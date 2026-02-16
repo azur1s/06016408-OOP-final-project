@@ -1,0 +1,3 @@
+fonts/monogram-extended-italic.ttf
+fonts/monogram-extended.ttf
+words.txt
