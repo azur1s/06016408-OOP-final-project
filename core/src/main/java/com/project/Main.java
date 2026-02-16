@@ -19,9 +19,7 @@ public class Main extends ApplicationAdapter {
 
     private float charTimer = 0f;
     private int charCount = 0;
-    private int wrongCharCount = 0;
     private int lastWpm = 0;
-    private int lastAccuracy = 100;
 
     @Override
     public void create() {
@@ -40,8 +38,6 @@ public class Main extends ApplicationAdapter {
     public void render() {
         charTimer += Gdx.graphics.getDeltaTime();
 
-        boolean typedCharThisFrame = false;
-
         if (Gdx.input.isKeyJustPressed(Input.Keys.BACKSPACE)) {
             words.removeInputChar();
         } else {
@@ -49,34 +45,18 @@ public class Main extends ApplicationAdapter {
                 char c = (char) ('a' + i);
                 if (Gdx.input.isKeyJustPressed(Input.Keys.valueOf(Character.toUpperCase(c) + ""))) {
                     words.addInputChar(c);
+                    words.checkAndRemoveMatchedWord();
                     charCount++;
-                    typedCharThisFrame = true;
                     break;
                 }
             }
         }
 
-        words.checkAndRemoveMatchedWord();
-
-        // count an incorrect character exactly when a newly typed character
-        // makes the buffer unmatchable
-        if (typedCharThisFrame && !words.isInputBufferMatchable()) {
-            wrongCharCount++;
-        }
-
         if (charTimer >= 1.0f) {
             lastWpm = (int) ((charCount / 5.0f) * (60.0f / charTimer));
 
-            if (charCount <= 0) {
-                lastAccuracy = 100;
-            } else {
-                int correctCharCount = Math.max(0, charCount - wrongCharCount);
-                lastAccuracy = Math.round((correctCharCount * 100.0f) / charCount);
-            }
-
             charTimer = 0f;
             charCount = 0;
-            wrongCharCount = 0;
         }
 
         ScreenUtils.clear(0.0f, 0.0f, 0.0f, 1f);
@@ -92,18 +72,15 @@ public class Main extends ApplicationAdapter {
             y -= 36;
         }
 
-        // draw the input buffer at the bottom left
-        font.setColor(1f, 1f, 1f, 1f);
-        font.draw(batch, words.inputBuffer, 24, 24);
-
-        // display the WPM at the bottom right
         String wpmText = lastWpm + " WPM";
-        String accText = lastAccuracy + "% ACC";
-        String hudText = wpmText + "  " + accText;
 
-        gl.setText(font, hudText);
-        float wpmWidth = gl.width;
-        font.draw(batch, hudText, Gdx.graphics.getWidth() - wpmWidth - 24, 24);
+        gl.setText(font, wpmText);
+        font.draw(batch, wpmText, Gdx.graphics.getWidth() - gl.width - 24, 24);
+
+        String fpsText = Gdx.graphics.getFramesPerSecond() + " FPS";
+
+        gl.setText(font, fpsText);
+        font.draw(batch, fpsText, Gdx.graphics.getWidth() - gl.width - 24, Gdx.graphics.getHeight() - 24);
 
         batch.end();
     }

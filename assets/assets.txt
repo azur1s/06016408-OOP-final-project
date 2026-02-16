@@ -1,3 +1,8 @@
 fonts/monogram-extended-italic.ttf
 fonts/monogram-extended.ttf
-words.txt
+words_c.txt
+words_cpp.txt
+words_java.txt
+words_javascript.txt
+words_python.txt
+words_test.txt

@@ -22,10 +22,10 @@ while
 
 abstract
 final
-native
+# native
 static
-synchronized
-transient
+# synchronized
+# transient
 volatile
 
 private

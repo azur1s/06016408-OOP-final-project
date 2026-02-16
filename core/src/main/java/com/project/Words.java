@@ -6,10 +6,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
+
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 
 public class Words {
     public static String[] possibleWordList;
+    private static int maxWordLength = 0;
 
     Vector<String> currentWordList = new Vector<>();
 
@@ -17,11 +20,22 @@ public class Words {
     Vector<String> inputBufferPrefixes = new Vector<>();
 
     public static void init() {
-        FileHandle file = new FileHandle("words.txt");
+        FileHandle file = Gdx.files.internal("words.txt");
+
         possibleWordList = java.util.Arrays.stream(file.readString().split("\n"))
-            .filter(line -> !line.isEmpty() && !line.startsWith("#"))
+            .filter(line -> {
+                boolean isValid = !line.isEmpty() && !line.startsWith("#");
+                // also calculate the max word length
+                if (isValid && line.length() > maxWordLength)
+                    maxWordLength = line.length();
+                return isValid;
+            })
             .toArray(String[]::new);
-        System.out.println("Loaded " + possibleWordList.length + " words from " + file.path());
+
+        System.out.println(
+            "Loaded " + possibleWordList.length
+            + " words from " + file.path()
+        );
     }
 
     public void clearWordList() {
@@ -30,10 +44,17 @@ public class Words {
 
     public void clearInputBuffer() {
         inputBuffer = "";
+        inputBufferPrefixes.clear();
     }
 
     public void addInputChar(char c) {
-        inputBuffer += c;
+        // circular buffer with max length equal to the longest word in the
+        // possible word list
+        if (inputBuffer.length() < maxWordLength) {
+            inputBuffer += c;
+        } else {
+            inputBuffer = inputBuffer.substring(1) + c;
+        }
 
         // recalculate the input buffer prefixes
         // c -> "c"   -> [c]
@@ -43,9 +64,6 @@ public class Words {
         for (int i = 0; i <= inputBuffer.length() - 1; i++) {
             inputBufferPrefixes.add(inputBuffer.substring(i, inputBuffer.length()));
         }
-
-        System.out.println("Input buffer: " + inputBuffer);
-        System.out.println("Input buffer prefixes: " + inputBufferPrefixes);
     }
 
     public void removeInputChar() {
@@ -85,7 +103,7 @@ public class Words {
     }
 
     public Vector<Pair<String, String>> getCurrentWordListHighlighted() {
-        // and for each word, split into highlighted and non-highlighted parts
+        // for each word, split into highlighted and non-highlighted parts
         // based on the longest matching prefix
         // e.g. input buffer = "volati", words = [volatile, if, import]
         // -> ("volati", "le"), ("i", "f"), ("i", "mport")
@@ -96,7 +114,9 @@ public class Words {
             String nonHighlightedPart = word;
 
             for (String prefix : inputBufferPrefixes) {
-                if (word.startsWith(prefix) && prefix.length() > highlightedPart.length()) {
+                if (word.startsWith(prefix)
+                    && prefix.length() > highlightedPart.length()
+                ) {
                     highlightedPart = prefix;
                     nonHighlightedPart = word.substring(prefix.length());
                 }
@@ -108,42 +128,41 @@ public class Words {
         return highlightedWords;
     }
 
-    /**
-     * Checks whether the input buffer can't be matched to any of the current
-     * words.
-     */
-    public boolean isInputBufferMatchable() {
-        for (String word : currentWordList) {
-            if (word.startsWith(inputBuffer)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public void checkAndRemoveMatchedWord() {
-        for (String word : currentWordList) {
-            for (String prefix : inputBufferPrefixes) {
-                if (word.equals(prefix)) {
-                    removeWord(word);
-                    generateWordList(1);
+        Vector<String> matchedWords = new Vector<>();
+        boolean keepInputBuffer = false;
 
-                    if (isInputBufferMatchable()) {
-                        // if the buffer can still be matched, keep it as is so the
-                        // user can continue typing the next word
-                    } else {
-                        // otherwise, clear the buffer so the user can start fresh
-                        // on the next word
-                        clearInputBuffer();
+        for (String word : currentWordList) {
+            prefixLoop: for (String prefix : inputBufferPrefixes) {
+                if (word.equals(prefix)) {
+                    matchedWords.add(word);
+
+                    // if there's another word that starts with the same prefix,
+                    // keep the input buffer instead of clearing it
+                    // e.g. [final]    [final]ly -> keep "final"
+                    //      [switch]   [ch]ar    -> clear input buffer
+                    //      [volatile] [e]xtends -> clear input buffer
+                    for (String otherWord : currentWordList) {
+                        if (!otherWord.equals(word) && otherWord.startsWith(word)) {
+                            keepInputBuffer = true;
+                            break;
+                        }
                     }
 
-                    return;
+                    break prefixLoop;
                 }
             }
         }
-    }
 
-    public void removeWord(String word) {
-        currentWordList.remove(word);
+        for (String matchedWord : matchedWords) {
+            currentWordList.remove(matchedWord);
+            generateWordList(1);
+        }
+
+        // clear the input buffer if a word was matched and there's no other
+        // word that can be matched with the current input buffer
+        if (!keepInputBuffer && matchedWords.size() > 0) {
+            clearInputBuffer();
+        }
     }
 }
