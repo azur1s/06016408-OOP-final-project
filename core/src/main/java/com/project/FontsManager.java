@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.ObjectMap;
 
-public final class Fonts implements Disposable {
+public final class FontsManager implements Disposable {
     private final ObjectMap<String, BitmapFont> cache = new ObjectMap<>();
 
     public BitmapFont get(String internalFontPath, int sizePx) {
