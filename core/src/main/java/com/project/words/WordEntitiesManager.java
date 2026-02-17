@@ -11,9 +11,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
 
 public class WordEntitiesManager {
+    public static final int MAX_LANES = 5;
+
     /** List of all possible words that can be generated from a file. */
     public String[] possibleWordList;
     /** The largest length of any word in the possible word list. */
@@ -26,6 +27,8 @@ public class WordEntitiesManager {
 
     /** List of word entites currently on the screen. */
     Vector<WordEntity> entities = new Vector<>();
+    /** List of entites count in each lane. */
+    int[] laneCounts = new int[MAX_LANES];
 
     /** The current input buffer. */
     public String inputBuffer = "";
@@ -77,8 +80,7 @@ public class WordEntitiesManager {
 
     public void updateAll(float delta) {
         for (WordEntity wordEntity : entities) {
-            // update word position
-            wordEntity.position.x -= wordEntity.speed * delta;
+            wordEntity.update(delta);
 
             // update word's progress based on the current input buffer
             for (String suffix : inputBufferSuffix) {
@@ -103,6 +105,36 @@ public class WordEntitiesManager {
     // Entites/buffer interaction
 
     /**
+     * Selects a lane for a new word entity based on the current lane counts.
+     * Lanes with fewer entities are more likely to be selected.
+     */
+    private int selectLaneByWeight() {
+        // calculate total weight
+        int total = 0;
+        for (int count : laneCounts) {
+            total += (MAX_LANES - count); // more entities in lane -> less weight
+        }
+
+        // pick a random N between [0, total)
+        int r = (int) (Math.random() * total);
+
+        // find which lane the random N falls into
+        int cumulative = 0;
+        for (int i = 0; i < MAX_LANES; i++) {
+            // iterate through lanes, adding up weights until we exceed the
+            // random N
+            cumulative += (MAX_LANES - laneCounts[i]);
+            if (r < cumulative) {
+                laneCounts[i]++;
+                return i;
+            }
+        }
+
+        // fallback, should never reach here
+        return (int) (Math.random() * MAX_LANES);
+    }
+
+    /**
      * Generates a new word entity/entites and adds it to the current word list.
      * Ensured that the generated word(s) is not already in the current word list.
      */
@@ -122,15 +154,16 @@ public class WordEntitiesManager {
         int limit = Math.min(count, candidates.size());
         for (int i = 0; i < limit; i++) {
             String word = candidates.get(i);
+
             entities.add(new WordEntity(
                     word,
-                    new Vector2(
-                            Gdx.graphics.getWidth() + 50, // start slightly off screen
-                            (float) Math.random() * (Gdx.graphics.getHeight() - 100) + 50),
+                    // random x position off the right edge
+                    1000f + (float) Math.random() * 200f,
                     // calculate speed based on word length, longer words move slower
-                    25f + (maxWordLength - word.length()) * 10f
+                    10f + (maxWordLength - word.length()) * 10f
                     // random variation for fun
-                            + (float) Math.random() * 20f - 10f));
+                            + (float) Math.random() * 20f - 10f,
+                    selectLaneByWeight()));
         }
 
         if (limit < count) {

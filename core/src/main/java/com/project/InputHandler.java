@@ -13,13 +13,18 @@ public class InputHandler {
     }
 
     public void update() {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.BACKSPACE)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
+            words.addNewEntites(1);
+
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.BACKSPACE)) {
             words.removeInputChar();
+
         } else if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)
                 && Gdx.input.isKeyJustPressed(Input.Keys.MINUS)) {
             words.addInputChar('_');
             words.checkAndRemoveMatchedWord();
             sessionCharCount++;
+
         } else {
             for (int i = 0; i < 26; i++) {
                 char c = (char) ('a' + i);
