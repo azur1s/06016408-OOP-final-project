@@ -23,19 +23,18 @@ public class Words {
         FileHandle file = Gdx.files.internal("words.txt");
 
         possibleWordList = java.util.Arrays.stream(file.readString().split("\n"))
-            .filter(line -> {
-                boolean isValid = !line.isEmpty() && !line.startsWith("#");
-                // also calculate the max word length
-                if (isValid && line.length() > maxWordLength)
-                    maxWordLength = line.length();
-                return isValid;
-            })
-            .toArray(String[]::new);
+                .filter(line -> {
+                    boolean isValid = !line.isEmpty() && !line.startsWith("#");
+                    // also calculate the max word length
+                    if (isValid && line.length() > maxWordLength)
+                        maxWordLength = line.length();
+                    return isValid;
+                })
+                .toArray(String[]::new);
 
         System.out.println(
-            "Loaded " + possibleWordList.length
-            + " words from " + file.path()
-        );
+                "Loaded " + possibleWordList.length
+                        + " words from " + file.path());
     }
 
     public void clearWordList() {
@@ -57,8 +56,8 @@ public class Words {
         }
 
         // recalculate the input buffer prefixes
-        // c -> "c"   -> [c]
-        // o -> "co"  -> [co, o]
+        // c -> "c" -> [c]
+        // o -> "co" -> [co, o]
         // l -> "col" -> [col, ol, l]
         inputBufferPrefixes.clear();
         for (int i = 0; i <= inputBuffer.length() - 1; i++) {
@@ -97,8 +96,7 @@ public class Words {
 
         if (limit < count) {
             System.out.println("Warning: requested " + count
-            + " words, but only " + limit + " unique words are available."
-            );
+                    + " words, but only " + limit + " unique words are available.");
         }
     }
 
@@ -115,8 +113,7 @@ public class Words {
 
             for (String prefix : inputBufferPrefixes) {
                 if (word.startsWith(prefix)
-                    && prefix.length() > highlightedPart.length()
-                ) {
+                        && prefix.length() > highlightedPart.length()) {
                     highlightedPart = prefix;
                     nonHighlightedPart = word.substring(prefix.length());
                 }
@@ -139,9 +136,9 @@ public class Words {
 
                     // if there's another word that starts with the same prefix,
                     // keep the input buffer instead of clearing it
-                    // e.g. [final]    [final]ly -> keep "final"
-                    //      [switch]   [ch]ar    -> clear input buffer
-                    //      [volatile] [e]xtends -> clear input buffer
+                    // e.g. [final] [final]ly -> keep "final"
+                    // [switch] [ch]ar -> clear input buffer
+                    // [volatile] [e]xtends -> clear input buffer
                     for (String otherWord : currentWordList) {
                         if (!otherWord.equals(word) && otherWord.startsWith(word)) {
                             keepInputBuffer = true;
