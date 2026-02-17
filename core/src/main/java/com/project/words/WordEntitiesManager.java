@@ -10,6 +10,7 @@ import java.util.Vector;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class WordEntitiesManager {
@@ -45,7 +46,7 @@ public class WordEntitiesManager {
     // ========================================================================
 
     public void init() {
-        FileHandle file = Gdx.files.internal("words_java.txt");
+        FileHandle file = Gdx.files.internal("words/words_java.txt");
 
         String[] lines = file.readString().split("\n");
         List<String> validWords = new ArrayList<>();
@@ -72,14 +73,15 @@ public class WordEntitiesManager {
                         + " words from " + file.path());
     }
 
-    public void renderAll(SpriteBatch batch, BitmapFont font) {
+    public void renderAll(SpriteBatch batch, BitmapFont font, GlyphLayout gl) {
         for (WordEntity wordEntity : entities) {
-            wordEntity.render(batch, font);
+            wordEntity.render(batch, font, gl);
         }
     }
 
     public void updateAll(float delta) {
-        for (WordEntity wordEntity : entities) {
+        for (int i = entities.size() - 1; i >= 0; i--) {
+            WordEntity wordEntity = entities.get(i);
             wordEntity.update(delta);
 
             // update word's progress based on the current input buffer
@@ -92,6 +94,16 @@ public class WordEntitiesManager {
                 } else {
                     // no match, set progress to 0
                     wordEntity.progress = 0;
+                }
+            }
+
+            // if the word reaches the left edge of the screen, remove it and generate a new
+            // one
+            if (wordEntity.position.x < 100f) {
+                entities.remove(i);
+                addNewEntites(1);
+                for (WordEntitiesListener l : listeners) {
+                    l.onWordMissed(wordEntity);
                 }
             }
         }
@@ -135,10 +147,10 @@ public class WordEntitiesManager {
     }
 
     /**
-     * Generates a new word entity/entites and adds it to the current word list.
-     * Ensured that the generated word(s) is not already in the current word list.
+     * Generates a list of unique candidate words not already in the current word
+     * list.
      */
-    public void addNewEntites(int count) {
+    private List<String> generateUniqueWordsCandidate(int count) {
         Set<String> existing = new HashSet<>(entities.stream()
                 .map(wordEntity -> wordEntity.word)
                 .toList());
@@ -151,11 +163,21 @@ public class WordEntitiesManager {
         }
 
         Collections.shuffle(candidates);
-        int limit = Math.min(count, candidates.size());
+        return candidates.subList(0, Math.min(count, candidates.size()));
+    }
+
+    /**
+     * Generates a new word entity/entites and adds it to the current word list.
+     * Ensured that the generated word(s) is not already in the current word list.
+     */
+    public void addNewEntites(int count) {
+        List<String> candidates = generateUniqueWordsCandidate(count);
+        int limit = candidates.size();
+
         for (int i = 0; i < limit; i++) {
             String word = candidates.get(i);
 
-            entities.add(new WordEntity(
+            WordEntity entity = new WordEntity(
                     word,
                     // random x position off the right edge
                     1000f + (float) Math.random() * 200f,
@@ -163,7 +185,12 @@ public class WordEntitiesManager {
                     10f + (maxWordLength - word.length()) * 10f
                     // random variation for fun
                             + (float) Math.random() * 20f - 10f,
-                    selectLaneByWeight()));
+                    selectLaneByWeight());
+
+            WordEffect eff = WordEffect.randomEffect(entity);
+            entity.setEffect(eff);
+
+            entities.add(entity);
         }
 
         if (limit < count) {
@@ -178,14 +205,14 @@ public class WordEntitiesManager {
      * one. Also handles clearing the input buffer if necessary.
      */
     public void checkAndRemoveMatchedWord() {
-        Vector<String> matchedWords = new Vector<>();
+        Vector<WordEntity> matchedEntities = new Vector<>();
         boolean keepInputBuffer = false;
 
         for (WordEntity e : entities) {
             for (String suffix : inputBufferSuffix) {
                 String word = e.word;
                 if (word.equals(suffix)) {
-                    matchedWords.add(word);
+                    matchedEntities.add(e);
 
                     // if there's another word that starts with the same prefix,
                     // keep the input buffer instead of clearing it
@@ -206,17 +233,26 @@ public class WordEntitiesManager {
         }
 
         // remove matched words and generate new ones
-        for (String matchedWord : matchedWords) {
-            entities.removeIf(wordEntity -> wordEntity.word.equals(matchedWord));
+        for (WordEntity matchedEntity : matchedEntities) {
+            // check if the matched entity has a repeat effect and is not completed yet
+            if (matchedEntity.effect instanceof WordEffect.Repeat repeatEffect) {
+                if (!repeatEffect.isCompleted()) {
+                    // if not completed, increment the typed count and skip removing it
+                    matchedEntity.setEffect(repeatEffect.incrementTypedCount());
+                    continue;
+                }
+            }
+            // otherwise, remove the matched entity and generate a new one
+            entities.remove(matchedEntity);
             addNewEntites(1);
             for (WordEntitiesListener l : listeners) {
-                l.onWordCompleted(matchedWord);
+                l.onWordCompleted(matchedEntity);
             }
         }
 
         // clear the input buffer if a word was matched and there's no other
         // word that can be matched with the current input buffer
-        if (!keepInputBuffer && matchedWords.size() > 0) {
+        if (!keepInputBuffer && matchedEntities.size() > 0) {
             clearInputBuffer();
         }
     }

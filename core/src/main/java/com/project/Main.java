@@ -35,6 +35,13 @@ public class Main extends ApplicationAdapter {
     private InputHandler inputHandler;
     private StatsManager stats;
 
+    // Animation states
+    private float displayedHealth;
+    private float scoreScale = 1.5f;
+    private float baseScoreScale = 1.5f;
+
+    private ParticlesManager deathParticles;
+
     @Override
     public void create() {
         batch = new SpriteBatch();
@@ -48,7 +55,7 @@ public class Main extends ApplicationAdapter {
         uiCamera = new OrthographicCamera();
         uiViewport = new ExtendViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), uiCamera);
 
-        font = fonts.get("fonts/monogram-extended.ttf", 32);
+        font = fonts.get("fonts/monogram-extended-italic.ttf", 32);
 
         words = new WordEntitiesManager();
         words.init();
@@ -56,6 +63,11 @@ public class Main extends ApplicationAdapter {
 
         inputHandler = new InputHandler(words);
         stats = new StatsManager(words);
+        displayedHealth = stats.health;
+
+        words.addListener(stats);
+        deathParticles = new ParticlesManager("particles/entityDeath.p", "particles/");
+        words.addListener(deathParticles);
     }
 
     @Override
@@ -77,7 +89,8 @@ public class Main extends ApplicationAdapter {
         renderWorld();
 
         // render UI
-        renderUI();
+        drawHealthBar();
+        drawUI();
     }
 
     private void renderWorld() {
@@ -90,7 +103,9 @@ public class Main extends ApplicationAdapter {
         batch.begin();
 
         // draw word entites
-        words.renderAll(batch, font);
+        words.renderAll(batch, font, gl);
+
+        deathParticles.updateAndRender(batch, Gdx.graphics.getDeltaTime());
 
         batch.end();
     }
@@ -115,19 +130,60 @@ public class Main extends ApplicationAdapter {
                     laneHeight);
         }
 
+        // draw vertical line at x=100 to indicate fail zone
+        shapeRenderer.setColor(1f, 0.5f, 0.5f, 0.5f);
+        shapeRenderer.rect(100f, -1000f, 4f, 2000f);
+
         shapeRenderer.end();
     }
 
-    private void renderUI() {
+    private void drawHealthBar() {
+        // draw a health bar at the bottom part of the screen that span the entire
+        // width
+        float health = stats.health;
+        float barWidth = uiViewport.getWorldWidth() - 48f; // 24px padding on each side
+        float barHeight = 10f;
+
+        // animate health bar changes with lerp
+        float lerpSpeed = 5f;
+        displayedHealth += (health - displayedHealth) * lerpSpeed * Gdx.graphics.getDeltaTime();
+
+        shapeRenderer.setProjectionMatrix(uiCamera.combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(0.5f, 0.5f, 0.5f, 0.8f);
+        shapeRenderer.rect(24f, 0f, barWidth, barHeight);
+        shapeRenderer.setColor(0.5f, 1f, 0.5f, 0.8f);
+        shapeRenderer.rect(24f, 0f, barWidth * (displayedHealth / stats.maxHealth), barHeight);
+        shapeRenderer.end();
+    }
+
+    private void drawUI() {
         uiViewport.apply();
         batch.setProjectionMatrix(uiCamera.combined);
         batch.begin();
 
+        // display scores at the middle bottom of the screen, adjust size based on
+        // streaks (max 100% size increase at 10+ streaks), decay with timer
+        float streakBonus = Math.min(stats.streaks, 10) / 10f;
+        float timerFactor = 1f - Math.min(stats.streaksTimer, 3f) / 3f;
+        float targetScoreScale = baseScoreScale + streakBonus * Math.max(timerFactor, 0f);
+        float lerpSpeed = 10f;
+        scoreScale += (targetScoreScale - scoreScale) * lerpSpeed * Gdx.graphics.getDeltaTime();
+        font.getData().setScale(scoreScale);
+
+        String scoreText = String.valueOf(stats.score);
+        gl.setText(font, scoreText);
+        font.draw(batch, scoreText,
+                uiViewport.getWorldWidth() / 2f - gl.width / 2f,
+                gl.height + 24);
+
+        font.getData().setScale(1f); // reset scale for other UI elements
+
         String wpmText = stats.lastWpm + " WPM";
         gl.setText(font, wpmText);
-        font.draw(batch, wpmText, uiViewport.getWorldWidth() - gl.width - 24, 24);
+        font.draw(batch, wpmText, uiViewport.getWorldWidth() - gl.width - 24, gl.height + 24);
 
-        // debugView();
+        debugView();
 
         batch.end();
     }
@@ -163,5 +219,8 @@ public class Main extends ApplicationAdapter {
         batch.dispose();
         shapeRenderer.dispose();
         fonts.dispose();
+        if (deathParticles != null) {
+            deathParticles.dispose();
+        }
     }
 }

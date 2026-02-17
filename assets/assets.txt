@@ -1,8 +1,10 @@
 fonts/monogram-extended-italic.ttf
 fonts/monogram-extended.ttf
-words_c.txt
-words_cpp.txt
-words_java.txt
-words_javascript.txt
-words_python.txt
-words_test.txt
+particles/entityDeath.p
+particles/square.png
+words/words_c.txt
+words/words_cpp.txt
+words/words_java.txt
+words/words_javascript.txt
+words/words_python.txt
+words/words_test.txt

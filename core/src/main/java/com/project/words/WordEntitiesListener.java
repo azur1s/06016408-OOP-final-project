@@ -4,7 +4,11 @@ public interface WordEntitiesListener {
     /**
      * Called when a word entity is "completed".
      */
-    void onWordCompleted(String word);
+    void onWordCompleted(WordEntity wordEntity);
 
-    // TODO Callback on misspell
+    /**
+     * Called when a word entity reaches the left edge of the screen without being
+     * completed.
+     */
+    void onWordMissed(WordEntity wordEntity);
 }
