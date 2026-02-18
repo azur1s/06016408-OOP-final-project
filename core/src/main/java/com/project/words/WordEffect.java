@@ -34,8 +34,7 @@ public sealed interface WordEffect {
             // hide 40% of the characters with minimum of 1
             return new Hidden(Math.max(1, (int) (wordEntity.word.length() * 0.4)));
         } else if (r < 0.4) {
-            // repeat 1-2 times randomly
-            int count = (int) (Math.random() * 2) + 1;
+            int count = (int) (Math.random() * 2);
             return new Repeat(count);
         } else {
             return new Normal();

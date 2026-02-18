@@ -11,4 +11,9 @@ public interface WordEntitiesListener {
      * completed.
      */
     void onWordMissed(WordEntity wordEntity);
+
+    /**
+     * Called when a word entity's progress changes
+     */
+    void onWordProgress(WordEntity wordEntity);
 }

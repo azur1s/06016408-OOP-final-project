@@ -6,7 +6,7 @@ import com.project.words.WordEntitiesListener;
 import com.project.words.WordEntitiesManager;
 import com.project.words.WordEntity;
 
-public class StatsManager implements WordEntitiesListener {
+public class PlayerManager implements WordEntitiesListener {
     // Reference to Words for average word length
     private WordEntitiesManager words;
 
@@ -20,7 +20,9 @@ public class StatsManager implements WordEntitiesListener {
     public float charTimer = 0f;
     public int lastWpm = 0;
 
-    public StatsManager(WordEntitiesManager words) {
+    public int currentLane = 2;
+
+    public PlayerManager(WordEntitiesManager words) {
         this.words = words;
     }
 
@@ -67,5 +69,10 @@ public class StatsManager implements WordEntitiesListener {
                 * WordEffect.getDamageMultipler(wordEntity.effect)));
         streaks = 0;
         streaksTimer = 0f;
+    }
+
+    @Override
+    public void onWordProgress(WordEntity wordEntity) {
+        currentLane = wordEntity.lane;
     }
 }

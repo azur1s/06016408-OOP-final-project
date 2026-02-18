@@ -21,6 +21,9 @@ ios/robovm/build/
 *.class
 .mtj.tmp/
 
+# IDE Metadata (VS Code)
+.vscode/
+
 # IDE Metadata (IntelliJ)
 .idea/
 *.iml

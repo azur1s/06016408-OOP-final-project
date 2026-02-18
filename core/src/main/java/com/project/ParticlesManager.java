@@ -38,6 +38,10 @@ public class ParticlesManager implements WordEntitiesListener, Disposable {
         // spawnParticle(wordEntity);
     }
 
+    @Override
+    public void onWordProgress(WordEntity wordEntity) {
+    }
+
     public void updateAndRender(SpriteBatch batch, float delta) {
         if (activeEffects.isEmpty()) {
             return;

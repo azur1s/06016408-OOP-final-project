@@ -85,16 +85,25 @@ public class WordEntitiesManager {
             wordEntity.update(delta);
 
             // update word's progress based on the current input buffer
+            int previousProgress = wordEntity.progress;
+            int newProgress = 0;
+
             for (String suffix : inputBufferSuffix) {
                 String word = wordEntity.word;
                 if (word.startsWith(suffix)) {
-                    // matched a prefix of the word, set progress to the suffix // length
-                    wordEntity.progress = suffix.length();
+                    // matched a prefix of the word, set progress to the suffix length
+                    newProgress = suffix.length();
                     break;
-                } else {
-                    // no match, set progress to 0
-                    wordEntity.progress = 0;
                 }
+            }
+
+            if (previousProgress != newProgress) {
+                wordEntity.progress = newProgress;
+                for (WordEntitiesListener l : listeners) {
+                    l.onWordProgress(wordEntity);
+                }
+            } else {
+                wordEntity.progress = newProgress;
             }
 
             // if the word reaches the left edge of the screen, remove it and generate a new

@@ -58,8 +58,6 @@ public class WordEntity {
         if (effect instanceof WordEffect.Hidden hiddenEffect) {
             // hide last N characters based on the effect, and only show it when
             // progress reaches N
-            // e.g. if word is "example" and count is 2, display "examp__"
-            // and when user types "examp", display "exampl_" and so on
             int hiddenCount = hiddenEffect.count();
             int visibleCount = Math.max(0, word.length() - hiddenCount);
 
