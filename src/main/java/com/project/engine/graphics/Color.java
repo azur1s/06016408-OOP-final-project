@@ -1,4 +1,4 @@
-package com.project.engine;
+package com.project.engine.graphics;
 
 public class Color {
     public static final Color WHITE = new Color(1f, 1f, 1f, 1f);

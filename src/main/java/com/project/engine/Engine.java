@@ -2,6 +2,8 @@ package com.project.engine;
 
 import static org.lwjgl.glfw.GLFW.*;
 
+import com.project.engine.graphics.Graphics;
+
 public class Engine {
     private static long window;
 

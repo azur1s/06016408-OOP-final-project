@@ -1,4 +1,4 @@
-package com.project.engine;
+package com.project.engine.graphics;
 
 public class Graphics {
     private float deltaTime = 0;

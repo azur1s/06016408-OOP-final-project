@@ -1,4 +1,4 @@
-package com.project.engine;
+package com.project.engine.graphics;
 
 import com.project.math.Matrix4f;
 import com.project.math.Vec2;

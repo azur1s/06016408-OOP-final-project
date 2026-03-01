@@ -1,4 +1,4 @@
-package com.project.engine;
+package com.project.engine.graphics;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
@@ -6,8 +6,12 @@ import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
 
 import com.project.math.Matrix4f;
+import com.project.utils.Resources;
 
 public class TextureBatch {
+    private static final String TEXTURE_VERT = Resources.loadResourcesText("shaders/texture.vert");
+    private static final String TEXTURE_FRAG = Resources.loadResourcesText("shaders/texture.frag");
+
     // A single texture is a quad (2 triangles = 6 vertices).
     // Each vertex needs 4 floats (X, Y, U, V).
     // 6 * 4 = 24 floats per texture.
@@ -18,15 +22,23 @@ public class TextureBatch {
     // How many textures are currently in CPU array
     private int texCount = 0;
 
+    // Current shader
+
     private Texture lastTex = null;
     private boolean isDrawing = false;
     private Color currentColor = Color.WHITE;
 
     private final int vaoId, vboId;
-    private final Shader shader = new Shader();
+    private Shader shader;
     private final Matrix4f projection = new Matrix4f();
 
+    public enum ShaderType {
+        TEXTURE, MSDF
+    }
+
     public TextureBatch() {
+        shader = new Shader(TEXTURE_VERT, TEXTURE_FRAG);
+
         vaoId = glGenVertexArrays();
         glBindVertexArray(vaoId);
 
@@ -50,6 +62,7 @@ public class TextureBatch {
     public void begin() {
         if (isDrawing)
             throw new IllegalStateException("Already drawing! Call end() before beginning again.");
+
         isDrawing = true;
         shader.bind();
         shader.setUniformMat4f("u_projection", projection);
@@ -108,6 +121,56 @@ public class TextureBatch {
         vertices[idx++] = dy + h;
         vertices[idx++] = 1.0f;
         vertices[idx++] = 0.0f;
+
+        texCount++;
+    }
+
+    public void drawRegion(Texture texture, float x, float y, float w, float h,
+            float u1, float v1, float u2, float v2) {
+        if (!isDrawing)
+            throw new IllegalStateException("TextureBatch.begin() must be called first!");
+
+        if (texture != lastTex || texCount >= MAX_TEXTURES) {
+            flush();
+            lastTex = texture;
+        }
+
+        float ox = texture.getOriginX() * (w / texture.getWidth());
+        float oy = texture.getOriginY() * (h / texture.getHeight());
+        float dx = x - ox;
+        float dy = y - oy;
+
+        int idx = texCount * FLOATS_PER_TEXTURE;
+
+        vertices[idx++] = dx;
+        vertices[idx++] = dy + h;
+        vertices[idx++] = u1;
+        vertices[idx++] = v1;
+
+        vertices[idx++] = dx;
+        vertices[idx++] = dy;
+        vertices[idx++] = u1;
+        vertices[idx++] = v2;
+
+        vertices[idx++] = dx + w;
+        vertices[idx++] = dy;
+        vertices[idx++] = u2;
+        vertices[idx++] = v2;
+
+        vertices[idx++] = dx;
+        vertices[idx++] = dy + h;
+        vertices[idx++] = u1;
+        vertices[idx++] = v1;
+
+        vertices[idx++] = dx + w;
+        vertices[idx++] = dy;
+        vertices[idx++] = u2;
+        vertices[idx++] = v2;
+
+        vertices[idx++] = dx + w;
+        vertices[idx++] = dy + h;
+        vertices[idx++] = u2;
+        vertices[idx++] = v1;
 
         texCount++;
     }

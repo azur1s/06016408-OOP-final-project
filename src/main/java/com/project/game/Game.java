@@ -3,13 +3,14 @@ package com.project.game;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
-import com.project.engine.Color;
 import com.project.engine.Engine;
-import com.project.engine.Fonts;
 import com.project.engine.GameState;
-import com.project.engine.OrthoCamera;
-import com.project.engine.Texture;
-import com.project.engine.TextureBatch;
+import com.project.engine.graphics.Color;
+import com.project.engine.graphics.FontAtlas;
+import com.project.engine.graphics.OrthoCamera;
+import com.project.engine.graphics.Texture;
+import com.project.engine.graphics.TextureBatch;
+import com.project.engine.ui.Button;
 import com.project.game.words.WordEntitiesManager;
 import com.project.game.words.WordEntity;
 import com.project.math.Vec2;
@@ -17,14 +18,19 @@ import com.project.math.Vec2;
 public class Game implements GameState {
     private TextureBatch batch;
     private Texture solidTexture;
-    private Fonts fonts;
+
+    private FontAtlas font;
 
     private OrthoCamera camera;
+    private OrthoCamera uiCamera;
 
     private WordEntitiesManager words;
     private InputHandler inputHandler;
 
+    private Vec2 mouseScreen = new Vec2(0, 0);
     private Vec2 mouseWorld = new Vec2(0, 0);
+
+    private Button testButton;
 
     private boolean debug = false;
 
@@ -33,15 +39,24 @@ public class Game implements GameState {
         batch = new TextureBatch();
         solidTexture = new Texture("textures/solid.png");
 
-        fonts = new Fonts();
-        fonts.loadFont("default", "GeistMono-Regular.otf");
+        font = new FontAtlas("GeistMono-Regular.otf", 32);
 
         camera = new OrthoCamera(width, height, true);
+        uiCamera = new OrthoCamera(width, height, false);
 
         words = new WordEntitiesManager();
         words.init();
         words.addNewEntites(1);
         inputHandler = new InputHandler(words);
+
+        testButton = new Button(new Vec2(100, 25), new Vec2(200, 50), "Test Button",
+                new Color(1.0f, 0.0f, 0.0f, 1.0f),
+                new Color(0.8f, 0.0f, 0.0f, 1.0f),
+                new Texture("textures/button_test.png"));
+        testButton.setOnClick(() -> {
+            System.out.println("Button clicked!");
+            words.addNewEntites(1);
+        });
     }
 
     @Override
@@ -51,29 +66,32 @@ public class Game implements GameState {
         }
 
         inputHandler.update();
+        testButton.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
         words.update(delta);
 
         glClearColor(0.4f, 0.4f, 0.4f, 1.0f);
 
         camera.update();
+
+        Vec2 rawMousePos = Engine.input.getMousePosition();
+        mouseScreen.set(new Vec2(rawMousePos.x, camera.viewportHeight - rawMousePos.y));
+        mouseWorld.set(camera.screenToWorld(rawMousePos));
+
         batch.setProjection(camera.combined);
-
-        mouseWorld.set(camera.screenToWorld(Engine.input.getMousePosition()));
-
+        batch.begin();
         drawWorld(batch);
+        batch.end();
 
-        fonts.begin(camera.viewportWidth, camera.viewportHeight);
-        words.renderText(camera, fonts);
-        fonts.end();
-
+        batch.setProjection(uiCamera.combined);
+        batch.begin();
         drawUI(batch);
-        if (debug)
-            drawUITextDebug(fonts);
+        batch.end();
     }
 
     @Override
     public void resize(int width, int height) {
         camera.setOrtho(width, height, true);
+        uiCamera.setOrtho(width, height, false);
     }
 
     @Override
@@ -83,48 +101,29 @@ public class Game implements GameState {
     }
 
     private void drawWorld(TextureBatch batch) {
-        batch.begin();
 
         // draw 5 lanes for the words to move in
         for (int i = 0; i < 5; i++) {
             float y = (i - 2) * WordEntity.LANE_SPACING;
             batch.setColor(i % 2 == 0
-                    ? new Color(0.6f, 0.6f, 0.6f, 1f)
-                    : new Color(0.5f, 0.5f, 0.5f, 1f));
+                    ? new Color(0.0f, 0.0f, 0.0f, 0.2f)
+                    : new Color(0.0f, 0.0f, 0.0f, 0.4f));
             batch.draw(solidTexture, 0, y, 2000, WordEntity.LANE_HEIGHT);
         }
 
         batch.setColor(Color.WHITE);
-        words.renderTexture(camera, batch);
-
-        batch.end();
+        words.render(batch, font);
     }
 
     private void drawUI(TextureBatch batch) {
-        batch.begin();
-        batch.end();
-    }
+        testButton.render(batch, font, mouseScreen);
 
-    private void drawUITextDebug(Fonts fonts) {
-        fonts.begin(camera.viewportWidth, camera.viewportHeight);
-
-        float fps = Engine.graphics.getFramesPerSecond();
-        fonts.draw("default", String.format("FPS: %.2f", fps), 10, 30, 16);
-
-        // draw mouse position in world space & screen space for debugging
-        fonts.draw("default", String.format("Mouse World: (%.1f, %.1f)", mouseWorld.x, mouseWorld.y), 10, 50, 16);
-        Vec2 mouseScreen = Engine.input.getMousePosition();
-        fonts.draw("default", String.format("Mouse Screen: (%.1f, %.1f)", mouseScreen.x, mouseScreen.y), 10, 70, 16);
-
-        fonts.draw("default", String.format("Spawn Cooldown: %.2f", words.spawnCooldown), 10, 90, 16);
-        for (int i = 0; i < WordEntitiesManager.MAX_LANES; i++) {
-            fonts.draw("default", String.format("Lane %d Cooldown: %.2f", i, words.laneCooldowns[i]), 10, 110 + i * 20,
+        if (debug) {
+            font.drawTextUnaligned(batch,
+                    String.format("Mouse World: (%.2f, %.2f)", mouseWorld.x, mouseWorld.y), 20, 20, Color.BLACK, 16);
+            font.drawTextUnaligned(batch,
+                    String.format("Mouse Screen: (%.2f, %.2f)", mouseScreen.x, mouseScreen.y), 20, 50, Color.BLACK,
                     16);
         }
-        fonts.draw("default", String.format("Difficulty Ramp: %.2f", words.difficultyRamp), 10,
-                110 + WordEntitiesManager.MAX_LANES * 20,
-                16);
-
-        fonts.end();
     }
 }

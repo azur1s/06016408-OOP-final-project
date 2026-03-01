@@ -12,6 +12,10 @@ public class Vec2 {
         return new Vec2(this.x + v.x, this.y + v.y);
     }
 
+    public Vec2 subtract(Vec2 v) {
+        return new Vec2(this.x - v.x, this.y - v.y);
+    }
+
     public float length() {
         return (float) Math.sqrt(x * x + y * y);
     }
@@ -27,6 +31,11 @@ public class Vec2 {
         if (len == 0)
             return new Vec2(0, 0);
         return new Vec2(v.x / len, v.y / len);
+    }
+
+    public static boolean isPointInRect(Vec2 point, Vec2 rectPos, Vec2 rectSize) {
+        return point.x >= rectPos.x && point.x <= rectPos.x + rectSize.x &&
+                point.y >= rectPos.y && point.y <= rectPos.y + rectSize.y;
     }
 
     public void set(Vec2 other) {

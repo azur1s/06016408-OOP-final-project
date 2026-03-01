@@ -12,8 +12,8 @@ public class Input {
     private final boolean[] keysDown = new boolean[GLFW_KEY_LAST + 1];
     private final boolean[] keysPressed = new boolean[GLFW_KEY_LAST + 1];
 
-    private final boolean[] mouseButtonsDown = new boolean[2];
     private final boolean[] mouseButtonsPressed = new boolean[2];
+    private final boolean[] mouseButtonsReleased = new boolean[2];
 
     private Vec2 mouse = new Vec2(0, 0);
 
@@ -38,6 +38,7 @@ public class Input {
      */
     public void endFrame() {
         Arrays.fill(keysPressed, false);
+        Arrays.fill(mouseButtonsReleased, false);
     }
 
     /**
@@ -66,26 +67,27 @@ public class Input {
     }
 
     public void updateMouseButtonState(int button, int action) {
-        if (button >= 0 && button < mouseButtonsDown.length) {
+        if (button >= 0 && button < mouseButtonsPressed.length) {
             if (action == GLFW_PRESS) {
-                mouseButtonsDown[button] = true;
-                mouseButtonsPressed[button] = true; // Button was just pressed
+                mouseButtonsPressed[button] = true;
+                mouseButtonsReleased[button] = false;
             } else if (action == GLFW_RELEASE) {
-                mouseButtonsDown[button] = false;
+                mouseButtonsPressed[button] = false;
+                mouseButtonsReleased[button] = true;
             }
         }
-    }
-
-    public boolean isMouseButtonDown(int button) {
-        if (button >= 0 && button < mouseButtonsDown.length) {
-            return mouseButtonsDown[button];
-        }
-        return false;
     }
 
     public boolean isMouseButtonPressed(int button) {
         if (button >= 0 && button < mouseButtonsPressed.length) {
             return mouseButtonsPressed[button];
+        }
+        return false;
+    }
+
+    public boolean isMouseButtonReleased(int button) {
+        if (button >= 0 && button < mouseButtonsReleased.length) {
+            return mouseButtonsReleased[button];
         }
         return false;
     }

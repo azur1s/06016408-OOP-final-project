@@ -7,10 +7,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
-import com.project.engine.Fonts;
-import com.project.engine.OrthoCamera;
-import com.project.engine.Texture;
-import com.project.engine.TextureBatch;
+import com.project.engine.graphics.FontAtlas;
+import com.project.engine.graphics.Texture;
+import com.project.engine.graphics.TextureBatch;
 import com.project.utils.Resources;
 
 public class WordEntitiesManager {
@@ -81,15 +80,9 @@ public class WordEntitiesManager {
         wordTexture = new Texture("textures/test.png");
     }
 
-    public void renderTexture(OrthoCamera cam, TextureBatch batch) {
+    public void render(TextureBatch batch, FontAtlas font) {
         for (WordEntity wordEntity : entities) {
-            wordEntity.renderTexture(cam, batch);
-        }
-    }
-
-    public void renderText(OrthoCamera cam, Fonts fonts) {
-        for (WordEntity wordEntity : entities) {
-            wordEntity.renderText(cam, fonts);
+            wordEntity.render(batch, font);
         }
     }
 

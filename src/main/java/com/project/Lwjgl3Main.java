@@ -93,6 +93,9 @@ public class Lwjgl3Main {
     private void loop() {
         GL.createCapabilities();
 
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
         gstate.init(INITIAL_WIDTH, INITIAL_HEIGHT);
 
         // resize callback

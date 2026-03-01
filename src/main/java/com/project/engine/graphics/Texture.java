@@ -1,4 +1,4 @@
-package com.project.engine;
+package com.project.engine.graphics;
 
 import org.lwjgl.system.MemoryStack;
 
@@ -70,6 +70,35 @@ public class Texture {
         stbi_image_free(image);
         System.out.println(
                 "Texture loaded successfully: " + filePath + " (ID: " + id + ", " + width + "x" + height + ")");
+    }
+
+    public Texture(ByteBuffer bitmap, int width, int height) {
+        this(bitmap, width, height, width / 2.0f, height / 2.0f);
+    }
+
+    public Texture(ByteBuffer bitmap, int width, int height, float originX, float originY) {
+        this.width = width;
+        this.height = height;
+
+        // Set origin
+        this.originX = originX;
+        this.originY = originY;
+
+        // Upload to OpenGL
+
+        this.id = glGenTextures();
+        glBindTexture(GL_TEXTURE_2D, id);
+        // Tell OpenGL how to unpack the pixel data (1 byte alignment)
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+        // Upload the texture data to GPU
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA,
+                GL_UNSIGNED_BYTE, bitmap);
+        // Set texture parameters
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        System.out.println(
+                "Bitmap texture created successfully (ID: " + id + ", " + width + "x" + height + ")");
     }
 
     public void bind() {

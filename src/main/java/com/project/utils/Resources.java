@@ -31,7 +31,7 @@ public final class Resources {
     /**
      * Shared logic to read an InputStream into a byte array.
      */
-    private static byte[] loadResourceAsBytes(String resourcePath) {
+    public static byte[] loadResourceAsBytes(String resourcePath) {
         // Use try-with-resources to ensure the InputStream is closed automatically
         try (InputStream src = Resources.class.getClassLoader().getResourceAsStream(resourcePath)) {
             if (src == null) {
