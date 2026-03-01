@@ -20,7 +20,7 @@ public class Engine {
             currentGameState.cleanup();
         }
         currentGameState = newState;
-        currentGameState.init(width, height);
+        currentGameState.internalInit(width, height);
     }
 
     public static void requestExit() {

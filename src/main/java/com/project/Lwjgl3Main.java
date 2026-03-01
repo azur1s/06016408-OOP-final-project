@@ -96,7 +96,7 @@ public class Lwjgl3Main {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        gstate.init(INITIAL_WIDTH, INITIAL_HEIGHT);
+        gstate.internalInit(INITIAL_WIDTH, INITIAL_HEIGHT);
 
         // resize callback
         glfwSetFramebufferSizeCallback(window, (window, width, height) -> {
@@ -113,9 +113,9 @@ public class Lwjgl3Main {
             lastTime = currentTime;
             Engine.graphics.updateTime(deltaTime);
 
-            // Render
+            // Update game state and render
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-            gstate.render(deltaTime);
+            gstate.internalTick(deltaTime);
 
             glfwSwapBuffers(window);
 
@@ -126,7 +126,7 @@ public class Lwjgl3Main {
     }
 
     private void cleanup() {
-        gstate.cleanup();
+        gstate.internalCleanup();
 
         glfwFreeCallbacks(window);
         glfwDestroyWindow(window);
