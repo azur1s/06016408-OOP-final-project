@@ -6,8 +6,7 @@ import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 
 import com.project.engine.Engine;
-import com.project.engine.GameState;
-import com.project.game.Game;
+import com.project.scenes.menu.Main;
 
 import java.nio.*;
 
@@ -23,7 +22,6 @@ public class Lwjgl3Main {
     public static final int INITIAL_HEIGHT = 720;
 
     private long window;
-    GameState gstate = new Game();
 
     public void run() {
         System.out.println("LWJGL version " + Version.getVersion());
@@ -96,12 +94,15 @@ public class Lwjgl3Main {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        gstate.internalInit(INITIAL_WIDTH, INITIAL_HEIGHT);
+        Engine.width = INITIAL_WIDTH;
+        Engine.height = INITIAL_HEIGHT;
+        Engine.setScene(new Main());
 
         // resize callback
         glfwSetFramebufferSizeCallback(window, (window, width, height) -> {
             glViewport(0, 0, width, height);
-            gstate.resize(width, height);
+            if (Engine.getCurrentScene() != null)
+                Engine.getCurrentScene().resize(width, height);
         });
 
         double lastTime = glfwGetTime();
@@ -115,7 +116,8 @@ public class Lwjgl3Main {
 
             // Update game state and render
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-            gstate.internalTick(deltaTime);
+            if (Engine.getCurrentScene() != null)
+                Engine.getCurrentScene().internalTick(deltaTime);
 
             glfwSwapBuffers(window);
 
@@ -126,7 +128,8 @@ public class Lwjgl3Main {
     }
 
     private void cleanup() {
-        gstate.internalCleanup();
+        if (Engine.getCurrentScene() != null)
+            Engine.getCurrentScene().internalCleanup();
 
         glfwFreeCallbacks(window);
         glfwDestroyWindow(window);

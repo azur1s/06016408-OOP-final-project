@@ -1,9 +1,9 @@
-package com.project.game;
+package com.project.scenes.game;
 
-import com.project.game.words.WordEffect;
-import com.project.game.words.WordEntitiesListener;
-import com.project.game.words.WordEntitiesManager;
-import com.project.game.words.WordEntity;
+import com.project.scenes.game.words.WordEffect;
+import com.project.scenes.game.words.WordEntitiesListener;
+import com.project.scenes.game.words.WordEntitiesManager;
+import com.project.scenes.game.words.WordEntity;
 
 public class PlayerManager implements WordEntitiesListener {
     // Reference to Words for average word length

@@ -1,9 +1,9 @@
-package com.project.game;
+package com.project.scenes.game;
 
 import static org.lwjgl.glfw.GLFW.*;
 
 import com.project.engine.Engine;
-import com.project.game.words.WordEntitiesManager;
+import com.project.scenes.game.words.WordEntitiesManager;
 
 public class InputHandler {
     public WordEntitiesManager words;

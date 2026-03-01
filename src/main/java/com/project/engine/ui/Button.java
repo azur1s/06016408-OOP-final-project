@@ -4,7 +4,7 @@ import com.project.engine.graphics.Color;
 import com.project.engine.graphics.FontAtlas;
 import com.project.engine.graphics.Texture;
 import com.project.engine.graphics.TextureBatch;
-import com.project.math.Vec2;
+import com.project.engine.math.Vec2;
 
 public class Button {
     private Vec2 position, size;

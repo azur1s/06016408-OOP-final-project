@@ -5,8 +5,8 @@ import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
 
-import com.project.math.Matrix4f;
-import com.project.utils.Resources;
+import com.project.engine.math.Matrix4f;
+import com.project.engine.utils.Resources;
 
 public class TextureBatch {
     private static final String TEXTURE_VERT = Resources.loadResourcesText("shaders/texture.vert");

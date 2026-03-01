@@ -1,10 +1,10 @@
-package com.project.game.words;
+package com.project.scenes.game.words;
 
 import com.project.engine.graphics.Color;
 import com.project.engine.graphics.FontAtlas;
 import com.project.engine.graphics.Texture;
 import com.project.engine.graphics.TextureBatch;
-import com.project.math.Vec2;
+import com.project.engine.math.Vec2;
 
 public class WordEntity {
     public static final float LANE_HEIGHT = 100f;

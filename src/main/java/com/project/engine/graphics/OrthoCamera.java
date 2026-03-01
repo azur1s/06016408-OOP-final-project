@@ -1,8 +1,8 @@
 package com.project.engine.graphics;
 
-import com.project.math.Matrix4f;
-import com.project.math.Vec2;
-import com.project.math.Vec3;
+import com.project.engine.math.Matrix4f;
+import com.project.engine.math.Vec2;
+import com.project.engine.math.Vec3;
 
 public class OrthoCamera {
     public final Vec3 position = new Vec3(0, 0, 0);

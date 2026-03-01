@@ -4,7 +4,7 @@ import static org.lwjgl.glfw.GLFW.*;
 
 import java.util.Arrays;
 
-import com.project.math.Vec2;
+import com.project.engine.math.Vec2;
 
 public class Input {
     // An array of booleans representing the current state of each key. True if

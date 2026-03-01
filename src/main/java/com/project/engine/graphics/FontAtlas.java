@@ -8,8 +8,8 @@ import org.lwjgl.stb.STBTruetype;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
-import com.project.math.Vec2;
-import com.project.utils.Resources;
+import com.project.engine.math.Vec2;
+import com.project.engine.utils.Resources;
 
 public class FontAtlas {
     private final Texture texture;

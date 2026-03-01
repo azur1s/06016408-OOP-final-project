@@ -1,4 +1,4 @@
-package com.project.math;
+package com.project.engine.math;
 
 public class Matrix4f {
     // OpenGL use column-major order by default so we will store the matrix

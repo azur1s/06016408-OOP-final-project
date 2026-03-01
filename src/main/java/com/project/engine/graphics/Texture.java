@@ -2,7 +2,7 @@ package com.project.engine.graphics;
 
 import org.lwjgl.system.MemoryStack;
 
-import com.project.utils.Resources;
+import com.project.engine.utils.Resources;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;

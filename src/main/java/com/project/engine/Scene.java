@@ -2,9 +2,9 @@ package com.project.engine;
 
 import com.project.engine.graphics.OrthoCamera;
 import com.project.engine.graphics.TextureBatch;
-import com.project.math.Vec2;
+import com.project.engine.math.Vec2;
 
-public abstract class GameState {
+public abstract class Scene {
     protected TextureBatch batch;
     /// World-space camera. (0, 0) is the center of the screen.
     protected OrthoCamera camera;

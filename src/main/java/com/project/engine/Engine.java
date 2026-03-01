@@ -13,14 +13,17 @@ public class Engine {
     public static Input input = new Input();
     public static Graphics graphics = new Graphics();
 
-    private static GameState currentGameState;
+    private static Scene currentScene;
 
-    public static void setGameState(GameState newState) {
-        if (currentGameState != null) {
-            currentGameState.cleanup();
-        }
-        currentGameState = newState;
-        currentGameState.internalInit(width, height);
+    public static void setScene(Scene newScene) {
+        if (currentScene != null)
+            currentScene.cleanup();
+        currentScene = newScene;
+        currentScene.internalInit(width, height);
+    }
+
+    public static Scene getCurrentScene() {
+        return currentScene;
     }
 
     public static void requestExit() {

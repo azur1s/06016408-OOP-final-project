@@ -1,4 +1,4 @@
-package com.project.math;
+package com.project.engine.math;
 
 public class Vec3 {
     public float x, y, z;
@@ -25,7 +25,8 @@ public class Vec3 {
     // Normalization (turning the vector into a unit vector of length 1)
     public Vec3 normalize() {
         float len = length();
-        if (len == 0) return new Vec3(0, 0, 0);
+        if (len == 0)
+            return new Vec3(0, 0, 0);
         return new Vec3(x / len, y / len, z / len);
     }
 
@@ -35,10 +36,9 @@ public class Vec3 {
 
     public Vec3 cross(Vec3 v) {
         return new Vec3(
-            y * v.z - z * v.y,
-            z * v.x - x * v.z,
-            x * v.y - y * v.x
-        );
+                y * v.z - z * v.y,
+                z * v.x - x * v.z,
+                x * v.y - y * v.x);
     }
 
     public void set(float x, float y) {

@@ -1,4 +1,4 @@
-package com.project.game.words;
+package com.project.scenes.game.words;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,7 +10,7 @@ import java.util.Vector;
 import com.project.engine.graphics.FontAtlas;
 import com.project.engine.graphics.Texture;
 import com.project.engine.graphics.TextureBatch;
-import com.project.utils.Resources;
+import com.project.engine.utils.Resources;
 
 public class WordEntitiesManager {
     public static final int MAX_LANES = 5;
@@ -131,7 +131,7 @@ public class WordEntitiesManager {
 
             // if the word reaches the left edge of the screen, remove it and generate a new
             // one
-            if (wordEntity.position.x < 100f) {
+            if (wordEntity.position.x < -500f) {
                 entities.remove(i);
                 addNewEntites(1);
                 for (WordEntitiesListener l : listeners) {

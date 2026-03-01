@@ -1,4 +1,4 @@
-package com.project.math;
+package com.project.engine.math;
 
 public class Vec2 {
     public float x, y;
@@ -46,5 +46,10 @@ public class Vec2 {
     public void set(float x, float y) {
         this.x = x;
         this.y = y;
+    }
+
+    @Override
+    public String toString() {
+        return "Vec2(" + x + ", " + y + ")";
     }
 }

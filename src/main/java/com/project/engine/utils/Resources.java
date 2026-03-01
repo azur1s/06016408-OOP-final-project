@@ -1,4 +1,4 @@
-package com.project.utils;
+package com.project.engine.utils;
 
 import org.lwjgl.BufferUtils;
 import java.io.ByteArrayOutputStream;

@@ -1,19 +1,19 @@
-package com.project.game;
+package com.project.scenes.game;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
 import com.project.engine.Engine;
-import com.project.engine.GameState;
+import com.project.engine.Scene;
 import com.project.engine.graphics.Color;
 import com.project.engine.graphics.FontAtlas;
 import com.project.engine.graphics.Texture;
+import com.project.engine.math.Vec2;
 import com.project.engine.ui.Button;
-import com.project.game.words.WordEntitiesManager;
-import com.project.game.words.WordEntity;
-import com.project.math.Vec2;
+import com.project.scenes.game.words.WordEntitiesManager;
+import com.project.scenes.game.words.WordEntity;
 
-public class Game extends GameState {
+public class Main extends Scene {
     private Texture solidTexture;
 
     private FontAtlas font;
@@ -36,7 +36,8 @@ public class Game extends GameState {
         words.addNewEntites(1);
         inputHandler = new InputHandler(words);
 
-        testButton = new Button(new Vec2(100, 25), new Vec2(200, 50), "Test Button",
+        testButton = new Button(new Vec2(100, 25), new Vec2(200, 50),
+                "Add entity",
                 new Color(1.0f, 0.0f, 0.0f, 1.0f),
                 new Color(0.8f, 0.0f, 0.0f, 1.0f),
                 new Texture("textures/button_test.png"));

@@ -2,7 +2,7 @@ package com.project.engine.graphics;
 
 import static org.lwjgl.opengl.GL20.*;
 
-import com.project.math.Matrix4f;
+import com.project.engine.math.Matrix4f;
 
 public class Shader {
     private final int programId;

@@ -1,4 +1,4 @@
-package com.project.game.words;
+package com.project.scenes.game.words;
 
 public interface WordEntitiesListener {
     /**
