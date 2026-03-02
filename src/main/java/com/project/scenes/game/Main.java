@@ -36,11 +36,14 @@ public class Main extends Scene {
         words.addNewEntites(1);
         inputHandler = new InputHandler(words);
 
-        testButton = new Button(new Vec2(100, 25), new Vec2(200, 50),
+        testButton = new Button(
+                super.layout.bottomRight(100, 25),
+                new Vec2(200, 50),
                 "Add entity",
                 new Color(1.0f, 0.0f, 0.0f, 1.0f),
                 new Color(0.8f, 0.0f, 0.0f, 1.0f),
                 new Texture("textures/button_test.png"));
+
         testButton.setOnClick(() -> {
             System.out.println("Button clicked!");
             words.addNewEntites(1);

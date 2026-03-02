@@ -16,6 +16,13 @@ public class Button {
     private Texture bgTexture;
 
     private Runnable onClick;
+    private Runnable onHover;
+    private Runnable onEnter;
+    private Runnable onLeave;
+
+    // Whether the button was hovered in the last frame, used for onEnter and
+    // onLeave callbacks
+    boolean lastHovered = false;
 
     public Button(Vec2 position, Vec2 size, String text,
             Color color, Color hoverColor,
@@ -53,11 +60,50 @@ public class Button {
         this(position, size, text, color, hoverColor, Color.WHITE, new Color(0.8f, 0.8f, 0.8f, 1.0f), bgTexture);
     }
 
+    /**
+     * Add a callback called when the button is clicked.
+     */
     public void setOnClick(Runnable onClick) {
         this.onClick = onClick;
     }
 
+    /**
+     * Add a callback called when the button is hovered.
+     */
+    public void setOnHover(Runnable onHover) {
+        this.onHover = onHover;
+    }
+
+    /**
+     * Add a callback called when the mouse enters the button area.
+     */
+    public void setOnEnter(Runnable onEnter) {
+        this.onEnter = onEnter;
+    }
+
+    /**
+     * Add a callback called when the mouse leaves the button area.
+     */
+    public void setOnLeave(Runnable onLeave) {
+        this.onLeave = onLeave;
+    }
+
     public void update(Vec2 mousePos, boolean mousePressed) {
+        if (isHovered(mousePos)) {
+            if (onHover != null) {
+                onHover.run();
+            }
+        }
+
+        if (isHovered(mousePos) && !lastHovered && onEnter != null) {
+            onEnter.run();
+            lastHovered = true;
+        }
+        if (!isHovered(mousePos) && lastHovered && onLeave != null) {
+            onLeave.run();
+            lastHovered = false;
+        }
+
         if (isHovered(mousePos) && mousePressed && onClick != null) {
             onClick.run();
         }
@@ -81,5 +127,9 @@ public class Button {
         Vec2 shiftedMousePos = new Vec2(mousePos.x - position.x, mousePos.y - position.y);
         Vec2 topLeft = new Vec2(-size.x / 2f, -size.y / 2f);
         return Vec2.isPointInRect(shiftedMousePos, topLeft, size);
+    }
+
+    public void cleanup() {
+        bgTexture.cleanup();
     }
 }

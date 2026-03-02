@@ -1,9 +1,12 @@
 package com.project.engine;
 
+import static org.lwjgl.glfw.GLFW.*;
+
 import com.project.engine.graphics.OrthoCamera;
 import com.project.engine.graphics.TextureBatch;
 import com.project.engine.math.Vec2;
 import com.project.engine.ui.Layout;
+import com.project.engine.ui.UIManager;
 
 public abstract class Scene {
     protected TextureBatch batch;
@@ -11,6 +14,7 @@ public abstract class Scene {
     protected OrthoCamera camera;
     /// UI-space camera. (0, 0) is the bottom-left corner of the screen.
     protected OrthoCamera uiCamera;
+    protected UIManager uiManager = new UIManager();
 
     /// Mouse position in screen space, (0, 0) is the bottom-left corner of the
     /// screen.
@@ -42,6 +46,8 @@ public abstract class Scene {
         Vec2 rawMousePos = Engine.input.getMousePosition();
         this.mouseScreen.set(new Vec2(rawMousePos.x, this.camera.viewportHeight - rawMousePos.y));
         this.mouseWorld.set(this.camera.screenToWorld(rawMousePos));
+
+        this.uiManager.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
 
         update(delta);
 

@@ -27,6 +27,17 @@ public class Main extends Scene {
                 new Vec2(200, 50),
                 "Start Game",
                 new Texture("textures/button_test.png"));
+
+        super.uiManager.add(startButton);
+
+        startButton.setOnEnter(() -> {
+            System.out.println("Start button entered.");
+        });
+
+        startButton.setOnLeave(() -> {
+            System.out.println("Start button left.");
+        });
+
         startButton.setOnClick(() -> {
             System.out.println("Start button clicked!");
             Engine.setScene(new com.project.scenes.game.Main());
@@ -38,8 +49,6 @@ public class Main extends Scene {
         if (Engine.input.isKeyPressed(GLFW_KEY_F3)) {
             Engine.setScene(new com.project.scenes.test.Main());
         }
-
-        startButton.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
     }
 
     @Override
@@ -47,13 +56,13 @@ public class Main extends Scene {
         glClearColor(0.4f, 0.4f, 0.4f, 1.0f);
 
         super.batch.setColor(Color.WHITE);
-        // super.batch.draw(logo,
-        // super.uiCamera.viewportWidth / 2f,
-        // super.uiCamera.viewportHeight / 2f + 100,
-        // 1000f,
-        // 500f);
+        super.batch.draw(logo,
+                super.uiCamera.viewportWidth / 2f,
+                super.uiCamera.viewportHeight / 2f + 100,
+                1000f,
+                500f);
 
-        startButton.render(super.batch, font, super.mouseScreen);
+        super.uiManager.render(super.batch, font, mouseScreen);
     }
 
     @Override
