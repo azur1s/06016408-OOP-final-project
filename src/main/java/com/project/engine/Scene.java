@@ -3,6 +3,7 @@ package com.project.engine;
 import com.project.engine.graphics.OrthoCamera;
 import com.project.engine.graphics.TextureBatch;
 import com.project.engine.math.Vec2;
+import com.project.engine.ui.Layout;
 
 public abstract class Scene {
     protected TextureBatch batch;
@@ -17,11 +18,21 @@ public abstract class Scene {
     /// Mouse position in world space, (0, 0) is the center of the screen.
     protected Vec2 mouseWorld = new Vec2(0, 0);
 
+    protected Layout layout;
+
     public void internalInit(int width, int height) {
         this.batch = new TextureBatch();
         this.camera = new OrthoCamera(width, height, true);
         this.uiCamera = new OrthoCamera(width, height, false);
+        this.layout = new Layout(width, height);
         init(width, height);
+    }
+
+    public void internalResize(int width, int height) {
+        this.camera.setOrtho(width, height, true);
+        this.uiCamera.setOrtho(width, height, false);
+        this.layout.resize(width, height);
+        resize(width, height);
     }
 
     public void internalTick(float delta) {
@@ -53,26 +64,32 @@ public abstract class Scene {
 
     // User-level methods
 
-    public abstract void init(int width, int height);
+    public void init(int width, int height) {
+    };
 
     /**
      * Updates the game state.
      */
-    public abstract void update(float delta);
+    public void update(float delta) {
+    };
 
     /**
      * Renders the world (game objects, background, etc.) in world space using the
      * world camera.
      */
-    public abstract void renderWorld(float delta);
+    public void renderWorld(float delta) {
+    };
 
     /**
      * Renders the UI (menus, buttons, text, etc.) in screen space using the UI
      * camera.
      */
-    public abstract void renderUI(float delta);
+    public void renderUI(float delta) {
+    };
 
-    public abstract void resize(int width, int height);
+    public void resize(int width, int height) {
+    };
 
-    public abstract void cleanup();
+    public void cleanup() {
+    };
 }

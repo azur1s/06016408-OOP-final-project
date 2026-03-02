@@ -6,6 +6,7 @@ import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
 
 import com.project.engine.math.Matrix4f;
+import com.project.engine.math.Vec2;
 import com.project.engine.utils.Resources;
 
 public class TextureBatch {
@@ -67,6 +68,10 @@ public class TextureBatch {
         shader.bind();
         shader.setUniformMat4f("u_projection", projection);
         shader.setUniform4f("u_color", currentColor.r, currentColor.g, currentColor.b, currentColor.a);
+    }
+
+    public void draw(Texture texture, Vec2 position, float w, float h) {
+        draw(texture, position.x, position.y, w, h);
     }
 
     public void draw(Texture texture, float x, float y, float w, float h) {

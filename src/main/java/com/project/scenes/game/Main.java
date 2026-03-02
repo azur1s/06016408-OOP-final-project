@@ -91,12 +91,6 @@ public class Main extends Scene {
     }
 
     @Override
-    public void resize(int width, int height) {
-        super.camera.setOrtho(width, height, true);
-        super.uiCamera.setOrtho(width, height, false);
-    }
-
-    @Override
     public void cleanup() {
         solidTexture.cleanup();
     }

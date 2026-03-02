@@ -23,11 +23,9 @@ public class Main extends Scene {
         logo = new Texture("textures/logo_test.png");
 
         startButton = new Button(
-                new Vec2(super.uiCamera.viewportWidth / 2f, super.uiCamera.viewportHeight / 2f - 200),
+                super.layout.center(0, 100),
                 new Vec2(200, 50),
                 "Start Game",
-                new Color(0.0f, 0.5f, 1.0f, 1.0f),
-                new Color(0.0f, 0.4f, 0.8f, 1.0f),
                 new Texture("textures/button_test.png"));
         startButton.setOnClick(() -> {
             System.out.println("Start button clicked!");
@@ -37,11 +35,11 @@ public class Main extends Scene {
 
     @Override
     public void update(float delta) {
-        startButton.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
-    }
+        if (Engine.input.isKeyPressed(GLFW_KEY_F3)) {
+            Engine.setScene(new com.project.scenes.test.Main());
+        }
 
-    @Override
-    public void renderWorld(float delta) {
+        startButton.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
     }
 
     @Override
@@ -49,20 +47,17 @@ public class Main extends Scene {
         glClearColor(0.4f, 0.4f, 0.4f, 1.0f);
 
         super.batch.setColor(Color.WHITE);
-        super.batch.draw(logo,
-                super.uiCamera.viewportWidth / 2f,
-                super.uiCamera.viewportHeight / 2f + 100,
-                1000f,
-                500f);
+        // super.batch.draw(logo,
+        // super.uiCamera.viewportWidth / 2f,
+        // super.uiCamera.viewportHeight / 2f + 100,
+        // 1000f,
+        // 500f);
 
-        startButton.render(batch, font, super.mouseScreen);
-    }
-
-    @Override
-    public void resize(int width, int height) {
+        startButton.render(super.batch, font, super.mouseScreen);
     }
 
     @Override
     public void cleanup() {
+        logo.cleanup();
     }
 }
