@@ -14,7 +14,9 @@ import com.project.engine.ui.Button;
 public class Main extends Scene {
     FontAtlas font;
     Texture logo;
-    Button startButton;
+    Button playButton;
+    Button settingButton;
+    Button quitButton;
 
     @Override
     public void init(int width, int height) {
@@ -22,25 +24,41 @@ public class Main extends Scene {
 
         logo = new Texture("textures/logo_test.png");
 
-        startButton = new Button(
-                super.layout.center(0, 100),
-                new Vec2(200, 50),
-                "Start Game",
-                new Texture("textures/button_test.png"));
+        Texture btnTexture = new Texture("textures/button_test.png");
+        Vec2 btnSize = new Vec2(400, 100);
 
-        super.uiManager.add(startButton);
+        playButton = new Button(
+                super.layout.centerRight(300, -150),
+                btnSize,
+                "Play Now",
+                btnTexture);
 
-        startButton.setOnEnter(() -> {
-            System.out.println("Start button entered.");
+        settingButton = new Button(
+                super.layout.centerRight(300, 0),
+                btnSize,
+                "Setting",
+                btnTexture);
+
+        quitButton = new Button(
+                super.layout.centerRight(300, 150),
+                btnSize,
+                "Quit",
+                btnTexture);
+
+        super.uiManager.add(playButton);
+        super.uiManager.add(settingButton);
+        super.uiManager.add(quitButton);
+
+        playButton.setOnClick(() -> {
+            Engine.setScene(new com.project.scenes.menu.Mode());
         });
 
-        startButton.setOnLeave(() -> {
-            System.out.println("Start button left.");
+        settingButton.setOnClick(() -> {
+            System.out.println("Setting menu not implemented.");
         });
 
-        startButton.setOnClick(() -> {
-            System.out.println("Start button clicked!");
-            Engine.setScene(new com.project.scenes.game.Main());
+        quitButton.setOnClick(() -> {
+            Engine.requestExit();
         });
     }
 
@@ -55,12 +73,12 @@ public class Main extends Scene {
     public void renderUI(float delta) {
         glClearColor(0.4f, 0.4f, 0.4f, 1.0f);
 
+        Vec2 titlePos = super.layout.centerLeft(super.layout.res.x / 4f, -100);
+        font.drawTextAligned(super.batch, "Java Smash", titlePos.x, titlePos.y, Color.WHITE, 64);
+
+        Vec2 logoPos = super.layout.centerLeft(super.layout.res.x / 4f, 50);
         super.batch.setColor(Color.WHITE);
-        super.batch.draw(logo,
-                super.uiCamera.viewportWidth / 2f,
-                super.uiCamera.viewportHeight / 2f + 100,
-                1000f,
-                500f);
+        super.batch.draw(logo, logoPos.x, logoPos.y, 400f, 200f);
 
         super.uiManager.render(super.batch, font, mouseScreen);
     }

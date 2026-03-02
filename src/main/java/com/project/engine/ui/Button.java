@@ -61,6 +61,13 @@ public class Button {
     }
 
     /**
+     * Set the text displayed on the button.
+     */
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    /**
      * Add a callback called when the button is clicked.
      */
     public void setOnClick(Runnable onClick) {
