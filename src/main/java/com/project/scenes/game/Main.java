@@ -22,8 +22,11 @@ public class Main extends Scene {
     private InputHandler inputHandler;
 
     private Button testButton;
+    private Button pauseButton;
+    private Button exitButton;
 
     private boolean debug = false;
+    private boolean isPaused = false;
 
     @Override
     public void init(int width, int height) {
@@ -48,6 +51,32 @@ public class Main extends Scene {
             System.out.println("Button clicked!");
             words.addNewEntites(1);
         });
+
+        pauseButton = new Button(
+                super.layout.topLeft(100, 50),
+                new Vec2(100, 50),
+                "Pause",
+                new Texture("textures/button_test.png"));
+
+        pauseButton.setOnClick(() -> {
+            isPaused = !isPaused;
+            if (isPaused) {
+                // Change text or texture when paused if needed
+                System.out.println("Game Paused");
+            } else {
+                System.out.println("Game Resumed");
+            }
+        });
+
+        exitButton = new Button(
+                super.layout.center(0, 0),
+                new Vec2(200, 50),
+                "Exit Game",
+                new Texture("textures/button_test.png"));
+
+        exitButton.setOnClick(() -> {
+            Engine.setScene(new com.project.scenes.menu.Main());
+        });
     }
 
     @Override
@@ -56,11 +85,16 @@ public class Main extends Scene {
             debug = !debug;
         }
 
-        inputHandler.update();
+        if (!isPaused) {
+            inputHandler.update();
+            words.update(delta);
+        } else {
+            // Update exit button only when paused
+            exitButton.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
+        }
 
         testButton.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
-
-        words.update(delta);
+        pauseButton.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
     }
 
     @Override
@@ -83,6 +117,19 @@ public class Main extends Scene {
     @Override
     public void renderUI(float delta) {
         testButton.render(super.batch, font, mouseScreen);
+        pauseButton.render(super.batch, font, mouseScreen);
+
+        if (isPaused) {
+            // Darken the screen when paused
+            super.batch.setColor(new Color(0f, 0f, 0f, 0.5f));
+            super.batch.draw(solidTexture, 0, 0, Engine.width, Engine.height);
+            super.batch.setColor(Color.WHITE);
+
+            exitButton.render(super.batch, font, mouseScreen);
+
+            Vec2 pauseTextPos = super.layout.center(0, -100);
+            font.drawTextAligned(super.batch, "PAUSED", pauseTextPos.x, pauseTextPos.y, Color.WHITE, 64);
+        }
 
         if (debug) {
             font.drawTextUnaligned(super.batch,

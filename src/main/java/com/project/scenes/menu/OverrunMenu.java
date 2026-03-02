@@ -1,0 +1,103 @@
+package com.project.scenes.menu;
+
+import static org.lwjgl.opengl.GL11.*;
+
+import com.project.engine.Engine;
+import com.project.engine.Scene;
+import com.project.engine.graphics.Color;
+import com.project.engine.graphics.FontAtlas;
+import com.project.engine.graphics.Texture;
+import com.project.engine.math.Vec2;
+import com.project.engine.ui.Button;
+
+public class OverrunMenu extends Scene {
+    FontAtlas font;
+    Texture btnTexture;
+    Texture itemSlotTexture;
+
+    Button playBtn;
+    Button backBtn;
+    Button item1Btn;
+    Button item2Btn;
+
+    @Override
+    public void init(int width, int height) {
+        font = new FontAtlas("GeistMono-Regular.otf", 32);
+        btnTexture = new Texture("textures/button_test.png");
+        itemSlotTexture = new Texture("textures/solid.png"); // placeholder
+
+        Vec2 btnSize = new Vec2(200, 50);
+        Vec2 itemSlotSize = new Vec2(100, 100);
+
+        playBtn = new Button(
+                super.layout.center(0, 150),
+                btnSize,
+                "Play",
+                btnTexture);
+
+        backBtn = new Button(
+                super.layout.topLeft(100, 50),
+                new Vec2(100, 50),
+                "Back",
+                btnTexture);
+
+        item1Btn = new Button(
+                super.layout.center(-60, 0),
+                itemSlotSize,
+                "",
+                itemSlotTexture);
+
+        item2Btn = new Button(
+                super.layout.center(60, 0),
+                itemSlotSize,
+                "",
+                itemSlotTexture);
+
+        super.uiManager.add(playBtn);
+        super.uiManager.add(backBtn);
+        super.uiManager.add(item1Btn);
+        super.uiManager.add(item2Btn);
+
+        // TODO: สำหรับคนทำระบบเปิดหน้าต่าง shop/inventory ตรงนี้เพื่อเลือกรูปไอเทมมาใส่
+        item1Btn.setOnClick(() -> System.out.println("Open Select Item 1 UI"));
+        item2Btn.setOnClick(() -> System.out.println("Open Select Item 2 UI"));
+
+        playBtn.setOnClick(() -> {
+            // TODO: ส่งคำสั่งเริ่มเกมในโหมด Overrun (อาจจะสร้าง Scene สำหรับ Overrun
+            // แทนหรือส่งพารามิเตอร์)
+            Engine.setScene(new com.project.scenes.game.Main());
+        });
+
+        backBtn.setOnClick(() -> {
+            Engine.setScene(new com.project.scenes.menu.Mode());
+        });
+    }
+
+    @Override
+    public void update(float delta) {
+    }
+
+    @Override
+    public void renderUI(float delta) {
+        glClearColor(0.4f, 0.4f, 0.4f, 1.0f);
+
+        // Texts
+        Vec2 titlePos = super.layout.center(0, -150);
+        font.drawTextAligned(super.batch, "Overrun", titlePos.x, titlePos.y, Color.WHITE, 64);
+
+        Vec2 selectItemPos = super.layout.center(0, -70);
+        font.drawTextAligned(super.batch, "Select Item", selectItemPos.x, selectItemPos.y, Color.WHITE, 24);
+
+        super.uiManager.render(super.batch, font, mouseScreen);
+    }
+
+    @Override
+    public void cleanup() {
+        if (font != null)
+            font.cleanup();
+        if (btnTexture != null)
+            btnTexture.cleanup();
+        if (itemSlotTexture != null)
+            itemSlotTexture.cleanup();
+    }
+}
