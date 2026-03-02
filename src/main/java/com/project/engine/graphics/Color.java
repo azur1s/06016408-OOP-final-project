@@ -28,13 +28,4 @@ public class Color {
                 && Float.compare(other.b, b) == 0
                 && Float.compare(other.a, a) == 0;
     }
-
-    @Override
-    public int hashCode() {
-        int result = (r != 0.0f ? Float.floatToIntBits(r) : 0);
-        result = 31 * result + (g != 0.0f ? Float.floatToIntBits(g) : 0);
-        result = 31 * result + (b != 0.0f ? Float.floatToIntBits(b) : 0);
-        result = 31 * result + (a != 0.0f ? Float.floatToIntBits(a) : 0);
-        return result;
-    }
 }
