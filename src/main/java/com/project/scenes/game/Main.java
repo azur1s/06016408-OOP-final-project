@@ -122,7 +122,7 @@ public class Main extends Scene {
         if (isPaused) {
             // Darken the screen when paused
             super.batch.setColor(new Color(0f, 0f, 0f, 0.5f));
-            super.batch.draw(solidTexture, 0, 0, Engine.width, Engine.height);
+            super.batch.draw(solidTexture, Engine.width * 0.5f, Engine.height * 0.5f, Engine.width, Engine.height);
             super.batch.setColor(Color.WHITE);
 
             exitButton.render(super.batch, font, mouseScreen);
