@@ -16,6 +16,12 @@ public class FontAtlas {
     private final STBTTPackedchar.Buffer charData;
     private final int fontSize;
 
+    /**
+     * Creates a font atlas from the specified TTF file and font size/resolution.
+     *
+     * @param ttfFilePath The path to the TTF file.
+     * @param fontSize    The size of the font.
+     */
     public FontAtlas(String ttfFilePath, int fontSize) {
         this.fontSize = fontSize;
         int atlasWidth = 1024;
@@ -24,6 +30,7 @@ public class FontAtlas {
         ByteBuffer bitmap = MemoryUtil.memAlloc(atlasWidth * atlasHeight);
         charData = STBTTPackedchar.malloc(95); // ASCII 32..126
 
+        // Allocate a temporary buffer to load the TTF file into memory
         try (MemoryStack stack = MemoryStack.stackPush()) {
             byte[] ttfBytes = Resources.loadResourceAsBytes(ttfFilePath);
             ByteBuffer ttfBuffer = stack.malloc(ttfBytes.length);
@@ -32,6 +39,7 @@ public class FontAtlas {
             STBTTPackContext packContext = STBTTPackContext.malloc(stack);
 
             STBTruetype.stbtt_PackBegin(packContext, bitmap, atlasWidth, atlasHeight, 0, 1, MemoryUtil.NULL);
+            // Use 2x oversampling for better quality at small sizes
             STBTruetype.stbtt_PackSetOversampling(packContext, 2, 2);
             STBTruetype.stbtt_PackFontRange(packContext, ttfBuffer, 0, fontSize, 32, charData);
             STBTruetype.stbtt_PackEnd(packContext);
@@ -49,7 +57,7 @@ public class FontAtlas {
             rgbaBitmap.put((byte) 255); // B
             rgbaBitmap.put(grayscale); // A = grayscale value
         }
-        rgbaBitmap.flip();
+        rgbaBitmap.flip(); // Flip for reading
 
         // Origin at the top-left corner
         this.texture = new Texture(rgbaBitmap, atlasWidth, atlasHeight, 0, 0);
@@ -134,14 +142,24 @@ public class FontAtlas {
         }
     }
 
+    /**
+     * Draws text with the top-left corner of the text at (x, y) without any
+     * alignment.
+     */
     public void drawTextUnaligned(TextureBatch batch, String text, float x, float y, Color color, float scale) {
         drawText(batch, text, x, y, color, scale, false, false);
     }
 
+    /**
+     * Draws text centered both horizontally and vertically around (x, y).
+     */
     public void drawTextAligned(TextureBatch batch, String text, float x, float y, Color color, float scale) {
         drawText(batch, text, x, y, color, scale, true, true);
     }
 
+    /**
+     * Draws text centered horizontally around x, but with the top of the text at y.
+     */
     public void drawTextHorizontalAligned(TextureBatch batch, String text, float x, float y, Color color, float scale) {
         drawText(batch, text, x, y, color, scale, true, false);
     }
@@ -198,7 +216,7 @@ public class FontAtlas {
      * atlas at the specified font size.
      *
      * @param text  The text to measure
-     * @param scale The desired font size (absolute, not relative to creation size)
+     * @param scale Font size
      */
     public float getTextWidth(String text, float scale) {
         float scaleRatio = scale / fontSize;
@@ -218,7 +236,7 @@ public class FontAtlas {
      * atlas at the specified font size.
      *
      * @param text  The text to measure
-     * @param scale The desired font size (absolute, not relative to creation size)
+     * @param scale Font size
      */
     public float getTextHeight(String text, float scale) {
         float scaleRatio = scale / fontSize;
@@ -227,6 +245,14 @@ public class FontAtlas {
         return (maxY - minY) * scaleRatio;
     }
 
+    /**
+     * Measures the dimensions of the given text string when rendered with this font
+     * atlas at the specified font size.
+     *
+     * @param text  The text to measure
+     * @param scale Font size
+     * @return A Vec2 containing the width (x) and height (y) of the text
+     */
     public Vec2 measure(String text, float scale) {
         return new Vec2(getTextWidth(text, scale), getTextHeight(text, scale));
     }

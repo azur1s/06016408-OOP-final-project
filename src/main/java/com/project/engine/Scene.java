@@ -8,6 +8,20 @@ import com.project.engine.math.Vec2;
 import com.project.engine.ui.Layout;
 import com.project.engine.ui.UIManager;
 
+/**
+ * Scene class acts as a container for all game objects, UI elements, and logic
+ * for a particular scene or level in the game (main menu/gameplay/etc.).
+ *
+ * A scene will have these components pre-initialized by the engine:
+ * - `batch` TextureBatch for rendering sprites
+ * - `camera` OrthoCamera for world-space rendering (0, 0 is center of screen)
+ * - `uiCamera` OrthoCamera for UI rendering (0, 0 is bottom-left corner of
+ * screen)
+ * - `uiManager` UIManager for managing UI elements
+ * - `mouseScreen` Vec2 for tracking mouse position in screen space
+ * - `mouseWorld` Vec2 for tracking mouse position in world space
+ * - `layout` Layout for managing UI layout and resizing
+ */
 public abstract class Scene {
     protected TextureBatch batch;
     /// World-space camera. (0, 0) is the center of the screen.
@@ -23,6 +37,8 @@ public abstract class Scene {
     protected Vec2 mouseWorld = new Vec2(0, 0);
 
     protected Layout layout;
+
+    // Internal methods called by the engine/LWJGL main loop
 
     public void internalInit(int width, int height) {
         this.batch = new TextureBatch();
@@ -70,6 +86,9 @@ public abstract class Scene {
 
     // User-level methods
 
+    /**
+     * Initializes the scene. Called once when the scene is first loaded.
+     */
     public void init(int width, int height) {
     };
 
@@ -93,9 +112,15 @@ public abstract class Scene {
     public void renderUI(float delta) {
     };
 
+    /**
+     * Called when the window is resized.
+     */
     public void resize(int width, int height) {
     };
 
+    /**
+     * Called when the scene is being destroyed.
+     */
     public void cleanup() {
     };
 }

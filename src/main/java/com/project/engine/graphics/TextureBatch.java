@@ -70,10 +70,27 @@ public class TextureBatch {
         shader.setUniform4f("u_color", currentColor.r, currentColor.g, currentColor.b, currentColor.a);
     }
 
+    /**
+     * Adds a texture to the batch.
+     *
+     * @param texture  The texture to add
+     * @param position The position
+     * @param w        The width
+     * @param h        The height
+     */
     public void draw(Texture texture, Vec2 position, float w, float h) {
         draw(texture, position.x, position.y, w, h);
     }
 
+    /**
+     * Adds a texture to the batch.
+     *
+     * @param texture The texture to add
+     * @param x       The x position
+     * @param y       The y position
+     * @param w       The width
+     * @param h       The height
+     */
     public void draw(Texture texture, float x, float y, float w, float h) {
         if (!isDrawing)
             throw new IllegalStateException("TextureBatch.begin() must be called first!");
@@ -130,6 +147,20 @@ public class TextureBatch {
         texCount++;
     }
 
+    /**
+     * Draws a region of the texture (e.g. a sprite from a sprite sheet, font
+     * atlas).
+     *
+     * @param texture The texture atlas to draw from
+     * @param x       The x position
+     * @param y       The y position
+     * @param w       The width
+     * @param h       The height
+     * @param u1      The left U coordinate (0.0 - 1.0)
+     * @param v1      The top V coordinate (0.0 - 1.0)
+     * @param u2      The right U coordinate (0.0 - 1.0)
+     * @param v2      The bottom V coordinate (0.0 - 1.0)
+     */
     public void drawRegion(Texture texture, float x, float y, float w, float h,
             float u1, float v1, float u2, float v2) {
         if (!isDrawing)

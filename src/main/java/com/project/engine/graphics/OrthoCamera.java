@@ -58,10 +58,18 @@ public class OrthoCamera {
         combined.set(Matrix4f.multiply(projection, view));
     }
 
+    /**
+     * Converts screen coordinates (bottom-left origin) to world coordinates based
+     * on the current camera position and viewport size.
+     */
     public Vec2 screenToWorld(Vec2 screenCoords) {
         return screenToWorld(screenCoords.x, screenCoords.y);
     }
 
+    /**
+     * Converts screen coordinates (bottom-left origin) to world coordinates based
+     * on the current camera position and viewport size.
+     */
     public Vec2 screenToWorld(float screenX, float screenY) {
         // Convert screen coordinates to (-1 to 1) range
         float ndcX = (2.0f * screenX) / viewportWidth - 1.0f;
@@ -78,14 +86,14 @@ public class OrthoCamera {
     }
 
     /**
-     * Converts world coordinates to screen coordinates (top-left origin).
+     * Converts world coordinates to screen coordinates (bottom-left origin).
      */
     public Vec2 worldToScreen(Vec2 worldCoords) {
         return worldToScreen(worldCoords.x, worldCoords.y);
     }
 
     /**
-     * Converts world coordinates to screen coordinates (top-left origin).
+     * Converts world coordinates to screen coordinates (bottom-left origin).
      */
     public Vec2 worldToScreen(float worldX, float worldY) {
         float screenX = (worldX - position.x) + (viewportWidth / 2f);
