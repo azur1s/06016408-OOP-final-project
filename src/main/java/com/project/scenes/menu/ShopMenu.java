@@ -11,7 +11,7 @@ import com.project.engine.graphics.Color;
 import com.project.engine.graphics.FontAtlas;
 import com.project.engine.graphics.Texture;
 import com.project.engine.math.Vec2;
-import com.project.engine.ui.Button;
+import com.project.scenes.menu.components.UIButton;
 
 public class ShopMenu extends Scene {
     FontAtlas font;
@@ -19,11 +19,11 @@ public class ShopMenu extends Scene {
     Texture solidTexture;
 
     // Navigation and Shared UI
-    Button backBtn;
-    Button tabShopBtnDisplay;
+    UIButton backBtn;
+    UIButton tabShopBtnDisplay;
 
-    Button toggleLeftBtn;
-    Button toggleRightBtn;
+    UIButton toggleLeftBtn;
+    UIButton toggleRightBtn;
 
     // Status tracker
     boolean isSkinTabSelected = false; // false = Item Tab, true = Skin Tab
@@ -35,15 +35,15 @@ public class ShopMenu extends Scene {
     final int[] SKIN_COSTS = { 5000, 10000, 20000 };
 
     // --- ITEM TAB UI ---
-    ArrayList<Button> itemBoxBtns = new ArrayList<>();
-    Button buyItemBtn;
-    Button infoItemBtn;
+    ArrayList<UIButton> itemBoxBtns = new ArrayList<>();
+    UIButton buyItemBtn;
+    UIButton infoItemBtn;
 
     // --- SKIN TAB UI ---
-    ArrayList<Button> skinBoxBtns = new ArrayList<>();
-    Button buySkin1Btn;
-    Button buySkin2Btn;
-    Button buySkin3Btn;
+    ArrayList<UIButton> skinBoxBtns = new ArrayList<>();
+    UIButton buySkin1Btn;
+    UIButton buySkin2Btn;
+    UIButton buySkin3Btn;
 
     @Override
     public void init(int width, int height) {
@@ -51,25 +51,25 @@ public class ShopMenu extends Scene {
         btnTexture = new Texture("textures/button_test.png");
         solidTexture = new Texture("textures/solid.png");
 
-        backBtn = new Button(
+        backBtn = new UIButton(
                 super.layout.topLeft(100, 50),
                 new Vec2(100, 50),
                 "Back",
                 btnTexture);
 
-        tabShopBtnDisplay = new Button(
+        tabShopBtnDisplay = new UIButton(
                 super.layout.topCenter(0, 50),
                 new Vec2(300, 40),
                 isSkinTabSelected ? "Shop Skin" : "Shop ITEM",
                 solidTexture);
 
-        toggleLeftBtn = new Button(
+        toggleLeftBtn = new UIButton(
                 super.layout.bottomCenter(-30, 20),
                 new Vec2(40, 40),
                 "<",
                 btnTexture);
 
-        toggleRightBtn = new Button(
+        toggleRightBtn = new UIButton(
                 super.layout.bottomCenter(30, 20),
                 new Vec2(40, 40),
                 ">",
@@ -84,14 +84,14 @@ public class ShopMenu extends Scene {
             final int index = i;
             // สร้างปุ่มชิ้นส่วนไอเทมทางซ้าย
             float yOffset = -150 + (i * 80);
-            Button itemBtn = new Button(
+            UIButton itemBtn = new UIButton(
                     super.layout.centerLeft(super.layout.res.x / 4f - 60, yOffset),
                     new Vec2(220, 60),
                     "ITEM " + (i + 1),
                     btnTexture);
 
             boolean isUnlocked = com.project.scenes.game.PlayerData.unlockedItems[i];
-            Button unlockStatusBtn = new Button(
+            UIButton unlockStatusBtn = new UIButton(
                     super.layout.centerLeft(super.layout.res.x / 4f + 160, yOffset),
                     new Vec2(120, 60),
                     isUnlocked ? "UNLOCKED" : "LOCKED",
@@ -115,14 +115,14 @@ public class ShopMenu extends Scene {
             });
         }
 
-        infoItemBtn = new Button(
+        infoItemBtn = new UIButton(
                 super.layout.centerRight(super.layout.res.x / 4f - 100, -180),
                 new Vec2(120, 30),
                 "INFO ITEM",
                 btnTexture);
         super.uiManager.add(infoItemBtn);
 
-        buyItemBtn = new Button(
+        buyItemBtn = new UIButton(
                 super.layout.centerRight(super.layout.res.x / 4f + 30, 200),
                 new Vec2(180, 60),
                 com.project.scenes.game.PlayerData.unlockedItems[selectedItemIndex] ? "UNLOCKED"
@@ -134,7 +134,7 @@ public class ShopMenu extends Scene {
         // 3 กล่องสกิน
         for (int i = 0; i < 3; i++) {
             float xOffset = (i - 1) * 220;
-            Button skinBoxBtn = new Button(
+            UIButton skinBoxBtn = new UIButton(
                     super.layout.center(xOffset, 0),
                     new Vec2(200, 350),
                     "",
@@ -144,13 +144,13 @@ public class ShopMenu extends Scene {
             super.uiManager.add(skinBoxBtn);
         }
 
-        buySkin1Btn = new Button(super.layout.center(-220, 120), new Vec2(150, 50),
+        buySkin1Btn = new UIButton(super.layout.center(-220, 120), new Vec2(150, 50),
                 com.project.scenes.game.PlayerData.unlockedSkins[0] ? "UNLOCKED" : "BUY (" + SKIN_COSTS[0] + " C)",
                 btnTexture);
-        buySkin2Btn = new Button(super.layout.center(0, 120), new Vec2(150, 50),
+        buySkin2Btn = new UIButton(super.layout.center(0, 120), new Vec2(150, 50),
                 com.project.scenes.game.PlayerData.unlockedSkins[1] ? "UNLOCKED" : "BUY (" + SKIN_COSTS[1] + " C)",
                 btnTexture);
-        buySkin3Btn = new Button(super.layout.center(220, 120), new Vec2(150, 50),
+        buySkin3Btn = new UIButton(super.layout.center(220, 120), new Vec2(150, 50),
                 com.project.scenes.game.PlayerData.unlockedSkins[2] ? "UNLOCKED" : "BUY (" + SKIN_COSTS[2] + " C)",
                 btnTexture);
 
@@ -189,7 +189,7 @@ public class ShopMenu extends Scene {
         });
 
         // Loop skin buy logic
-        Button[] skinBuyBtns = { buySkin1Btn, buySkin2Btn, buySkin3Btn };
+        UIButton[] skinBuyBtns = { buySkin1Btn, buySkin2Btn, buySkin3Btn };
         for (int i = 0; i < 3; i++) {
             final int skinIdx = i;
             skinBuyBtns[i].setOnClick(() -> {
@@ -221,13 +221,13 @@ public class ShopMenu extends Scene {
     @Override
     public void update(float delta) {
         if (!isSkinTabSelected) {
-            for (Button btn : itemBoxBtns) {
+            for (UIButton btn : itemBoxBtns) {
                 btn.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
             }
             buyItemBtn.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
             infoItemBtn.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
         } else {
-            for (Button btn : skinBoxBtns) {
+            for (UIButton btn : skinBoxBtns) {
                 btn.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
             }
             buySkin1Btn.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
@@ -253,7 +253,7 @@ public class ShopMenu extends Scene {
         tabShopBtnDisplay.render(super.batch, font, mouseScreen);
 
         if (!isSkinTabSelected) {
-            for (Button btn : itemBoxBtns)
+            for (UIButton btn : itemBoxBtns)
                 btn.render(super.batch, font, mouseScreen);
 
             // Draw item info panel box
@@ -267,7 +267,7 @@ public class ShopMenu extends Scene {
             buyItemBtn.render(super.batch, font, mouseScreen);
 
         } else {
-            for (Button btn : skinBoxBtns)
+            for (UIButton btn : skinBoxBtns)
                 btn.render(super.batch, font, mouseScreen);
 
             // Draw Skin Texts inside borders

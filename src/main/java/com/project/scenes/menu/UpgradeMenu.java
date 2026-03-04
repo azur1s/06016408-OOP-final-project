@@ -11,7 +11,7 @@ import com.project.engine.graphics.Color;
 import com.project.engine.graphics.FontAtlas;
 import com.project.engine.graphics.Texture;
 import com.project.engine.math.Vec2;
-import com.project.engine.ui.Button;
+import com.project.scenes.menu.components.UIButton;
 
 public class UpgradeMenu extends Scene {
     FontAtlas font;
@@ -19,23 +19,23 @@ public class UpgradeMenu extends Scene {
     Texture solidTexture;
 
     // Shared UI
-    Button backBtn;
-    Button tabTitleBtn;
+    UIButton backBtn;
+    UIButton tabTitleBtn;
 
     // --- ITEM LIST UI ---
-    ArrayList<Button> itemSelectBtns = new ArrayList<>();
-    ArrayList<Button> itemUpgradeBtns = new ArrayList<>();
+    ArrayList<UIButton> itemSelectBtns = new ArrayList<>();
+    ArrayList<UIButton> itemUpgradeBtns = new ArrayList<>();
 
     // Status tracker
     int selectedItemIndex = 0; // The item currently shown on the right panel
 
     // --- INFO PANEL UI ---
-    Button infoItemBtn;
-    Button mainUpgradeBtn;
+    UIButton infoItemBtn;
+    UIButton mainUpgradeBtn;
 
-    Button stat0Btn;
-    Button stat1Btn;
-    Button stat2Btn;
+    UIButton stat0Btn;
+    UIButton stat1Btn;
+    UIButton stat2Btn;
     int selectedStatIndex = 0;
 
     // Removed constant UPGRADE_COST to use dynamic formula
@@ -46,13 +46,13 @@ public class UpgradeMenu extends Scene {
         btnTexture = new Texture("textures/button_test.png");
         solidTexture = new Texture("textures/solid.png");
 
-        backBtn = new Button(
+        backBtn = new UIButton(
                 super.layout.topLeft(100, 50),
                 new Vec2(100, 50),
                 "Back",
                 btnTexture);
 
-        tabTitleBtn = new Button(
+        tabTitleBtn = new UIButton(
                 super.layout.topCenter(0, 50),
                 new Vec2(300, 40),
                 "Upgrade",
@@ -67,11 +67,11 @@ public class UpgradeMenu extends Scene {
         Color tColor = new Color(0, 0, 0, 0);
         Color hColor = new Color(1, 1, 1, 0.3f);
         Vec2 statBtnSize = new Vec2(380, 70);
-        stat0Btn = new Button(super.layout.centerRight(super.layout.res.x / 4f + 30, -80), statBtnSize, "", tColor,
+        stat0Btn = new UIButton(super.layout.centerRight(super.layout.res.x / 4f + 30, -80), statBtnSize, "", tColor,
                 hColor, solidTexture);
-        stat1Btn = new Button(super.layout.centerRight(super.layout.res.x / 4f + 30, 0), statBtnSize, "", tColor,
+        stat1Btn = new UIButton(super.layout.centerRight(super.layout.res.x / 4f + 30, 0), statBtnSize, "", tColor,
                 hColor, solidTexture);
-        stat2Btn = new Button(super.layout.centerRight(super.layout.res.x / 4f + 30, 80), statBtnSize, "", tColor,
+        stat2Btn = new UIButton(super.layout.centerRight(super.layout.res.x / 4f + 30, 80), statBtnSize, "", tColor,
                 hColor, solidTexture);
 
         stat0Btn.setOnClick(() -> {
@@ -89,7 +89,7 @@ public class UpgradeMenu extends Scene {
 
         // ปุ่มอัพเกรดหลักในแผง Info Panel (Initialized here to avoid NPE in
         // updateUpgradeButtonText)
-        mainUpgradeBtn = new Button(
+        mainUpgradeBtn = new UIButton(
                 super.layout.centerRight(super.layout.res.x / 4f + 30, 200),
                 new Vec2(180, 60),
                 "UPGRADE",
@@ -104,7 +104,7 @@ public class UpgradeMenu extends Scene {
             float yOffset = -150 + (i * 80);
 
             // ปุ่มชื่อไอเทมทางซ้าย
-            Button itemBtn = new Button(
+            UIButton itemBtn = new UIButton(
                     super.layout.centerLeft(super.layout.res.x / 4f - 60, yOffset),
                     new Vec2(220, 60),
                     "ITEM " + (i + 1),
@@ -113,7 +113,7 @@ public class UpgradeMenu extends Scene {
             boolean isUnlocked = com.project.scenes.game.PlayerData.unlockedItems[i];
 
             // ปุ่มจำลองสถานะการอัพเกรดข้างๆ
-            Button upgradeStatusBtn = new Button(
+            UIButton upgradeStatusBtn = new UIButton(
                     super.layout.centerLeft(super.layout.res.x / 4f + 160, yOffset),
                     new Vec2(120, 60),
                     isUnlocked ? "UPGRADE" : "LOCKED",
@@ -137,7 +137,7 @@ public class UpgradeMenu extends Scene {
             super.uiManager.add(upgradeStatusBtn);
         }
 
-        infoItemBtn = new Button(
+        infoItemBtn = new UIButton(
                 super.layout.centerRight(super.layout.res.x / 4f - 100, -220),
                 new Vec2(120, 30),
                 "INFO ITEM",
@@ -183,9 +183,9 @@ public class UpgradeMenu extends Scene {
 
     @Override
     public void update(float delta) {
-        for (Button btn : itemSelectBtns)
+        for (UIButton btn : itemSelectBtns)
             btn.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
-        for (Button btn : itemUpgradeBtns)
+        for (UIButton btn : itemUpgradeBtns)
             btn.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
 
         infoItemBtn.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
@@ -210,9 +210,9 @@ public class UpgradeMenu extends Scene {
         tabTitleBtn.render(super.batch, font, mouseScreen);
 
         // Render item list
-        for (Button btn : itemSelectBtns)
+        for (UIButton btn : itemSelectBtns)
             btn.render(super.batch, font, mouseScreen);
-        for (Button btn : itemUpgradeBtns)
+        for (UIButton btn : itemUpgradeBtns)
             btn.render(super.batch, font, mouseScreen);
 
         // Draw Info panel background

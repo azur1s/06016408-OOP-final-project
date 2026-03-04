@@ -8,18 +8,18 @@ import com.project.engine.graphics.Color;
 import com.project.engine.graphics.FontAtlas;
 import com.project.engine.graphics.Texture;
 import com.project.engine.math.Vec2;
-import com.project.engine.ui.Button;
+import com.project.scenes.menu.components.UIButton;
 
 public class StageMenu extends Scene {
     FontAtlas font;
     Texture btnTexture;
-    Button backBtn;
+    UIButton backBtn;
 
     // โหนดสำหรับโชว์ด่านย่อย
-    Button node1;
-    Button node2;
-    Button node3;
-    Button node4;
+    UIButton node1;
+    UIButton node2;
+    UIButton node3;
+    UIButton node4;
 
     @Override
     public void init(int width, int height) {
@@ -27,17 +27,17 @@ public class StageMenu extends Scene {
         btnTexture = new Texture("textures/button_test.png");
         Vec2 nodeSize = new Vec2(100, 100);
 
-        backBtn = new Button(
+        backBtn = new UIButton(
                 super.layout.topLeft(100, 50),
                 new Vec2(100, 50),
                 "Back",
                 btnTexture);
 
         // นำปุ่มมาเรียงไว้ตรงกลางหน้าจอ (0,0 ของ layout.center คือจุดกึ่งกลางจอพอดี)
-        node1 = new Button(super.layout.center(-250, -50), nodeSize, "4", btnTexture);
-        node2 = new Button(super.layout.center(-100, 30), nodeSize, "3", btnTexture);
-        node3 = new Button(super.layout.center(100, -30), nodeSize, "2", btnTexture);
-        node4 = new Button(super.layout.center(250, 40), nodeSize, "1", btnTexture);
+        node1 = new UIButton(super.layout.center(-250, -50), nodeSize, "4", btnTexture);
+        node2 = new UIButton(super.layout.center(-100, 30), nodeSize, "3", btnTexture);
+        node3 = new UIButton(super.layout.center(100, -30), nodeSize, "2", btnTexture);
+        node4 = new UIButton(super.layout.center(250, 40), nodeSize, "1", btnTexture);
 
         super.uiManager.add(backBtn);
         super.uiManager.add(node1);

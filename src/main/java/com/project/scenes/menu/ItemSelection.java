@@ -8,17 +8,17 @@ import com.project.engine.graphics.Color;
 import com.project.engine.graphics.FontAtlas;
 import com.project.engine.graphics.Texture;
 import com.project.engine.math.Vec2;
-import com.project.engine.ui.Button;
+import com.project.scenes.menu.components.UIButton;
 
 public class ItemSelection extends Scene {
     FontAtlas font;
     Texture btnTexture;
     Texture itemSlotTexture;
 
-    Button playBtn;
-    Button backBtn;
-    Button item1Btn;
-    Button item2Btn;
+    UIButton playBtn;
+    UIButton backBtn;
+    UIButton item1Btn;
+    UIButton item2Btn;
 
     @Override
     public void init(int width, int height) {
@@ -29,25 +29,25 @@ public class ItemSelection extends Scene {
         Vec2 btnSize = new Vec2(200, 50);
         Vec2 itemSlotSize = new Vec2(100, 100);
 
-        playBtn = new Button(
+        playBtn = new UIButton(
                 super.layout.center(0, 150),
                 btnSize,
                 "Play",
                 btnTexture);
 
-        backBtn = new Button(
+        backBtn = new UIButton(
                 super.layout.topLeft(100, 50),
                 new Vec2(100, 50),
                 "Back",
                 btnTexture);
 
-        item1Btn = new Button(
+        item1Btn = new UIButton(
                 super.layout.center(-80, 0),
                 itemSlotSize,
                 "",
                 itemSlotTexture);
 
-        item2Btn = new Button(
+        item2Btn = new UIButton(
                 super.layout.center(80, 0),
                 itemSlotSize,
                 "",

@@ -9,14 +9,14 @@ import com.project.engine.graphics.Color;
 import com.project.engine.graphics.FontAtlas;
 import com.project.engine.graphics.Texture;
 import com.project.engine.math.Vec2;
-import com.project.engine.ui.Button;
+import com.project.scenes.menu.components.UIButton;
 
 public class Main extends Scene {
     FontAtlas font;
     Texture logo;
-    Button playButton;
-    Button settingButton;
-    Button quitButton;
+    UIButton playButton;
+    UIButton settingButton;
+    UIButton quitButton;
 
     @Override
     public void init(int width, int height) {
@@ -27,19 +27,19 @@ public class Main extends Scene {
         Texture btnTexture = new Texture("textures/button_test.png");
         Vec2 btnSize = new Vec2(400, 100);
 
-        playButton = new Button(
+        playButton = new UIButton(
                 super.layout.centerRight(300, -150),
                 btnSize,
                 "Play Now",
                 btnTexture);
 
-        settingButton = new Button(
+        settingButton = new UIButton(
                 super.layout.centerRight(300, 0),
                 btnSize,
                 "Setting",
                 btnTexture);
 
-        quitButton = new Button(
+        quitButton = new UIButton(
                 super.layout.centerRight(300, 150),
                 btnSize,
                 "Quit",

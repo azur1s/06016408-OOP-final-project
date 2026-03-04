@@ -8,18 +8,18 @@ import com.project.engine.graphics.Color;
 import com.project.engine.graphics.FontAtlas;
 import com.project.engine.graphics.Texture;
 import com.project.engine.math.Vec2;
-import com.project.engine.ui.Button;
+import com.project.scenes.menu.components.UIButton;
 
 public class Mode extends Scene {
     FontAtlas font;
     Texture btnTexture;
     Texture cardTexture;
 
-    Button stageBtn;
-    Button overrunBtn;
-    Button upgradeBtn;
-    Button shopBtn;
-    Button backBtn;
+    UIButton stageBtn;
+    UIButton overrunBtn;
+    UIButton upgradeBtn;
+    UIButton shopBtn;
+    UIButton backBtn;
 
     @Override
     public void init(int width, int height) {
@@ -29,31 +29,31 @@ public class Mode extends Scene {
 
         Vec2 btnSize = new Vec2(300, 100);
 
-        stageBtn = new Button(
+        stageBtn = new UIButton(
                 super.layout.center(-200, 150),
                 btnSize,
                 "Stage",
                 btnTexture);
 
-        overrunBtn = new Button(
+        overrunBtn = new UIButton(
                 super.layout.center(200, 150),
                 btnSize,
                 "Overrun",
                 btnTexture);
 
-        upgradeBtn = new Button(
+        upgradeBtn = new UIButton(
                 super.layout.bottomRight(400, 50),
                 new Vec2(150, 50),
                 "Upgrade",
                 btnTexture);
 
-        shopBtn = new Button(
+        shopBtn = new UIButton(
                 super.layout.bottomRight(200, 50),
                 new Vec2(150, 50),
                 "Shop",
                 btnTexture);
 
-        backBtn = new Button(
+        backBtn = new UIButton(
                 super.layout.topLeft(100, 50),
                 new Vec2(100, 50),
                 "Back",

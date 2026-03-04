@@ -12,6 +12,7 @@ public class Engine {
 
     public static Input input = new Input();
     public static Graphics graphics = new Graphics();
+    public static AudioManager audio = new AudioManager();
 
     private static Scene currentScene;
 
