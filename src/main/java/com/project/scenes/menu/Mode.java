@@ -27,16 +27,16 @@ public class Mode extends Scene {
         btnTexture = new Texture("textures/button_test.png");
         cardTexture = new Texture("textures/solid.png"); // placeholder for card
 
-        Vec2 btnSize = new Vec2(200, 50);
+        Vec2 btnSize = new Vec2(300, 100);
 
         stageBtn = new Button(
-                super.layout.center(-150, 100),
+                super.layout.center(-200, 150),
                 btnSize,
                 "Stage",
                 btnTexture);
 
         overrunBtn = new Button(
-                super.layout.center(150, 100),
+                super.layout.center(200, 150),
                 btnSize,
                 "Overrun",
                 btnTexture);
@@ -77,6 +77,10 @@ public class Mode extends Scene {
             Engine.setScene(new com.project.scenes.menu.Main());
         });
 
+        upgradeBtn.setOnClick(() -> {
+            Engine.setScene(new com.project.scenes.menu.UpgradeMenu());
+        });
+
         shopBtn.setOnClick(() -> {
             Engine.setScene(new com.project.scenes.menu.ShopMenu());
         });
@@ -90,13 +94,18 @@ public class Mode extends Scene {
     public void renderUI(float delta) {
         glClearColor(0.4f, 0.4f, 0.4f, 1.0f);
 
+        // Coins Display
+        Vec2 coinPos = super.layout.topRight(150, 50);
+        font.drawTextAligned(super.batch, "Coins: " + com.project.scenes.game.PlayerData.coins, coinPos.x, coinPos.y,
+                Color.WHITE, 24);
+
         // draw dummy cards
         super.batch.setColor(new Color(0.8f, 0.8f, 0.8f, 1.0f));
-        Vec2 stageCardPos = super.layout.center(-150, -100);
-        super.batch.draw(cardTexture, stageCardPos.x, stageCardPos.y, 200, 250);
+        Vec2 stageCardPos = super.layout.center(-200, -100);
+        super.batch.draw(cardTexture, stageCardPos.x, stageCardPos.y, 300, 300);
 
-        Vec2 overrunCardPos = super.layout.center(150, -100);
-        super.batch.draw(cardTexture, overrunCardPos.x, overrunCardPos.y, 200, 250);
+        Vec2 overrunCardPos = super.layout.center(200, -100);
+        super.batch.draw(cardTexture, overrunCardPos.x, overrunCardPos.y, 300, 300);
 
         super.uiManager.render(super.batch, font, mouseScreen);
     }

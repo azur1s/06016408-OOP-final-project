@@ -137,6 +137,6 @@ public class Button {
     }
 
     public void cleanup() {
-        bgTexture.cleanup();
+        // bgTexture is managed and cleaned up by the Scene
     }
 }
