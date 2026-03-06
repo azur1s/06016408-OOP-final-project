@@ -23,6 +23,11 @@ public class StageMenu extends Scene {
 
     @Override
     public void init(int width, int height) {
+        // TODO: Change BGM to Stage specific music here later
+        // Example: 
+        // Engine.audio.loadSound("bgm_stage", "audio/stage_song.ogg");
+        // Engine.audio.playSound("bgm_stage", true);
+
         font = new FontAtlas("GeistMono-Regular.otf", 32);
         btnTexture = new Texture("textures/button_test.png");
         Vec2 nodeSize = new Vec2(100, 100);

@@ -22,6 +22,11 @@ public class OverrunMenu extends Scene {
 
     @Override
     public void init(int width, int height) {
+        // TODO: Change BGM to Overrun specific music here later
+        // Example: 
+        // Engine.audio.loadSound("bgm_overrun", "audio/overrun_song.ogg");
+        // Engine.audio.playSound("bgm_overrun", true);
+
         font = new FontAtlas("GeistMono-Regular.otf", 32);
         btnTexture = new Texture("textures/button_test.png");
         itemSlotTexture = new Texture("textures/solid.png"); // placeholder
@@ -41,16 +46,31 @@ public class OverrunMenu extends Scene {
                 "Back",
                 btnTexture);
 
+        
+        int item1Index = com.project.scenes.game.PlayerData.equippedItems[0];
+        int item2Index = com.project.scenes.game.PlayerData.equippedItems[1];
+        
+        String item1Text = item1Index == -1 ? "" : "ITEM " + (item1Index + 1);
+        String item2Text = item2Index == -1 ? "" : "ITEM " + (item2Index + 1);
+
         item1Btn = new UIButton(
                 super.layout.center(-60, 0),
                 itemSlotSize,
-                "",
+                item1Text,
+                Color.WHITE,
+                new Color(0.8f, 0.8f, 0.8f, 1.0f),
+                Color.BLACK,
+                Color.BLACK,
                 itemSlotTexture);
 
         item2Btn = new UIButton(
                 super.layout.center(60, 0),
                 itemSlotSize,
-                "",
+                item2Text,
+                Color.WHITE,
+                new Color(0.8f, 0.8f, 0.8f, 1.0f),
+                Color.BLACK,
+                Color.BLACK,
                 itemSlotTexture);
 
         super.uiManager.add(playBtn);
@@ -59,8 +79,13 @@ public class OverrunMenu extends Scene {
         super.uiManager.add(item2Btn);
 
         // TODO: สำหรับคนทำระบบเปิดหน้าต่าง shop/inventory ตรงนี้เพื่อเลือกรูปไอเทมมาใส่
-        item1Btn.setOnClick(() -> System.out.println("Open Select Item 1 UI"));
-        item2Btn.setOnClick(() -> System.out.println("Open Select Item 2 UI"));
+        item1Btn.setOnClick(() -> {
+            Engine.setScene(new com.project.scenes.menu.ItemEquipMenu(0, "Overrun"));
+        });
+        
+        item2Btn.setOnClick(() -> {
+            Engine.setScene(new com.project.scenes.menu.ItemEquipMenu(1, "Overrun"));
+        });
 
         playBtn.setOnClick(() -> {
             // TODO: ส่งคำสั่งเริ่มเกมในโหมด Overrun (อาจจะสร้าง Scene สำหรับ Overrun

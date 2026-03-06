@@ -54,7 +54,7 @@ public class Main extends Scene {
         });
 
         settingButton.setOnClick(() -> {
-            System.out.println("Setting menu not implemented.");
+            Engine.setScene(new com.project.scenes.menu.Setting());
         });
 
         quitButton.setOnClick(() -> {

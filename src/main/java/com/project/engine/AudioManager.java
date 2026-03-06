@@ -46,6 +46,38 @@ public class AudioManager {
      */
     private HashMap<String, List<Integer>> activeSources = new HashMap<>();
 
+    private float masterVolume = 1.0f;
+    private float bgmVolume = 1.0f;
+    private float sfxVolume = 1.0f;
+
+    public float getMasterVolume() { return masterVolume; }
+    public void setMasterVolume(float masterVolume) {
+        this.masterVolume = Math.max(0.0f, Math.min(1.0f, masterVolume));
+        updateAllActiveSourcesVolume();
+    }
+
+    public float getBgmVolume() { return bgmVolume; }
+    public void setBgmVolume(float bgmVolume) {
+        this.bgmVolume = Math.max(0.0f, Math.min(1.0f, bgmVolume));
+        updateAllActiveSourcesVolume();
+    }
+
+    public float getSfxVolume() { return sfxVolume; }
+    public void setSfxVolume(float sfxVolume) {
+        this.sfxVolume = Math.max(0.0f, Math.min(1.0f, sfxVolume));
+        updateAllActiveSourcesVolume();
+    }
+
+    private void updateAllActiveSourcesVolume() {
+        for (String name : activeSources.keySet()) {
+            List<Integer> sources = activeSources.get(name);
+            float volume = masterVolume * (name.startsWith("bgm_") ? bgmVolume : sfxVolume);
+            for (int sourceId : sources) {
+                AL10.alSourcef(sourceId, AL10.AL_GAIN, volume);
+            }
+        }
+    }
+
     public AudioManager() {
         device = ALC10.alcOpenDevice((ByteBuffer) null);
         if (device == 0) {
@@ -116,6 +148,13 @@ public class AudioManager {
      * active, it is restarted.
      */
     public void playSound(String name) {
+        playSound(name, false);
+    }
+
+    /**
+     * Plays the sound identified by "name" with an option to loop.
+     */
+    public void playSound(String name, boolean loop) {
         Integer bufferId = soundBuffers.get(name);
         if (bufferId == null) {
             throw new IllegalArgumentException("Sound not loaded: " + name);
@@ -126,9 +165,12 @@ public class AudioManager {
 
         int sourceId = AL10.alGenSources();
         AL10.alSourcei(sourceId, AL10.AL_BUFFER, bufferId);
-        AL10.alSourcef(sourceId, AL10.AL_GAIN, 1.0f);
+        
+        float volume = masterVolume * (name.startsWith("bgm_") ? bgmVolume : sfxVolume);
+        AL10.alSourcef(sourceId, AL10.AL_GAIN, volume);
+        
         AL10.alSourcef(sourceId, AL10.AL_PITCH, 1.0f);
-        AL10.alSourcei(sourceId, AL10.AL_LOOPING, AL10.AL_FALSE);
+        AL10.alSourcei(sourceId, AL10.AL_LOOPING, loop ? AL10.AL_TRUE : AL10.AL_FALSE);
         AL10.alSourcePlay(sourceId);
 
         // Look up active sources for this sound, and add this new source to the list

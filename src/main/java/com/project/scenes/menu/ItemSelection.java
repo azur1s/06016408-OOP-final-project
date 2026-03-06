@@ -41,16 +41,30 @@ public class ItemSelection extends Scene {
                 "Back",
                 btnTexture);
 
+        int item1Index = com.project.scenes.game.PlayerData.equippedItems[0];
+        int item2Index = com.project.scenes.game.PlayerData.equippedItems[1];
+        
+        String item1Text = item1Index == -1 ? "" : "ITEM " + (item1Index + 1);
+        String item2Text = item2Index == -1 ? "" : "ITEM " + (item2Index + 1);
+
         item1Btn = new UIButton(
-                super.layout.center(-80, 0),
+                super.layout.center(-60, 0),
                 itemSlotSize,
-                "",
+                item1Text,
+                Color.WHITE,
+                new Color(0.8f, 0.8f, 0.8f, 1.0f),
+                Color.BLACK,
+                Color.BLACK,
                 itemSlotTexture);
 
         item2Btn = new UIButton(
-                super.layout.center(80, 0),
+                super.layout.center(60, 0),
                 itemSlotSize,
-                "",
+                item2Text,
+                Color.WHITE,
+                new Color(0.8f, 0.8f, 0.8f, 1.0f),
+                Color.BLACK,
+                Color.BLACK,
                 itemSlotTexture);
 
         super.uiManager.add(playBtn);
@@ -60,8 +74,13 @@ public class ItemSelection extends Scene {
 
         // TODO: สำหรับคนทำระบบเปิดหน้าต่าง shop/inventory ตรงนี้เพื่อเลือกรูปไอเทมมาใส่
         // เมื่อเลือกไอเทมเสร็จ ให้สลับ Texture ของปุ่มนี้เป็นรูปไอเทมนั้น
-        item1Btn.setOnClick(() -> System.out.println("Open Select Item 1 UI"));
-        item2Btn.setOnClick(() -> System.out.println("Open Select Item 2 UI"));
+        item1Btn.setOnClick(() -> {
+             Engine.setScene(new com.project.scenes.menu.ItemEquipMenu(0, "Stage"));
+        });
+        
+        item2Btn.setOnClick(() -> {
+             Engine.setScene(new com.project.scenes.menu.ItemEquipMenu(1, "Stage"));
+        });
 
         playBtn.setOnClick(() -> {
             // TODO: ส่งคำสั่งเริ่มเกม พร้อมกับด่านที่บันทึกไว้ และไอเทมที่เลือกใช้งานใน UI
