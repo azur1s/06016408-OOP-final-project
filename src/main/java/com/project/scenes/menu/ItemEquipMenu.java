@@ -72,6 +72,19 @@ public class ItemEquipMenu extends Scene {
             itemBtn.setOnClick(() -> {
                 if (PlayerData.unlockedItems[itemIndex]) {
                     // TODO (For Backend Devs): Add additional logic here if equipping an item requires server validation
+                    // If this item is already in another slot, swap: move the current slot's item to that slot
+                    int itemCurrentSlot = -1;
+                    for (int s = 0; s < PlayerData.equippedItems.length; s++) {
+                        if (s != slotToEquip && PlayerData.equippedItems[s] == itemIndex) {
+                            itemCurrentSlot = s;
+                            break;
+                        }
+                    }
+                    if (itemCurrentSlot != -1) {
+                        // Swap: put displaced item into the slot where selected item came from
+                        PlayerData.equippedItems[itemCurrentSlot] = PlayerData.equippedItems[slotToEquip];
+                        System.out.println("Swapped: moved Item " + (PlayerData.equippedItems[itemCurrentSlot] + 1) + " to Slot " + (itemCurrentSlot + 1));
+                    }
                     // Equipping the item into the correct slot
                     PlayerData.equippedItems[slotToEquip] = itemIndex;
                     System.out.println("Equipped Item " + (itemIndex + 1) + " into Slot " + (slotToEquip + 1));
