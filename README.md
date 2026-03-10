@@ -18,4 +18,5 @@
    ใช้คำสั่งด้านล่างนี้เพื่อสั่งให้ Maven คอมไพล์และเปิดเกมขึ้นมาใช้งานได้เลย:
    ```bash
    mvn compile exec:java
+   mvn compile exec:exec # MacOS
    ```
