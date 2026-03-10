@@ -60,6 +60,10 @@ public class Main extends Scene {
         quitButton.setOnClick(() -> {
             Engine.requestExit();
         });
+
+        // Load and play the global background music
+        Engine.audio.loadSound("bgm_main", "audio/Song.ogg");
+        Engine.audio.playSoundIfNotPlaying("bgm_main", true);
     }
 
     @Override

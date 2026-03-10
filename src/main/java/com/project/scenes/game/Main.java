@@ -30,6 +30,8 @@ public class Main extends Scene {
 
     @Override
     public void init(int width, int height) {
+        Engine.audio.stopSound("bgm_main");
+
         solidTexture = new Texture("textures/solid.png");
 
         font = new FontAtlas("GeistMono-Regular.otf", 32);

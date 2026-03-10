@@ -97,10 +97,6 @@ public class Lwjgl3Main {
         Engine.width = INITIAL_WIDTH;
         Engine.height = INITIAL_HEIGHT;
 
-        // Load and play the global background music
-        Engine.audio.loadSound("bgm_main", "audio/Song.ogg");
-        Engine.audio.playSound("bgm_main", true);
-
         Engine.setScene(new Main());
 
         // resize callback

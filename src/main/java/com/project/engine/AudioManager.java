@@ -47,22 +47,36 @@ public class AudioManager {
     private HashMap<String, List<Integer>> activeSources = new HashMap<>();
 
     private float masterVolume = 1.0f;
+    /**
+     * Audio that starts with "bgm_" is considered background music and is affected
+     * by the BGM volume slider, while everything else is considered sound effects
+     * and is affected by the SFX volume slider.
+     */
     private float bgmVolume = 1.0f;
     private float sfxVolume = 1.0f;
 
-    public float getMasterVolume() { return masterVolume; }
+    public float getMasterVolume() {
+        return masterVolume;
+    }
+
     public void setMasterVolume(float masterVolume) {
         this.masterVolume = Math.max(0.0f, Math.min(1.0f, masterVolume));
         updateAllActiveSourcesVolume();
     }
 
-    public float getBgmVolume() { return bgmVolume; }
+    public float getBgmVolume() {
+        return bgmVolume;
+    }
+
     public void setBgmVolume(float bgmVolume) {
         this.bgmVolume = Math.max(0.0f, Math.min(1.0f, bgmVolume));
         updateAllActiveSourcesVolume();
     }
 
-    public float getSfxVolume() { return sfxVolume; }
+    public float getSfxVolume() {
+        return sfxVolume;
+    }
+
     public void setSfxVolume(float sfxVolume) {
         this.sfxVolume = Math.max(0.0f, Math.min(1.0f, sfxVolume));
         updateAllActiveSourcesVolume();
@@ -165,10 +179,10 @@ public class AudioManager {
 
         int sourceId = AL10.alGenSources();
         AL10.alSourcei(sourceId, AL10.AL_BUFFER, bufferId);
-        
+
         float volume = masterVolume * (name.startsWith("bgm_") ? bgmVolume : sfxVolume);
         AL10.alSourcef(sourceId, AL10.AL_GAIN, volume);
-        
+
         AL10.alSourcef(sourceId, AL10.AL_PITCH, 1.0f);
         AL10.alSourcei(sourceId, AL10.AL_LOOPING, loop ? AL10.AL_TRUE : AL10.AL_FALSE);
         AL10.alSourcePlay(sourceId);
@@ -177,6 +191,17 @@ public class AudioManager {
         // If no list exists yet, create a new one and add it to the map
         activeSources.computeIfAbsent(name, k -> new java.util.ArrayList<>())
                 .add(sourceId);
+    }
+
+    /**
+     * Plays the sound identified by "name" only if it is not already active. If
+     * that same named sound is already active, this method does nothing.
+     */
+    public void playSoundIfNotPlaying(String name, boolean loop) {
+        List<Integer> sources = activeSources.get(name);
+        if (sources == null || sources.isEmpty()) {
+            playSound(name, loop);
+        }
     }
 
     public void stopSound(String name) {
