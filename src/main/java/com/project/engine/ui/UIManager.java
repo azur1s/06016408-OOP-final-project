@@ -6,11 +6,10 @@ import com.project.engine.Engine;
 import com.project.engine.graphics.FontAtlas;
 import com.project.engine.graphics.TextureBatch;
 import com.project.engine.math.Vec2;
-import com.project.scenes.menu.components.UISlider;
 
 public class UIManager {
     ArrayList<Button> buttons;
-    ArrayList<UISlider> sliders;
+    ArrayList<Slider> sliders;
 
     public UIManager() {
         buttons = new ArrayList<>();
@@ -21,7 +20,7 @@ public class UIManager {
         buttons.add(button);
     }
 
-    public void add(UISlider slider) {
+    public void add(Slider slider) {
         sliders.add(slider);
     }
 
@@ -29,7 +28,7 @@ public class UIManager {
         for (Button button : buttons) {
             button.update(mousePos, mouseReleased);
         }
-        for (UISlider slider : sliders) {
+        for (Slider slider : sliders) {
             slider.update(mousePos, Engine.input.isMouseButtonPressed(0));
         }
     }
@@ -38,7 +37,7 @@ public class UIManager {
         for (Button button : buttons) {
             button.render(batch, font, mouseScreen);
         }
-        for (UISlider slider : sliders) {
+        for (Slider slider : sliders) {
             slider.render(batch, font, mouseScreen);
         }
     }
