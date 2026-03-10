@@ -1,4 +1,5 @@
 # โปรเจกต์จบรายวิชา Object-Oriented Programming (2/68)
+[English Version](./README.md)
 
 **ขั้นตอนการ Compile และรันโปรเจกต์**
 
