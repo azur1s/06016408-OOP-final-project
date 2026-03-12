@@ -1,4 +1,4 @@
-package com.project.scenes.menu;
+package com.project.scenes.menu.settings;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -9,15 +9,14 @@ import com.project.engine.graphics.Color;
 import com.project.engine.graphics.FontAtlas;
 import com.project.engine.graphics.Texture;
 import com.project.engine.math.Vec2;
-import com.project.scenes.menu.components.UIButton;
-import com.project.scenes.menu.components.UISlider;
+import com.project.scenes.menu.components.common.UIButton;
+import com.project.scenes.menu.components.common.UISlider;
 
 public class Setting extends Scene {
-    FontAtlas font;
-    Texture logo;
-    UIButton backButton;
-    UISlider bgmVolumeSlider;
-    UISlider sfxVolumeSlider;
+    private FontAtlas font;
+    private UIButton backButton;
+    private UISlider bgmVolumeSlider;
+    private UISlider sfxVolumeSlider;
 
     @Override
     public void init(int width, int height) {

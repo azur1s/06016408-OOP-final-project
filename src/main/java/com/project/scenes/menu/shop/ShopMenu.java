@@ -1,9 +1,10 @@
-package com.project.scenes.menu;
+package com.project.scenes.menu.shop;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.glfw.GLFW.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.project.engine.Engine;
 import com.project.engine.Scene;
@@ -11,39 +12,38 @@ import com.project.engine.graphics.Color;
 import com.project.engine.graphics.FontAtlas;
 import com.project.engine.graphics.Texture;
 import com.project.engine.math.Vec2;
-import com.project.scenes.menu.components.UIButton;
+import com.project.scenes.menu.components.common.UIButton;
 
 public class ShopMenu extends Scene {
-    FontAtlas font;
-    Texture btnTexture;
-    Texture solidTexture;
+    private FontAtlas font;
+    private Texture btnTexture;
+    private Texture solidTexture;
 
     // Navigation and Shared UI
-    UIButton backBtn;
-    UIButton tabShopBtnDisplay;
+    private UIButton backBtn;
+    private UIButton tabShopBtnDisplay;
 
-    UIButton toggleLeftBtn;
-    UIButton toggleRightBtn;
+    private UIButton toggleLeftBtn;
+    private UIButton toggleRightBtn;
 
     // Status tracker
-    boolean isSkinTabSelected = false; // false = Item Tab, true = Skin Tab
-    int selectedItemIndex = 0;
-    int selectedSkinIndex = 0;
+    private boolean isSkinTabSelected = false; // false = Item Tab, true = Skin Tab
+    private int selectedItemIndex = 0;
 
     // Costs
-    final int ITEM_COST = 2000;
-    final int[] SKIN_COSTS = { 5000, 10000, 20000 };
+    private final int ITEM_COST = 2000;
+    private final int[] SKIN_COSTS = { 5000, 10000, 20000 };
 
     // --- ITEM TAB UI ---
-    ArrayList<UIButton> itemBoxBtns = new ArrayList<>();
-    UIButton buyItemBtn;
-    UIButton infoItemBtn;
+    private List<UIButton> itemBoxBtns = new ArrayList<>();
+    private UIButton buyItemBtn;
+    private UIButton infoItemBtn;
 
     // --- SKIN TAB UI ---
-    ArrayList<UIButton> skinBoxBtns = new ArrayList<>();
-    UIButton buySkin1Btn;
-    UIButton buySkin2Btn;
-    UIButton buySkin3Btn;
+    private List<UIButton> skinBoxBtns = new ArrayList<>();
+    private UIButton buySkin1Btn;
+    private UIButton buySkin2Btn;
+    private UIButton buySkin3Btn;
 
     @Override
     public void init(int width, int height) {
@@ -159,7 +159,7 @@ public class ShopMenu extends Scene {
         super.uiManager.add(buySkin3Btn);
 
         // ======= EVENT LISTENERS =======
-        backBtn.setOnClick(() -> Engine.setScene(new com.project.scenes.menu.Mode()));
+        backBtn.setOnClick(() -> Engine.setScene(new com.project.scenes.menu.mode.Mode()));
 
         toggleLeftBtn.setOnClick(() -> {
             isSkinTabSelected = false;

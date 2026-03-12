@@ -1,4 +1,4 @@
-package com.project.scenes.menu;
+package com.project.scenes.menu.equipment;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -8,17 +8,17 @@ import com.project.engine.graphics.Color;
 import com.project.engine.graphics.FontAtlas;
 import com.project.engine.graphics.Texture;
 import com.project.engine.math.Vec2;
-import com.project.scenes.menu.components.UIButton;
+import com.project.scenes.menu.components.common.UIButton;
 
 public class ItemSelection extends Scene {
-    FontAtlas font;
-    Texture btnTexture;
-    Texture itemSlotTexture;
+    private FontAtlas font;
+    private Texture btnTexture;
+    private Texture itemSlotTexture;
 
-    UIButton playBtn;
-    UIButton backBtn;
-    UIButton item1Btn;
-    UIButton item2Btn;
+    private UIButton playBtn;
+    private UIButton backBtn;
+    private UIButton item1Btn;
+    private UIButton item2Btn;
 
     @Override
     public void init(int width, int height) {
@@ -43,7 +43,7 @@ public class ItemSelection extends Scene {
 
         int item1Index = com.project.scenes.game.PlayerData.equippedItems[0];
         int item2Index = com.project.scenes.game.PlayerData.equippedItems[1];
-        
+
         String item1Text = item1Index == -1 ? "" : "ITEM " + (item1Index + 1);
         String item2Text = item2Index == -1 ? "" : "ITEM " + (item2Index + 1);
 
@@ -75,11 +75,11 @@ public class ItemSelection extends Scene {
         // TODO: สำหรับคนทำระบบเปิดหน้าต่าง shop/inventory ตรงนี้เพื่อเลือกรูปไอเทมมาใส่
         // เมื่อเลือกไอเทมเสร็จ ให้สลับ Texture ของปุ่มนี้เป็นรูปไอเทมนั้น
         item1Btn.setOnClick(() -> {
-             Engine.setScene(new com.project.scenes.menu.ItemEquipMenu(0, "Stage"));
+            Engine.setScene(new com.project.scenes.menu.equipment.ItemEquipMenu(0, "Stage"));
         });
-        
+
         item2Btn.setOnClick(() -> {
-             Engine.setScene(new com.project.scenes.menu.ItemEquipMenu(1, "Stage"));
+            Engine.setScene(new com.project.scenes.menu.equipment.ItemEquipMenu(1, "Stage"));
         });
 
         playBtn.setOnClick(() -> {
@@ -90,7 +90,7 @@ public class ItemSelection extends Scene {
 
         backBtn.setOnClick(() -> {
             // ถ้าย้อนกลับคือกลับไปหน้าเลือกด่าน
-            Engine.setScene(new com.project.scenes.menu.StageMenu());
+            Engine.setScene(new com.project.scenes.menu.mode.StageMenu());
         });
     }
 

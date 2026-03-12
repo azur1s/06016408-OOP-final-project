@@ -1,4 +1,4 @@
-package com.project.scenes.menu;
+package com.project.scenes.menu.mode;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -8,23 +8,23 @@ import com.project.engine.graphics.Color;
 import com.project.engine.graphics.FontAtlas;
 import com.project.engine.graphics.Texture;
 import com.project.engine.math.Vec2;
-import com.project.scenes.menu.components.UIButton;
+import com.project.scenes.menu.components.common.UIButton;
 
 public class StageMenu extends Scene {
-    FontAtlas font;
-    Texture btnTexture;
-    UIButton backBtn;
+    private FontAtlas font;
+    private Texture btnTexture;
+    private UIButton backBtn;
 
     // โหนดสำหรับโชว์ด่านย่อย
-    UIButton node1;
-    UIButton node2;
-    UIButton node3;
-    UIButton node4;
+    private UIButton node1;
+    private UIButton node2;
+    private UIButton node3;
+    private UIButton node4;
 
     @Override
     public void init(int width, int height) {
         // TODO: Change BGM to Stage specific music here later
-        // Example: 
+        // Example:
         // Engine.audio.loadSound("bgm_stage", "audio/stage_song.ogg");
         // Engine.audio.playSound("bgm_stage", true);
 
@@ -56,7 +56,7 @@ public class StageMenu extends Scene {
         // TODO: เมื่อผู้เล่นกดเลือกด่าน ให้เก็บ state ไว้ว่าเล่นด่านอะไร แล้วเปิดหน้า
         // ItemSelection ต่อ
         Runnable onNodeSelected = () -> {
-            Engine.setScene(new com.project.scenes.menu.ItemSelection());
+            Engine.setScene(new com.project.scenes.menu.equipment.ItemSelection());
         };
 
         node1.setOnClick(onNodeSelected);
@@ -65,7 +65,7 @@ public class StageMenu extends Scene {
         node4.setOnClick(onNodeSelected);
 
         backBtn.setOnClick(() -> {
-            Engine.setScene(new com.project.scenes.menu.Mode());
+            Engine.setScene(new com.project.scenes.menu.mode.Mode());
         });
     }
 

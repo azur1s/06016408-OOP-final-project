@@ -1,4 +1,4 @@
-package com.project.scenes.menu;
+package com.project.scenes.menu.mode;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -8,18 +8,18 @@ import com.project.engine.graphics.Color;
 import com.project.engine.graphics.FontAtlas;
 import com.project.engine.graphics.Texture;
 import com.project.engine.math.Vec2;
-import com.project.scenes.menu.components.UIButton;
+import com.project.scenes.menu.components.common.UIButton;
 
 public class Mode extends Scene {
-    FontAtlas font;
-    Texture btnTexture;
-    Texture cardTexture;
+    private FontAtlas font;
+    private Texture btnTexture;
+    private Texture cardTexture;
 
-    UIButton stageBtn;
-    UIButton overrunBtn;
-    UIButton upgradeBtn;
-    UIButton shopBtn;
-    UIButton backBtn;
+    private UIButton stageBtn;
+    private UIButton overrunBtn;
+    private UIButton upgradeBtn;
+    private UIButton shopBtn;
+    private UIButton backBtn;
 
     @Override
     public void init(int width, int height) {
@@ -66,11 +66,11 @@ public class Mode extends Scene {
         super.uiManager.add(backBtn);
 
         stageBtn.setOnClick(() -> {
-            Engine.setScene(new com.project.scenes.menu.StageMenu());
+            Engine.setScene(new com.project.scenes.menu.mode.StageMenu());
         });
 
         overrunBtn.setOnClick(() -> {
-            Engine.setScene(new com.project.scenes.menu.OverrunMenu());
+            Engine.setScene(new com.project.scenes.menu.mode.OverrunMenu());
         });
 
         backBtn.setOnClick(() -> {
@@ -78,11 +78,11 @@ public class Mode extends Scene {
         });
 
         upgradeBtn.setOnClick(() -> {
-            Engine.setScene(new com.project.scenes.menu.UpgradeMenu());
+            Engine.setScene(new com.project.scenes.menu.shop.UpgradeMenu());
         });
 
         shopBtn.setOnClick(() -> {
-            Engine.setScene(new com.project.scenes.menu.ShopMenu());
+            Engine.setScene(new com.project.scenes.menu.shop.ShopMenu());
         });
     }
 

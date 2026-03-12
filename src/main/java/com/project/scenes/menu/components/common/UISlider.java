@@ -1,4 +1,4 @@
-package com.project.scenes.menu.components;
+package com.project.scenes.menu.components.common;
 
 import com.project.engine.graphics.Color;
 import com.project.engine.graphics.Texture;

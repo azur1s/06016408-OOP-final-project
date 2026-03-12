@@ -9,14 +9,14 @@ import com.project.engine.graphics.Color;
 import com.project.engine.graphics.FontAtlas;
 import com.project.engine.graphics.Texture;
 import com.project.engine.math.Vec2;
-import com.project.scenes.menu.components.UIButton;
+import com.project.scenes.menu.components.common.UIButton;
 
 public class Main extends Scene {
-    FontAtlas font;
-    Texture logo;
-    UIButton playButton;
-    UIButton settingButton;
-    UIButton quitButton;
+    private FontAtlas font;
+    private Texture logo;
+    private UIButton playButton;
+    private UIButton settingButton;
+    private UIButton quitButton;
 
     @Override
     public void init(int width, int height) {
@@ -50,11 +50,11 @@ public class Main extends Scene {
         super.uiManager.add(quitButton);
 
         playButton.setOnClick(() -> {
-            Engine.setScene(new com.project.scenes.menu.Mode());
+            Engine.setScene(new com.project.scenes.menu.mode.Mode());
         });
 
         settingButton.setOnClick(() -> {
-            Engine.setScene(new com.project.scenes.menu.Setting());
+            Engine.setScene(new com.project.scenes.menu.settings.Setting());
         });
 
         quitButton.setOnClick(() -> {

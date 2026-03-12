@@ -1,4 +1,4 @@
-package com.project.scenes.menu;
+package com.project.scenes.menu.mode;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -8,22 +8,22 @@ import com.project.engine.graphics.Color;
 import com.project.engine.graphics.FontAtlas;
 import com.project.engine.graphics.Texture;
 import com.project.engine.math.Vec2;
-import com.project.scenes.menu.components.UIButton;
+import com.project.scenes.menu.components.common.UIButton;
 
 public class OverrunMenu extends Scene {
-    FontAtlas font;
-    Texture btnTexture;
-    Texture itemSlotTexture;
+    private FontAtlas font;
+    private Texture btnTexture;
+    private Texture itemSlotTexture;
 
-    UIButton playBtn;
-    UIButton backBtn;
-    UIButton item1Btn;
-    UIButton item2Btn;
+    private UIButton playBtn;
+    private UIButton backBtn;
+    private UIButton item1Btn;
+    private UIButton item2Btn;
 
     @Override
     public void init(int width, int height) {
         // TODO: Change BGM to Overrun specific music here later
-        // Example: 
+        // Example:
         // Engine.audio.loadSound("bgm_overrun", "audio/overrun_song.ogg");
         // Engine.audio.playSound("bgm_overrun", true);
 
@@ -46,10 +46,9 @@ public class OverrunMenu extends Scene {
                 "Back",
                 btnTexture);
 
-        
         int item1Index = com.project.scenes.game.PlayerData.equippedItems[0];
         int item2Index = com.project.scenes.game.PlayerData.equippedItems[1];
-        
+
         String item1Text = item1Index == -1 ? "" : "ITEM " + (item1Index + 1);
         String item2Text = item2Index == -1 ? "" : "ITEM " + (item2Index + 1);
 
@@ -80,11 +79,11 @@ public class OverrunMenu extends Scene {
 
         // TODO: สำหรับคนทำระบบเปิดหน้าต่าง shop/inventory ตรงนี้เพื่อเลือกรูปไอเทมมาใส่
         item1Btn.setOnClick(() -> {
-            Engine.setScene(new com.project.scenes.menu.ItemEquipMenu(0, "Overrun"));
+            Engine.setScene(new com.project.scenes.menu.equipment.ItemEquipMenu(0, "Overrun"));
         });
-        
+
         item2Btn.setOnClick(() -> {
-            Engine.setScene(new com.project.scenes.menu.ItemEquipMenu(1, "Overrun"));
+            Engine.setScene(new com.project.scenes.menu.equipment.ItemEquipMenu(1, "Overrun"));
         });
 
         playBtn.setOnClick(() -> {
@@ -94,7 +93,7 @@ public class OverrunMenu extends Scene {
         });
 
         backBtn.setOnClick(() -> {
-            Engine.setScene(new com.project.scenes.menu.Mode());
+            Engine.setScene(new com.project.scenes.menu.mode.Mode());
         });
     }
 

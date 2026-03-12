@@ -1,9 +1,10 @@
-package com.project.scenes.menu;
+package com.project.scenes.menu.shop;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.glfw.GLFW.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.project.engine.Engine;
 import com.project.engine.Scene;
@@ -11,32 +12,32 @@ import com.project.engine.graphics.Color;
 import com.project.engine.graphics.FontAtlas;
 import com.project.engine.graphics.Texture;
 import com.project.engine.math.Vec2;
-import com.project.scenes.menu.components.UIButton;
+import com.project.scenes.menu.components.common.UIButton;
 
 public class UpgradeMenu extends Scene {
-    FontAtlas font;
-    Texture btnTexture;
-    Texture solidTexture;
+    private FontAtlas font;
+    private Texture btnTexture;
+    private Texture solidTexture;
 
     // Shared UI
-    UIButton backBtn;
-    UIButton tabTitleBtn;
+    private UIButton backBtn;
+    private UIButton tabTitleBtn;
 
     // --- ITEM LIST UI ---
-    ArrayList<UIButton> itemSelectBtns = new ArrayList<>();
-    ArrayList<UIButton> itemUpgradeBtns = new ArrayList<>();
+    private List<UIButton> itemSelectBtns = new ArrayList<>();
+    private List<UIButton> itemUpgradeBtns = new ArrayList<>();
 
     // Status tracker
-    int selectedItemIndex = 0; // The item currently shown on the right panel
+    private int selectedItemIndex = 0; // The item currently shown on the right panel
 
     // --- INFO PANEL UI ---
-    UIButton infoItemBtn;
-    UIButton mainUpgradeBtn;
+    private UIButton infoItemBtn;
+    private UIButton mainUpgradeBtn;
 
-    UIButton stat0Btn;
-    UIButton stat1Btn;
-    UIButton stat2Btn;
-    int selectedStatIndex = 0;
+    private UIButton stat0Btn;
+    private UIButton stat1Btn;
+    private UIButton stat2Btn;
+    private int selectedStatIndex = 0;
 
     // Removed constant UPGRADE_COST to use dynamic formula
 
@@ -145,7 +146,7 @@ public class UpgradeMenu extends Scene {
         super.uiManager.add(infoItemBtn);
 
         // ======= EVENT LISTENERS =======
-        backBtn.setOnClick(() -> Engine.setScene(new com.project.scenes.menu.Mode()));
+        backBtn.setOnClick(() -> Engine.setScene(new com.project.scenes.menu.mode.Mode()));
 
         mainUpgradeBtn.setOnClick(() -> {
             if (!com.project.scenes.game.PlayerData.unlockedItems[selectedItemIndex])
