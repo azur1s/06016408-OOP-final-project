@@ -7,7 +7,7 @@
 - Java 17 or higher
 - Maven (See instruction from the [Maven Official Guide](https://maven.apache.org/install.html))
 
-### 3. Open Terminal
+### 2. Open Terminal
 ```sh
 # Go to project folder
 cd project
