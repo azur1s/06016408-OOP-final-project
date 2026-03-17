@@ -1,4 +1,4 @@
-package com.project.scenes.game;
+package com.project.scenes.menu;
 
 public class PlayerData {
     // 99999 starting coins for testing

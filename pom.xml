@@ -209,6 +209,11 @@
 		<artifactId>lwjgl-stb</artifactId>
 		<classifier>${lwjgl.natives}</classifier>
 	</dependency>
+	<dependency>
+		<groupId>com.google.code.gson</groupId>
+		<artifactId>gson</artifactId>
+		<version>2.11.0</version>
+	</dependency>
 </dependencies>
 
 <build>

@@ -90,7 +90,7 @@ public class ShopMenu extends Scene {
                     "ITEM " + (i + 1),
                     btnTexture);
 
-            boolean isUnlocked = com.project.scenes.game.PlayerData.unlockedItems[i];
+            boolean isUnlocked = com.project.scenes.menu.PlayerData.unlockedItems[i];
             UIButton unlockStatusBtn = new UIButton(
                     super.layout.centerLeft(super.layout.res.x / 4f + 160, yOffset),
                     new Vec2(120, 60),
@@ -125,7 +125,7 @@ public class ShopMenu extends Scene {
         buyItemBtn = new UIButton(
                 super.layout.centerRight(super.layout.res.x / 4f + 30, 200),
                 new Vec2(180, 60),
-                com.project.scenes.game.PlayerData.unlockedItems[selectedItemIndex] ? "UNLOCKED"
+                com.project.scenes.menu.PlayerData.unlockedItems[selectedItemIndex] ? "UNLOCKED"
                         : "BUY (" + ITEM_COST + " C)",
                 btnTexture);
         super.uiManager.add(buyItemBtn);
@@ -145,13 +145,13 @@ public class ShopMenu extends Scene {
         }
 
         buySkin1Btn = new UIButton(super.layout.center(-220, 120), new Vec2(150, 50),
-                com.project.scenes.game.PlayerData.unlockedSkins[0] ? "UNLOCKED" : "BUY (" + SKIN_COSTS[0] + " C)",
+                com.project.scenes.menu.PlayerData.unlockedSkins[0] ? "UNLOCKED" : "BUY (" + SKIN_COSTS[0] + " C)",
                 btnTexture);
         buySkin2Btn = new UIButton(super.layout.center(0, 120), new Vec2(150, 50),
-                com.project.scenes.game.PlayerData.unlockedSkins[1] ? "UNLOCKED" : "BUY (" + SKIN_COSTS[1] + " C)",
+                com.project.scenes.menu.PlayerData.unlockedSkins[1] ? "UNLOCKED" : "BUY (" + SKIN_COSTS[1] + " C)",
                 btnTexture);
         buySkin3Btn = new UIButton(super.layout.center(220, 120), new Vec2(150, 50),
-                com.project.scenes.game.PlayerData.unlockedSkins[2] ? "UNLOCKED" : "BUY (" + SKIN_COSTS[2] + " C)",
+                com.project.scenes.menu.PlayerData.unlockedSkins[2] ? "UNLOCKED" : "BUY (" + SKIN_COSTS[2] + " C)",
                 btnTexture);
 
         super.uiManager.add(buySkin1Btn);
@@ -175,10 +175,11 @@ public class ShopMenu extends Scene {
 
         // Buy System Integration
         buyItemBtn.setOnClick(() -> {
-            if (!com.project.scenes.game.PlayerData.unlockedItems[selectedItemIndex]) {
-                if (com.project.scenes.game.PlayerData.hasEnoughCoins(ITEM_COST)) {
-                    com.project.scenes.game.PlayerData.deductCoins(ITEM_COST);
-                    com.project.scenes.game.PlayerData.unlockedItems[selectedItemIndex] = true;
+            if (!com.project.scenes.menu.PlayerData.unlockedItems[selectedItemIndex]) {
+                if (com.project.scenes.menu.PlayerData.hasEnoughCoins(ITEM_COST)) {
+                    com.project.scenes.menu.PlayerData.deductCoins(ITEM_COST);
+                    com.project.scenes.menu.PlayerData.unlockedItems[selectedItemIndex] = true;
+                    com.project.scenes.menu.PlayerDataSaver.save();
                     itemBoxBtns.get(selectedItemIndex * 2 + 1).setText("UNLOCKED");
                     System.out.println("Purchased ITEM " + (selectedItemIndex + 1));
                     updateBuyButtonText();
@@ -194,10 +195,11 @@ public class ShopMenu extends Scene {
             final int skinIdx = i;
             skinBuyBtns[i].setOnClick(() -> {
                 int cost = SKIN_COSTS[skinIdx];
-                if (!com.project.scenes.game.PlayerData.unlockedSkins[skinIdx]) {
-                    if (com.project.scenes.game.PlayerData.hasEnoughCoins(cost)) {
-                        com.project.scenes.game.PlayerData.deductCoins(cost);
-                        com.project.scenes.game.PlayerData.unlockedSkins[skinIdx] = true;
+                if (!com.project.scenes.menu.PlayerData.unlockedSkins[skinIdx]) {
+                    if (com.project.scenes.menu.PlayerData.hasEnoughCoins(cost)) {
+                        com.project.scenes.menu.PlayerData.deductCoins(cost);
+                        com.project.scenes.menu.PlayerData.unlockedSkins[skinIdx] = true;
+                        com.project.scenes.menu.PlayerDataSaver.save();
                         System.out.println("Purchased SKIN " + (skinIdx + 1));
                         skinBuyBtns[skinIdx].setText("UNLOCKED");
                     } else {
@@ -210,7 +212,7 @@ public class ShopMenu extends Scene {
 
     private void updateBuyButtonText() {
         if (!isSkinTabSelected) {
-            if (com.project.scenes.game.PlayerData.unlockedItems[selectedItemIndex]) {
+            if (com.project.scenes.menu.PlayerData.unlockedItems[selectedItemIndex]) {
                 buyItemBtn.setText("UNLOCKED");
             } else {
                 buyItemBtn.setText("BUY (" + ITEM_COST + " C)");
@@ -246,7 +248,7 @@ public class ShopMenu extends Scene {
 
         // Coins Display
         Vec2 coinPos = super.layout.topRight(150, 50);
-        font.drawTextAligned(super.batch, "Coins: " + com.project.scenes.game.PlayerData.coins, coinPos.x, coinPos.y,
+        font.drawTextAligned(super.batch, "Coins: " + com.project.scenes.menu.PlayerData.coins, coinPos.x, coinPos.y,
                 Color.WHITE, 24);
 
         // Render static display label

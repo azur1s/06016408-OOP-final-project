@@ -46,8 +46,8 @@ public class OverrunMenu extends Scene {
                 "Back",
                 btnTexture);
 
-        int item1Index = com.project.scenes.game.PlayerData.equippedItems[0];
-        int item2Index = com.project.scenes.game.PlayerData.equippedItems[1];
+        int item1Index = com.project.scenes.menu.PlayerData.equippedItems[0];
+        int item2Index = com.project.scenes.menu.PlayerData.equippedItems[1];
 
         String item1Text = item1Index == -1 ? "" : "ITEM " + (item1Index + 1);
         String item2Text = item2Index == -1 ? "" : "ITEM " + (item2Index + 1);

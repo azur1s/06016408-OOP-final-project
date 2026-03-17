@@ -1,6 +1,5 @@
 package com.project.scenes.menu;
 
-import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
 import com.project.engine.Engine;
@@ -20,6 +19,8 @@ public class Main extends Scene {
 
     @Override
     public void init(int width, int height) {
+        PlayerDataSaver.load();
+
         font = new FontAtlas("GeistMono-Regular.otf", 32);
 
         logo = new Texture("textures/logo_test.png");
@@ -58,6 +59,7 @@ public class Main extends Scene {
         });
 
         quitButton.setOnClick(() -> {
+            PlayerDataSaver.save();
             Engine.requestExit();
         });
 
@@ -68,9 +70,6 @@ public class Main extends Scene {
 
     @Override
     public void update(float delta) {
-        if (Engine.input.isKeyPressed(GLFW_KEY_F3)) {
-            Engine.setScene(new com.project.scenes.test.Main());
-        }
     }
 
     @Override
@@ -89,6 +88,7 @@ public class Main extends Scene {
 
     @Override
     public void cleanup() {
+        PlayerDataSaver.save();
         logo.cleanup();
     }
 }

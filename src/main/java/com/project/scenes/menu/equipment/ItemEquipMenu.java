@@ -12,7 +12,7 @@ import com.project.engine.graphics.Color;
 import com.project.engine.graphics.FontAtlas;
 import com.project.engine.graphics.Texture;
 import com.project.engine.math.Vec2;
-import com.project.scenes.game.PlayerData;
+import com.project.scenes.menu.PlayerData;
 import com.project.scenes.menu.components.common.UIButton;
 
 public class ItemEquipMenu extends Scene {
