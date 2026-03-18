@@ -19,4 +19,3 @@ mvn compile exec:exec
 
 # License
 This project is licensed under the GPL-3.0 License. See the [LICENSE](./LICENSE) file for details.
-Images used in this project are hand-drawn by the authors and are licensed under the CC BY-NC-SA 4.0 License. See the [Creative Commons License](https://creativecommons.org/licenses/by-nc-sa/4.0/) for more information.
