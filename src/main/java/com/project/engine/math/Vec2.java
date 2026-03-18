@@ -16,6 +16,10 @@ public class Vec2 {
         return new Vec2(this.x - v.x, this.y - v.y);
     }
 
+    public Vec2 mul(float scalar) {
+        return new Vec2(this.x * scalar, this.y * scalar);
+    }
+
     public float length() {
         return (float) Math.sqrt(x * x + y * y);
     }

@@ -50,6 +50,7 @@ public class WordEntitiesManager {
     Texture wordTexture;
 
     // ========================================================================
+    // #region Initialization, rendering, and updating
 
     public void init() {
         String path = "words/words_java.txt";
@@ -94,6 +95,7 @@ public class WordEntitiesManager {
             spawnCooldown = SPAWN_INTERVAL - difficultyRamp;
         }
 
+        // Decrease lane cooldowns
         for (int i = 0; i < MAX_LANES; i++) {
             if (laneCooldowns[i] > 0) {
                 laneCooldowns[i] -= delta;
@@ -103,6 +105,7 @@ public class WordEntitiesManager {
             }
         }
 
+        // Update word entities and check for missed words
         for (int i = entities.size() - 1; i >= 0; i--) {
             WordEntity wordEntity = entities.get(i);
             wordEntity.update(delta);
@@ -132,21 +135,25 @@ public class WordEntitiesManager {
             // if the word reaches the left edge of the screen, remove it and generate a new
             // one
             if (wordEntity.position.x < -500f) {
-                entities.remove(i);
+                removeEntity(wordEntity);
                 addNewEntites(1);
                 for (WordEntitiesListener l : listeners) {
                     l.onWordMissed(wordEntity);
                 }
             }
         }
+
+        // Remove inactive entities
+        entities.removeIf(entity -> !entity.active);
     }
 
     public void addListener(WordEntitiesListener listener) {
         listeners.add(listener);
     }
 
+    // #endregion
     // ========================================================================
-    // Entites/buffer interaction
+    // #region Entites/buffer interaction
 
     /**
      * Selects a lane for a new word entity to spawn in based on the lane cooldowns.
@@ -272,7 +279,7 @@ public class WordEntitiesManager {
                 }
             }
             // Otherwise, remove the matched entity
-            entities.remove(matchedEntity);
+            removeEntity(matchedEntity);
             // Decrease the spawn timer
             spawnCooldown -= 0.5f;
             difficultyRamp += 0.1f;
@@ -290,8 +297,13 @@ public class WordEntitiesManager {
         }
     }
 
+    // #endregion
     // ========================================================================
-    // Utility methods for word entites/buffer
+    // #region Utility methods for word entites/buffer
+
+    private void removeEntity(WordEntity entity) {
+        entity.active = false;
+    }
 
     public void clearWordList() {
         entities.clear();
@@ -336,4 +348,5 @@ public class WordEntitiesManager {
         }
     }
 
+    // #endregion
 }

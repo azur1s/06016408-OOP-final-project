@@ -1,12 +1,14 @@
 package com.project.scenes.game.words;
 
+import com.project.engine.entities.CollisionLayer;
+import com.project.engine.entities.Entity;
 import com.project.engine.graphics.Color;
 import com.project.engine.graphics.FontAtlas;
 import com.project.engine.graphics.Texture;
 import com.project.engine.graphics.TextureBatch;
 import com.project.engine.math.Vec2;
 
-public class WordEntity {
+public class WordEntity extends Entity {
     public static final float LANE_HEIGHT = 100f;
     public static final float LANE_GAP = 20f;
     public static final float LANE_SPACING = LANE_HEIGHT + LANE_GAP;
@@ -15,10 +17,9 @@ public class WordEntity {
 
     public String word;
     public int progress = 0; // How many characters have been correctly typed
-    public float speed;
     public WordEffect effect = new WordEffect.Normal();
 
-    public Vec2 position;
+    public float speed;
     /**
      * The lane the word entity is in [0 - 4].
      */
@@ -26,17 +27,26 @@ public class WordEntity {
 
     public WordEntity(Texture texture, String word, float xPosition, float speed, int lane) {
         // lane 0 is top, lane 4 is bottom
-        float yLane = (lane - 2) * LANE_SPACING;
-
+        super(new Vec2(xPosition, (lane - 2) * LANE_SPACING),
+                new Vec2(texture.getWidth(), texture.getHeight()));
         this.texture = texture;
         this.word = word;
-        this.position = new Vec2(xPosition, yLane);
         this.speed = speed;
         this.lane = lane;
     }
 
+    @Override
+    public int getLayer() {
+        return CollisionLayer.ENEMY;
+    }
+
+    @Override
+    public int getMask() {
+        return CollisionLayer.PLAYER_PROJECTILE;
+    }
+
     public void update(float delta) {
-        position.x -= speed * delta;
+        move(new Vec2(-this.speed, 0f), delta);
     }
 
     public void render(TextureBatch batch, FontAtlas font) {
