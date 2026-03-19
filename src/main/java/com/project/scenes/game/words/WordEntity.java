@@ -1,5 +1,6 @@
 package com.project.scenes.game.words;
 
+import com.project.engine.entities.Collidable;
 import com.project.engine.entities.CollisionLayer;
 import com.project.engine.entities.Entity;
 import com.project.engine.graphics.Color;
@@ -28,7 +29,7 @@ public class WordEntity extends Entity {
     public WordEntity(Texture texture, String word, float xPosition, float speed, int lane) {
         // lane 0 is top, lane 4 is bottom
         super(new Vec2(xPosition, (lane - 2) * LANE_SPACING),
-                new Vec2(texture.getWidth(), texture.getHeight()));
+                new Vec2(64f, 64f));
         this.texture = texture;
         this.word = word;
         this.speed = speed;
@@ -45,13 +46,18 @@ public class WordEntity extends Entity {
         return CollisionLayer.PLAYER_PROJECTILE;
     }
 
+    @Override
+    public void onCollision(Collidable other) {
+        this.active = false;
+    }
+
     public void update(float delta) {
         move(new Vec2(-this.speed, 0f), delta);
     }
 
     public void render(TextureBatch batch, FontAtlas font) {
         batch.setColor(Color.WHITE);
-        batch.draw(texture, position.x, position.y - 8f, 64f, 64f);
+        batch.draw(texture, position.x, position.y - 8f, size.x, size.y);
 
         Color previewColor = new Color(0.75f, 0.75f, 0.75f, 1f);
         Color typedColor = Color.WHITE;

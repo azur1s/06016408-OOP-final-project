@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
+import com.project.engine.entities.Collidable;
 import com.project.engine.graphics.FontAtlas;
 import com.project.engine.graphics.Texture;
 import com.project.engine.graphics.TextureBatch;
@@ -135,16 +136,13 @@ public class WordEntitiesManager {
             // if the word reaches the left edge of the screen, remove it and generate a new
             // one
             if (wordEntity.position.x < -500f) {
-                removeEntity(wordEntity);
+                // removeEntity(wordEntity);
                 addNewEntites(1);
                 for (WordEntitiesListener l : listeners) {
                     l.onWordMissed(wordEntity);
                 }
             }
         }
-
-        // Remove inactive entities
-        entities.removeIf(entity -> !entity.active);
     }
 
     public void addListener(WordEntitiesListener listener) {
@@ -279,15 +277,15 @@ public class WordEntitiesManager {
                 }
             }
             // Otherwise, remove the matched entity
-            removeEntity(matchedEntity);
+            // removeEntity(matchedEntity);
+            for (WordEntitiesListener l : listeners) {
+                l.onWordCompleted(matchedEntity);
+            }
             // Decrease the spawn timer
             spawnCooldown -= 0.5f;
             difficultyRamp += 0.1f;
             // Cap the difficulty ramp
             difficultyRamp = Math.min(difficultyRamp, SPAWN_INTERVAL - (SPAWN_INTERVAL / 2f));
-            for (WordEntitiesListener l : listeners) {
-                l.onWordCompleted(matchedEntity);
-            }
         }
 
         // Clear the input buffer if a word was matched and there's no other
@@ -301,8 +299,16 @@ public class WordEntitiesManager {
     // ========================================================================
     // #region Utility methods for word entites/buffer
 
-    private void removeEntity(WordEntity entity) {
-        entity.active = false;
+    public void removeInactive() {
+        entities.removeIf(entity -> !entity.active);
+    }
+
+    public ArrayList<Collidable> getCollidables() {
+        ArrayList<Collidable> collidables = new ArrayList<>();
+        for (WordEntity e : entities) {
+            collidables.add(e);
+        }
+        return collidables;
     }
 
     public void clearWordList() {

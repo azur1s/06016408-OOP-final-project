@@ -3,13 +3,18 @@ package com.project.scenes.game;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
+import java.util.ArrayList;
+
 import com.project.engine.Engine;
 import com.project.engine.Scene;
+import com.project.engine.entities.Collidable;
+import com.project.engine.entities.CollisionManager;
 import com.project.engine.graphics.Color;
 import com.project.engine.graphics.FontAtlas;
 import com.project.engine.graphics.Texture;
 import com.project.engine.math.Vec2;
 import com.project.engine.ui.Button;
+import com.project.scenes.game.projectiles.ProjectileManager;
 import com.project.scenes.game.words.WordEntitiesManager;
 import com.project.scenes.game.words.WordEntity;
 
@@ -18,6 +23,8 @@ public class Main extends Scene {
 
     private FontAtlas font;
 
+    private CollisionManager collision;
+    private ProjectileManager projectiles;
     private WordEntitiesManager words;
     private InputHandler inputHandler;
 
@@ -36,9 +43,14 @@ public class Main extends Scene {
 
         font = new FontAtlas("GeistMono-Regular.otf", 32);
 
+        collision = new CollisionManager();
+        projectiles = new ProjectileManager();
+
         words = new WordEntitiesManager();
         words.init();
         words.addNewEntites(1);
+        words.addListener(projectiles);
+
         inputHandler = new InputHandler(words);
 
         testButton = new Button(
@@ -90,6 +102,15 @@ public class Main extends Scene {
         if (!isPaused) {
             inputHandler.update();
             words.update(delta);
+            projectiles.update(delta);
+
+            ArrayList<Collidable> collidables = new ArrayList<>();
+            collidables.addAll(words.getCollidables());
+            collidables.addAll(projectiles.getCollidables());
+            collision.detectAndDispatch(collidables);
+
+            words.removeInactive();
+            projectiles.removeInactive();
         } else {
             // Update exit button only when paused
             exitButton.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
@@ -114,6 +135,7 @@ public class Main extends Scene {
 
         super.batch.setColor(Color.WHITE);
         words.render(super.batch, font);
+        projectiles.render(super.batch);
     }
 
     @Override
