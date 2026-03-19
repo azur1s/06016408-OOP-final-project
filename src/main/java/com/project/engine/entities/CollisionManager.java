@@ -17,7 +17,7 @@ public class CollisionManager {
                 // Check layer and mask
                 boolean aCollidesWithB = (a.getMask() & b.getLayer()) != 0;
                 boolean bCollidesWithA = (b.getMask() & a.getLayer()) != 0;
-                if (!aCollidesWithB && !bCollidesWithA) {
+                if (!(aCollidesWithB && bCollidesWithA)) {
                     continue; // No collision possible based on layers
                 }
 

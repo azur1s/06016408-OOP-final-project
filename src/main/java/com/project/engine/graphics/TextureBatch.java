@@ -212,6 +212,19 @@ public class TextureBatch {
     }
 
     /**
+     * Draws a solid rectangle with the given color.
+     *
+     * @param position
+     * @param size
+     * @param color
+     */
+    public void drawRect(Vec2 position, Vec2 size, Color color) {
+        Texture texture = new Texture("textures/solid.png");
+        setColor(color);
+        draw(texture, position.x, position.y, size.x, size.y);
+    }
+
+    /**
      * Sends the current batch to the GPU and draws it.
      */
     public void flush() {

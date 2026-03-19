@@ -12,7 +12,7 @@ public class Vec2 {
         return new Vec2(this.x + v.x, this.y + v.y);
     }
 
-    public Vec2 subtract(Vec2 v) {
+    public Vec2 sub(Vec2 v) {
         return new Vec2(this.x - v.x, this.y - v.y);
     }
 
@@ -30,11 +30,11 @@ public class Vec2 {
         return (float) Math.sqrt(dx * dx + dy * dy);
     }
 
-    public static Vec2 normalize(Vec2 v) {
-        float len = v.length();
+    public Vec2 normalize() {
+        float len = length();
         if (len == 0)
             return new Vec2(0, 0);
-        return new Vec2(v.x / len, v.y / len);
+        return new Vec2(x / len, y / len);
     }
 
     public static boolean isPointInRect(Vec2 point, Vec2 rectPos, Vec2 rectSize) {

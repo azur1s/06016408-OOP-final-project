@@ -4,6 +4,7 @@ import com.project.engine.math.Vec2;
 
 public class Entity implements Collidable {
     public Vec2 position;
+    public Vec2 size;
     public Vec2 velocity = new Vec2(0f, 0f);
     public boolean active = true;
     public AABB boundingBox;
@@ -12,6 +13,7 @@ public class Entity implements Collidable {
     /// Size is used to calculate the bounding box, which is centered on the
     /// position.
     public Entity(Vec2 position, Vec2 size) {
+        this.size = size;
         this.position = position;
         this.boundingBox = new AABB(
                 new Vec2(position.x - size.x / 2, position.y - size.y / 2),
