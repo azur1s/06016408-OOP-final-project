@@ -6,6 +6,7 @@ import engine.Engine;
 import game.overrun.words.WordEntitiesManager;
 
 public class InputHandler {
+    // Reference to Words for adding input chars and checking matches
     public WordEntitiesManager words;
     public int sessionCharCount = 0;
 

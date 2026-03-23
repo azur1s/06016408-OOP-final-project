@@ -142,8 +142,9 @@ public class WordEntitiesManager {
 
             // if the word reaches the left edge of the screen, remove it and generate a new
             // one
-            if (wordEntity.position.x < -500f) {
-                // removeEntity(wordEntity);
+            if (wordEntity.position.x < -600f) {
+                entities.get(i).active = false;
+                entities.remove(i);
                 addNewEntites(1);
                 for (WordEntitiesListener l : listeners) {
                     l.onWordMissed(wordEntity);

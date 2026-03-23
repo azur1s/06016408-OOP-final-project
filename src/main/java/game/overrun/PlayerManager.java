@@ -1,5 +1,6 @@
 package game.overrun;
 
+import engine.math.Vec2;
 import game.overrun.words.WordEffect;
 import game.overrun.words.WordEntitiesListener;
 import game.overrun.words.WordEntitiesManager;
@@ -8,6 +9,7 @@ import game.overrun.words.WordEntity;
 public class PlayerManager implements WordEntitiesListener {
     // Reference to Words for average word length
     private WordEntitiesManager words;
+    private Vec2 playerPosition = new Vec2(-500f, -5f);
 
     public int maxHealth = 100;
     public int health = maxHealth;
@@ -19,7 +21,7 @@ public class PlayerManager implements WordEntitiesListener {
     public float charTimer = 0f;
     public int lastWpm = 0;
 
-    public int currentLane = 2;
+    public int currentLane = 1;
 
     public PlayerManager(WordEntitiesManager words) {
         this.words = words;
@@ -51,15 +53,24 @@ public class PlayerManager implements WordEntitiesListener {
         score += points;
     }
 
+    public Vec2 getPosition() {
+        return playerPosition;
+    }
+
     @Override
     public void onWordCompleted(WordEntity wordEntity) {
-        float streakMultiplier = 1 + (streaks * 0.1f) + (-(streaksTimer - 3) * 0.05f);
+        currentLane = wordEntity.lane;
+        // TODO lerp
+        playerPosition.set(playerPosition.x, wordEntity.position.y);
 
-        addScore((int) (10 * wordEntity.word.length()
-                * WordEffect.getScoreMultipler(wordEntity.effect)
-                * streakMultiplier));
-        streaks++;
-        streaksTimer = 0f;
+        // float streakMultiplier = 1 + (streaks * 0.1f) + (-(streaksTimer - 3) *
+        // 0.05f);
+
+        // addScore((int) (10 * wordEntity.word.length()
+        // * WordEffect.getScoreMultipler(wordEntity.effect)
+        // * streakMultiplier));
+        // streaks++;
+        // streaksTimer = 0f;
     }
 
     @Override
@@ -72,6 +83,6 @@ public class PlayerManager implements WordEntitiesListener {
 
     @Override
     public void onWordProgress(WordEntity wordEntity) {
-        currentLane = wordEntity.lane;
+        // currentLane = wordEntity.lane;
     }
 }

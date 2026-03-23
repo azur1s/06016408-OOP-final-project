@@ -21,15 +21,16 @@ import game.overrun.words.WordEntity;
 public class Main extends Scene {
     private Texture solidTexture;
     private Texture backgroundTexture;
+    private Texture playerTexture;
 
     private FontAtlas font;
 
     private CollisionManager collision;
+    private PlayerManager playerManager;
     private ProjectileManager projectiles;
     private WordEntitiesManager words;
     private InputHandler inputHandler;
 
-    private Button testButton;
     private Button pauseButton;
     private Button exitButton;
 
@@ -42,31 +43,22 @@ public class Main extends Scene {
 
         solidTexture = new Texture("textures/solid.png");
         backgroundTexture = new Texture("textures/background/stage1.png");
+        playerTexture = new Texture("textures/player.png");
 
         font = new FontAtlas("GeistMono-Regular.otf", 32);
 
         collision = new CollisionManager();
+        playerManager = new PlayerManager(words);
         projectiles = new ProjectileManager();
+        projectiles.playerManager = playerManager;
 
         words = new WordEntitiesManager();
         words.init();
         words.addNewEntites(1);
+        words.addListener(playerManager);
         words.addListener(projectiles);
 
         inputHandler = new InputHandler(words);
-
-        testButton = new Button(
-                super.layout.bottomRight(100, 25),
-                new Vec2(200, 50),
-                "Add entity",
-                new Color(1.0f, 0.0f, 0.0f, 1.0f),
-                new Color(0.8f, 0.0f, 0.0f, 1.0f),
-                new Texture("textures/button_test.png"));
-
-        testButton.setOnClick(() -> {
-            System.out.println("Button clicked!");
-            words.addNewEntites(1);
-        });
 
         pauseButton = new Button(
                 super.layout.topLeft(100, 50),
@@ -118,7 +110,6 @@ public class Main extends Scene {
             exitButton.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
         }
 
-        testButton.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
         pauseButton.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
     }
 
@@ -144,12 +135,32 @@ public class Main extends Scene {
         super.batch.setColor(Color.WHITE);
         words.render(super.batch, font);
         projectiles.render(super.batch);
+
+        // Draw player
+        Vec2 playerPos = playerManager.getPosition();
+        super.batch.setColor(Color.WHITE);
+        super.batch.draw(playerTexture, playerPos.x, playerPos.y, 81f, 100f);
     }
 
     @Override
     public void renderUI(float delta) {
-        testButton.render(super.batch, font, mouseScreen);
         pauseButton.render(super.batch, font, mouseScreen);
+
+        // Draw health bar at bottom left
+        float healthBarWidth = Engine.width;
+        float healthBarHeight = 40f;
+        float healthPercent = (float) playerManager.health / playerManager.maxHealth;
+        // Black background
+        super.batch.setColor(Color.BLACK);
+        super.batch.draw(solidTexture, healthBarWidth / 2f, 0, healthBarWidth, healthBarHeight);
+        // Red foreground
+        super.batch.setColor(Color.RED);
+        super.batch.draw(solidTexture, healthBarWidth / 2f + (healthBarWidth * (healthPercent - 1f) / 2f), 0,
+                healthBarWidth * healthPercent, healthBarHeight);
+        // Health text
+        super.batch.setColor(Color.WHITE);
+        font.drawTextUnaligned(super.batch, "Health: " + playerManager.health + "/" + playerManager.maxHealth, 30,
+                40, Color.WHITE, 16);
 
         if (isPaused) {
             // Darken the screen when paused

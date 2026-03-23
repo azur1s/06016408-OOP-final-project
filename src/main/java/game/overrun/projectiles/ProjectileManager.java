@@ -5,11 +5,15 @@ import java.util.ArrayList;
 import engine.entities.Collidable;
 import engine.graphics.TextureBatch;
 import engine.math.Vec2;
+import game.overrun.PlayerManager;
 import game.overrun.words.WordEntitiesListener;
 import game.overrun.words.WordEntity;
 
 public class ProjectileManager implements WordEntitiesListener {
-    ArrayList<Projectile> projectiles = new ArrayList<>();
+    // Reference to Player for getting player position to spawn projectile
+    public PlayerManager playerManager;
+    // List of active projectiles
+    private ArrayList<Projectile> projectiles = new ArrayList<>();
 
     public void spawnProjectile(Projectile projectile) {
         projectiles.add(projectile);
@@ -42,7 +46,7 @@ public class ProjectileManager implements WordEntitiesListener {
 
     @Override
     public void onWordCompleted(WordEntity wordEntity) {
-        Vec2 spawnPositon = new Vec2(-600, 0);
+        Vec2 spawnPositon = playerManager.getPosition().copy();
         Vec2 direction = wordEntity.position.sub(spawnPositon).normalize();
 
         Projectile p = new Projectile(

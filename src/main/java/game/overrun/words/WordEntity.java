@@ -32,7 +32,7 @@ public class WordEntity extends Entity {
     public WordEntity(AnimationClip clip, String word, float xPosition, float speed, int lane) {
         // lane 0 is top, lane 3 is bottom
         super(new Vec2(xPosition, (lane - 2) * LANE_SPACING + LANE_Y_OFFSET),
-                new Vec2(64f, 64f));
+                new Vec2(74f, 74f));
         this.clip = clip;
         this.word = word;
         this.speed = speed;
@@ -70,6 +70,8 @@ public class WordEntity extends Entity {
         // Shift the text up so it's above the texture
         Vec2 pos = position.add(new Vec2(0f, 30f));
 
+        float fontSize = 18f;
+
         if (effect instanceof WordEffect.Hidden hiddenEffect) {
 
             // Hide last N characters based on the effect, and only show it when
@@ -88,16 +90,16 @@ public class WordEntity extends Entity {
             if (progress < visibleCount) {
                 font.drawTextHorizontalAligned(batch,
                         word.substring(0, visibleCount) + hiddenPart,
-                        pos.x, pos.y, previewColor, 16);
+                        pos.x, pos.y, previewColor, fontSize);
             } else {
-                font.drawTextHorizontalAligned(batch, word, pos.x, pos.y, previewColor, 16);
+                font.drawTextHorizontalAligned(batch, word, pos.x, pos.y, previewColor, fontSize);
             }
 
         } else if (effect instanceof WordEffect.Repeat repeatEffect) {
             // Display the word with a multiplier based on how many times it needs to be
             // repeated, e.g. if count is 3, display "example³"
-            Vec2 wordSize = font.measure(word, 16);
-            font.drawTextHorizontalAligned(batch, word, pos.x, pos.y, previewColor, 16);
+            Vec2 wordSize = font.measure(word, fontSize);
+            font.drawTextHorizontalAligned(batch, word, pos.x, pos.y, previewColor, fontSize);
 
             // Draw the multiplier in the top right corner of the word
             String multiplier = "x" + (1 + repeatEffect.count() - repeatEffect.typedCount());
@@ -108,15 +110,15 @@ public class WordEntity extends Entity {
 
         // Normal variant
         else {
-            font.drawTextHorizontalAligned(batch, word, pos.x, pos.y, previewColor, 16);
+            font.drawTextHorizontalAligned(batch, word, pos.x, pos.y, previewColor, fontSize);
         }
 
         // Draw the typed part of the word on top, shifted to the left so it overlaps
         // with the preview text
         if (progress > 0) {
-            float typedWidth = font.getTextWidth(word.substring(0, progress), 16);
+            float typedWidth = font.getTextWidth(word.substring(0, progress), fontSize);
             font.drawTextHorizontalAligned(batch, word.substring(0, progress),
-                    pos.x - (font.getTextWidth(word, 16) / 2f) + (typedWidth / 2f), pos.y, typedColor, 16);
+                    pos.x - (font.getTextWidth(word, fontSize) / 2f) + (typedWidth / 2f), pos.y, typedColor, fontSize);
         }
     }
 

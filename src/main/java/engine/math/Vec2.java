@@ -52,6 +52,10 @@ public class Vec2 {
         this.y = y;
     }
 
+    public Vec2 copy() {
+        return new Vec2(x, y);
+    }
+
     @Override
     public String toString() {
         return "Vec2(" + x + ", " + y + ")";
