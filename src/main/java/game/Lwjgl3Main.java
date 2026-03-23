@@ -113,7 +113,7 @@ public class Lwjgl3Main {
             double currentTime = glfwGetTime();
             float deltaTime = (float) (currentTime - lastTime);
             lastTime = currentTime;
-            Engine.graphics.updateTime(deltaTime);
+            Engine.graphics.updateTime((float) currentTime, deltaTime);
 
             // Update game state and render
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer

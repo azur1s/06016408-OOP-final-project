@@ -23,7 +23,7 @@ public class Main extends Scene {
 
         font = new FontAtlas("GeistMono-Regular.otf", 32);
 
-        logo = new Texture("textures/logo_test.png");
+        logo = new Texture("textures/logo.png");
 
         Texture btnTexture = new Texture("textures/button_test.png");
         Vec2 btnSize = new Vec2(400, 100);
@@ -76,12 +76,11 @@ public class Main extends Scene {
     public void renderUI(float delta) {
         glClearColor(0.4f, 0.4f, 0.4f, 1.0f);
 
-        Vec2 titlePos = super.layout.centerLeft(super.layout.res.x / 4f, -100);
-        font.drawTextAligned(super.batch, "Java Smash", titlePos.x, titlePos.y, Color.WHITE, 64);
+        float logoScale = 1.0f + 0.05f * (float) Math.sin(Engine.graphics.getTime() * 0.5f);
 
-        Vec2 logoPos = super.layout.centerLeft(super.layout.res.x / 4f, 50);
+        Vec2 logoPos = super.layout.centerLeft(super.layout.res.x / 4f + 50f, 0f);
         super.batch.setColor(Color.WHITE);
-        super.batch.draw(logo, logoPos.x, logoPos.y, 400f, 200f);
+        super.batch.draw(logo, logoPos.x, logoPos.y, 3800f / 6f * logoScale, 3000f / 6f * logoScale);
 
         super.uiManager.render(super.batch, font, mouseScreen);
     }

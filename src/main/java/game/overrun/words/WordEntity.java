@@ -10,6 +10,8 @@ import engine.graphics.TextureBatch;
 import engine.math.Vec2;
 
 public class WordEntity extends Entity {
+    // TODO move all this to WordEntitiesManager
+    public static final float LANE_Y_OFFSET = -5f;
     public static final float LANE_HEIGHT = 100f;
     public static final float LANE_GAP = 20f;
     public static final float LANE_SPACING = LANE_HEIGHT + LANE_GAP;
@@ -22,13 +24,13 @@ public class WordEntity extends Entity {
 
     public float speed;
     /**
-     * The lane the word entity is in [0 - 4].
+     * The lane the word entity is in [0 - 3].
      */
     public int lane;
 
     public WordEntity(Texture texture, String word, float xPosition, float speed, int lane) {
-        // lane 0 is top, lane 4 is bottom
-        super(new Vec2(xPosition, (lane - 2) * LANE_SPACING),
+        // lane 0 is top, lane 3 is bottom
+        super(new Vec2(xPosition, (lane - 2) * LANE_SPACING + LANE_Y_OFFSET),
                 new Vec2(64f, 64f));
         this.texture = texture;
         this.word = word;

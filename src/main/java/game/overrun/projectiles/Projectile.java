@@ -39,7 +39,6 @@ public class Projectile extends Entity {
 
     @Override
     public void onCollision(Collidable other) {
-        System.out.println("Projectile collided with " + other);
         active = false;
     }
 

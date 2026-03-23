@@ -20,6 +20,7 @@ import game.overrun.words.WordEntity;
 
 public class Main extends Scene {
     private Texture solidTexture;
+    private Texture backgroundTexture;
 
     private FontAtlas font;
 
@@ -40,6 +41,7 @@ public class Main extends Scene {
         Engine.audio.stopSound("bgm_main");
 
         solidTexture = new Texture("textures/solid.png");
+        backgroundTexture = new Texture("textures/background/stage1.png");
 
         font = new FontAtlas("GeistMono-Regular.otf", 32);
 
@@ -124,13 +126,19 @@ public class Main extends Scene {
     public void renderWorld(float delta) {
         glClearColor(0.4f, 0.4f, 0.4f, 1.0f);
 
-        // draw 5 lanes for the words to move in
-        for (int i = 0; i < 5; i++) {
-            float y = (i - 2) * WordEntity.LANE_SPACING;
-            super.batch.setColor(i % 2 == 0
-                    ? new Color(0.0f, 0.0f, 0.0f, 0.2f)
-                    : new Color(0.0f, 0.0f, 0.0f, 0.4f));
-            super.batch.draw(solidTexture, 0, y, 2000, WordEntity.LANE_HEIGHT);
+        // Draw background
+        super.batch.setColor(Color.WHITE);
+        super.batch.draw(backgroundTexture, 0, 0, Engine.width, Engine.height);
+
+        if (debug) {
+            // draw 4 lanes for the words to move in
+            for (int i = 0; i < 4; i++) {
+                float y = (i - 2) * WordEntity.LANE_SPACING + WordEntity.LANE_Y_OFFSET;
+                super.batch.setColor(i % 2 == 0
+                        ? new Color(1.0f, 0.0f, 0.0f, 0.2f)
+                        : new Color(1.0f, 0.0f, 0.0f, 0.4f));
+                super.batch.draw(solidTexture, 0, y, 2000, WordEntity.LANE_HEIGHT);
+            }
         }
 
         super.batch.setColor(Color.WHITE);

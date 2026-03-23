@@ -14,7 +14,7 @@ import engine.graphics.TextureBatch;
 import engine.utils.Resources;
 
 public class WordEntitiesManager {
-    public static final int MAX_LANES = 5;
+    public static final int MAX_LANES = 4;
     public static final float SPAWN_INTERVAL = 6f; // s between spawning new words
     public static final float LANE_COOLDOWN = 0.5f; // s cooldown for a lane after spawning a word
 
