@@ -1,3 +1,6 @@
+# gendocs.py
+.csv
+
 # Java / Maven
 target/
 dependency-reduced-pom.xml
