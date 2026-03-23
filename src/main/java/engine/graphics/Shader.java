@@ -37,6 +37,11 @@ public class Shader {
         return shader;
     }
 
+    public void setUniform1i(String name, int value) {
+        int location = glGetUniformLocation(programId, name);
+        glUniform1i(location, value);
+    }
+
     public void setUniform4f(String name, float r, float g, float b, float a) {
         int location = glGetUniformLocation(programId, name);
         glUniform4f(location, r, g, b, a);

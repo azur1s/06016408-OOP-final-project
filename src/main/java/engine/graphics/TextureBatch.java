@@ -29,6 +29,7 @@ public class TextureBatch {
     private Texture lastTex = null;
     private boolean isDrawing = false;
     private Color currentColor = Color.WHITE;
+    private boolean currentFlipped = false;
 
     private final int vaoId, vboId;
     private Shader shader;
@@ -69,6 +70,7 @@ public class TextureBatch {
         shader.bind();
         shader.setUniformMat4f("u_projection", projection);
         shader.setUniform4f("u_color", currentColor.r, currentColor.g, currentColor.b, currentColor.a);
+        shader.setUniform1i("u_flipped", currentFlipped ? 1 : 0);
     }
 
     /**
@@ -146,6 +148,19 @@ public class TextureBatch {
         vertices[idx++] = 0.0f;
 
         texCount++;
+    }
+
+    /**
+     * Draws a frame from an animation clip.
+     *
+     * @param clip     AnimationClip to draw
+     * @param position The position
+     * @param time     The time within the animation
+     * @param w        The width
+     * @param h        The height
+     */
+    public void drawAnimation(AnimationClip clip, Vec2 position, float time, float w, float h) {
+        draw(clip.getFrame(time), position, w, h);
     }
 
     /**
@@ -255,6 +270,14 @@ public class TextureBatch {
         }
     }
 
+    public void setFlipped(boolean flipped) {
+        if (flipped != currentFlipped) {
+            flush();
+            currentFlipped = flipped;
+            shader.setUniform1i("u_flipped", flipped ? 1 : 0);
+        }
+    }
+
     public void end() {
         if (!isDrawing)
             throw new IllegalStateException("SpriteBatch is not drawing!");
@@ -262,6 +285,7 @@ public class TextureBatch {
         isDrawing = false;
         lastTex = null;
         currentColor = Color.WHITE;
+        currentFlipped = false;
     }
 
     public void setProjection(Matrix4f projection) {

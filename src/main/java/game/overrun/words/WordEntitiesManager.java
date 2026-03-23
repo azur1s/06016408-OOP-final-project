@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
+import engine.Engine;
 import engine.entities.Collidable;
+import engine.graphics.AnimationClip;
 import engine.graphics.FontAtlas;
 import engine.graphics.Texture;
 import engine.graphics.TextureBatch;
@@ -48,7 +50,7 @@ public class WordEntitiesManager {
     /** Listeners for word entity events. */
     Vector<WordEntitiesListener> listeners = new Vector<>();
 
-    Texture wordTexture;
+    AnimationClip wordAnimationClip;
 
     // ========================================================================
     // #region Initialization, rendering, and updating
@@ -79,7 +81,12 @@ public class WordEntitiesManager {
                 "Loaded " + possibleWordList.length
                         + " words from " + path);
 
-        wordTexture = new Texture("textures/test.png");
+        wordAnimationClip = new AnimationClip(new Texture[] {
+                new Texture("textures/entities/stage1/e1_1.png"),
+                new Texture("textures/entities/stage1/e1_2.png"),
+                new Texture("textures/entities/stage1/e1_3.png"),
+                new Texture("textures/entities/stage1/e1_4.png"),
+        }, 0.2f);
     }
 
     public void render(TextureBatch batch, FontAtlas font) {
@@ -211,7 +218,7 @@ public class WordEntitiesManager {
             String word = candidates.get(i);
 
             WordEntity entity = new WordEntity(
-                    wordTexture,
+                    wordAnimationClip,
                     word,
                     // Random x position off the right edge
                     700f,

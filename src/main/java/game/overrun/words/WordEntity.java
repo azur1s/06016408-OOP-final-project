@@ -1,11 +1,12 @@
 package game.overrun.words;
 
+import engine.Engine;
 import engine.entities.Collidable;
 import engine.entities.CollisionLayer;
 import engine.entities.Entity;
+import engine.graphics.AnimationClip;
 import engine.graphics.Color;
 import engine.graphics.FontAtlas;
-import engine.graphics.Texture;
 import engine.graphics.TextureBatch;
 import engine.math.Vec2;
 
@@ -16,7 +17,7 @@ public class WordEntity extends Entity {
     public static final float LANE_GAP = 20f;
     public static final float LANE_SPACING = LANE_HEIGHT + LANE_GAP;
 
-    public Texture texture;
+    public AnimationClip clip;
 
     public String word;
     public int progress = 0; // How many characters have been correctly typed
@@ -28,11 +29,11 @@ public class WordEntity extends Entity {
      */
     public int lane;
 
-    public WordEntity(Texture texture, String word, float xPosition, float speed, int lane) {
+    public WordEntity(AnimationClip clip, String word, float xPosition, float speed, int lane) {
         // lane 0 is top, lane 3 is bottom
         super(new Vec2(xPosition, (lane - 2) * LANE_SPACING + LANE_Y_OFFSET),
                 new Vec2(64f, 64f));
-        this.texture = texture;
+        this.clip = clip;
         this.word = word;
         this.speed = speed;
         this.lane = lane;
@@ -59,7 +60,9 @@ public class WordEntity extends Entity {
 
     public void render(TextureBatch batch, FontAtlas font) {
         batch.setColor(Color.WHITE);
-        batch.draw(texture, position.x, position.y - 8f, size.x, size.y);
+        batch.setFlipped(true); // TODO remove this when texture is fixed
+        batch.draw(clip.getFrame(Engine.graphics.getTime()), position.x, position.y - 8f, size.x, size.y);
+        batch.setFlipped(false);
 
         Color previewColor = new Color(0.75f, 0.75f, 0.75f, 1f);
         Color typedColor = Color.WHITE;
