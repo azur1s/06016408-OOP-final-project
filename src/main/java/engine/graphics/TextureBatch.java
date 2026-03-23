@@ -10,6 +10,7 @@ import engine.math.Vec2;
 import engine.utils.Resources;
 
 public class TextureBatch {
+    private static final Texture SOLID_TEXTURE = new Texture("textures/solid.png");
     private static final String TEXTURE_VERT = Resources.loadResourcesText("shaders/texture.vert");
     private static final String TEXTURE_FRAG = Resources.loadResourcesText("shaders/texture.frag");
 
@@ -219,9 +220,8 @@ public class TextureBatch {
      * @param color
      */
     public void drawRect(Vec2 position, Vec2 size, Color color) {
-        Texture texture = new Texture("textures/solid.png");
         setColor(color);
-        draw(texture, position.x, position.y, size.x, size.y);
+        draw(SOLID_TEXTURE, position.x, position.y, size.x, size.y);
     }
 
     /**
