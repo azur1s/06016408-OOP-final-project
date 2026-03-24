@@ -29,6 +29,9 @@ public class selectcharacter extends Scene {
             new Color(0.41f, 0.69f, 0.92f, 1.0f),
             new Color(0.53f, 0.77f, 0.49f, 1.0f)
     };
+    private float[] cardScaleAnimations;
+    private float[] cardLiftAnimations;
+    private float[] clickPulseAnimations;
     private int hoveredCharacter = -1;
     private int pendingSelection;
 
@@ -40,6 +43,9 @@ public class selectcharacter extends Scene {
         playerTexture = new Texture("textures/player.png");
 
         pendingSelection = PlayerData.selectedCharacter;
+        cardScaleAnimations = new float[3];
+        cardLiftAnimations = new float[3];
+        clickPulseAnimations = new float[3];
 
         characterButtons = new UIButton[3];
         float[] xOffsets = { 280f, 0f, -280f };
@@ -53,7 +59,10 @@ public class selectcharacter extends Scene {
                     new Color(1f, 1f, 1f, 0.06f),
                     solidTexture);
 
-            button.setOnClick(() -> pendingSelection = index);
+            button.setOnClick(() -> {
+                pendingSelection = index;
+                clickPulseAnimations[index] = 1.0f;
+            });
             button.setOnEnter(() -> hoveredCharacter = index);
             button.setOnLeave(() -> {
                 if (hoveredCharacter == index) {
@@ -93,6 +102,17 @@ public class selectcharacter extends Scene {
         }
         selectButton.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
         backButton.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
+
+        for (int i = 0; i < characterButtons.length; i++) {
+            boolean isHovered = characterButtons[i].isHovered(mouseScreen);
+            boolean isSelected = pendingSelection == i;
+            float targetScale = isSelected ? 1.06f : isHovered ? 1.03f : 1.0f;
+            float targetLift = isSelected ? 18f : isHovered ? 10f : 0f;
+
+            cardScaleAnimations[i] = approach(cardScaleAnimations[i], targetScale, delta * 8f);
+            cardLiftAnimations[i] = approach(cardLiftAnimations[i], targetLift, delta * 180f);
+            clickPulseAnimations[i] = Math.max(0f, clickPulseAnimations[i] - delta * 4.5f);
+        }
     }
 
     @Override
@@ -132,6 +152,21 @@ public class selectcharacter extends Scene {
     private void drawCharacterCard(int index, float cardX, float cardY) {
         boolean isSelected = pendingSelection == index;
         boolean isHovered = hoveredCharacter == index;
+        float pulse = clickPulseAnimations[index];
+        float pulseBoost = (float) Math.sin(pulse * Math.PI) * 0.035f;
+        float scale = cardScaleAnimations[index] + pulseBoost;
+        float lift = cardLiftAnimations[index] + pulse * 12f;
+
+        float panelWidth = 220f * scale;
+        float panelHeight = 310f * scale;
+        float shadowWidth = 228f * scale;
+        float shadowHeight = 322f * scale;
+        float borderThickness = Math.max(6f, 6f * scale);
+        float imageWidth = 105f * scale;
+        float imageHeight = 130f * scale;
+        float podiumWidth = 130f * scale;
+        float podiumHeight = 44f * scale;
+        float drawY = cardY + lift;
 
         Color panelColor = isSelected
                 ? new Color(0.91f, 0.93f, 0.98f, 1.0f)
@@ -139,35 +174,42 @@ public class selectcharacter extends Scene {
         Color outlineColor = isSelected
                 ? accentColors[index]
                 : new Color(0.86f, 0.86f, 0.86f, 1.0f);
-        Color shadowColor = new Color(0f, 0f, 0f, 0.08f);
+        Color shadowColor = new Color(0f, 0f, 0f, 0.10f + pulse * 0.04f);
         Color textColor = isSelected ? accentColors[index] : new Color(0.75f, 0.75f, 0.75f, 1.0f);
 
         super.batch.setColor(shadowColor);
-        super.batch.draw(solidTexture, cardX, cardY - 8f, 228f, 322f);
+        super.batch.draw(solidTexture, cardX, drawY - 12f, shadowWidth, shadowHeight);
 
         super.batch.setColor(panelColor);
-        super.batch.draw(solidTexture, cardX, cardY, 220f, 310f);
+        super.batch.draw(solidTexture, cardX, drawY, panelWidth, panelHeight);
 
         super.batch.setColor(outlineColor);
-        super.batch.draw(solidTexture, cardX, cardY + 155f, 220f, 6f);
-        super.batch.draw(solidTexture, cardX, cardY - 155f, 220f, 6f);
-        super.batch.draw(solidTexture, cardX - 107f, cardY, 6f, 310f);
-        super.batch.draw(solidTexture, cardX + 107f, cardY, 6f, 310f);
+        super.batch.draw(solidTexture, cardX, drawY + panelHeight * 0.5f, panelWidth, borderThickness);
+        super.batch.draw(solidTexture, cardX, drawY - panelHeight * 0.5f, panelWidth, borderThickness);
+        super.batch.draw(solidTexture, cardX - panelWidth * 0.5f + borderThickness * 0.5f, drawY, borderThickness, panelHeight);
+        super.batch.draw(solidTexture, cardX + panelWidth * 0.5f - borderThickness * 0.5f, drawY, borderThickness, panelHeight);
 
-        font.drawTextHorizontalAligned(super.batch, "(pic character)", cardX, cardY + 65f, textColor, 30);
+        font.drawTextHorizontalAligned(super.batch, "(pic character)", cardX, drawY + 65f * scale, textColor, 30f * scale);
 
         super.batch.setColor(new Color(0.85f, 0.85f, 0.85f, 1.0f));
-        super.batch.draw(solidTexture, cardX, cardY - 10f, 130f, 44f);
+        super.batch.draw(solidTexture, cardX, drawY - 10f * scale, podiumWidth, podiumHeight);
 
         super.batch.setColor(accentColors[index]);
-        super.batch.draw(playerTexture, cardX, cardY + 18f, 105f, 130f);
+        super.batch.draw(playerTexture, cardX, drawY + 18f * scale, imageWidth, imageHeight);
 
-        font.drawTextHorizontalAligned(super.batch, characterNames[index], cardX, cardY - 115f, Color.BLACK, 24);
+        font.drawTextHorizontalAligned(super.batch, characterNames[index], cardX, drawY - 115f * scale, Color.BLACK, 24f * scale);
 
         if (isSelected) {
-            font.drawTextHorizontalAligned(super.batch, "Selected", cardX, cardY - 145f, accentColors[index], 22);
+            font.drawTextHorizontalAligned(super.batch, "Selected", cardX, drawY - 145f * scale, accentColors[index], 22f * scale);
         }
 
         super.batch.setColor(Color.WHITE);
+    }
+
+    private float approach(float current, float target, float amount) {
+        if (current < target) {
+            return Math.min(current + amount, target);
+        }
+        return Math.max(current - amount, target);
     }
 }
