@@ -14,6 +14,7 @@ public class Main extends Scene {
     private FontAtlas font;
     private Texture logo;
     private UIButton playButton;
+    private UIButton selectCharacterButton;
     private UIButton settingButton;
     private UIButton quitButton;
 
@@ -51,7 +52,8 @@ public class Main extends Scene {
         super.uiManager.add(quitButton);
 
         playButton.setOnClick(() -> {
-            Engine.setScene(new game.menu.mode.Mode());
+            if (PlayerData.selectedCharacter == -1) Engine.setScene(new game.menu.mode.Mode());
+            else Engine.setScene(new game.menu.selectcharacter.selectcharacter());
         });
 
         settingButton.setOnClick(() -> {
