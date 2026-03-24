@@ -4,6 +4,9 @@ public class PlayerData {
     // 99999 starting coins for testing
     public static int coins = 99999;
 
+    // Selected character index (0-2)
+    public static int selectedCharacter = 0;
+
     // index 0 = Item 1 (unlocked by default)
     public static boolean[] unlockedItems = { true, false, false, false, false };
 

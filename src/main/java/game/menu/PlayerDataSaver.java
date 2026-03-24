@@ -52,6 +52,7 @@ public class PlayerDataSaver {
 
     private static class SaveData {
         int coins;
+        int selectedCharacter;
         boolean[] unlockedItems;
         boolean[] unlockedSkins;
         int[] equippedItems;
@@ -60,6 +61,7 @@ public class PlayerDataSaver {
         static SaveData fromPlayerData() {
             SaveData data = new SaveData();
             data.coins = PlayerData.coins;
+            data.selectedCharacter = PlayerData.selectedCharacter;
             data.unlockedItems = Arrays.copyOf(PlayerData.unlockedItems, PlayerData.unlockedItems.length);
             data.unlockedSkins = Arrays.copyOf(PlayerData.unlockedSkins, PlayerData.unlockedSkins.length);
             data.equippedItems = Arrays.copyOf(PlayerData.equippedItems, PlayerData.equippedItems.length);
@@ -74,6 +76,9 @@ public class PlayerDataSaver {
 
         void applyToPlayerData() {
             PlayerData.coins = coins;
+            if (selectedCharacter >= 0 && selectedCharacter <= 2) {
+                PlayerData.selectedCharacter = selectedCharacter;
+            }
 
             if (unlockedItems != null && unlockedItems.length == PlayerData.unlockedItems.length) {
                 PlayerData.unlockedItems = Arrays.copyOf(unlockedItems, unlockedItems.length);
