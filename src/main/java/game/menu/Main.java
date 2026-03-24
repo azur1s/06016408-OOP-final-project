@@ -14,7 +14,6 @@ public class Main extends Scene {
     private FontAtlas font;
     private Texture logo;
     private UIButton playButton;
-    private UIButton selectCharacterButton;
     private UIButton settingButton;
     private UIButton quitButton;
 
