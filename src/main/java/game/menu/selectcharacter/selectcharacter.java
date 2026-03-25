@@ -1,4 +1,4 @@
-package game.menu.selectcharacter;
+package game.menu.selectCharacter;
 
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
 import static org.lwjgl.opengl.GL11.glClearColor;
@@ -13,7 +13,7 @@ import game.menu.PlayerData;
 import game.menu.PlayerDataSaver;
 import game.menu.components.UIButton;
 
-public class selectcharacter extends Scene {
+public class selectCharacter extends Scene {
     private FontAtlas font;
     private Texture solidTexture;
     private Texture buttonTexture;
@@ -186,10 +186,13 @@ public class selectcharacter extends Scene {
         super.batch.setColor(outlineColor);
         super.batch.draw(solidTexture, cardX, drawY + panelHeight * 0.5f, panelWidth, borderThickness);
         super.batch.draw(solidTexture, cardX, drawY - panelHeight * 0.5f, panelWidth, borderThickness);
-        super.batch.draw(solidTexture, cardX - panelWidth * 0.5f + borderThickness * 0.5f, drawY, borderThickness, panelHeight);
-        super.batch.draw(solidTexture, cardX + panelWidth * 0.5f - borderThickness * 0.5f, drawY, borderThickness, panelHeight);
+        super.batch.draw(solidTexture, cardX - panelWidth * 0.5f + borderThickness * 0.5f, drawY, borderThickness,
+                panelHeight);
+        super.batch.draw(solidTexture, cardX + panelWidth * 0.5f - borderThickness * 0.5f, drawY, borderThickness,
+                panelHeight);
 
-        font.drawTextHorizontalAligned(super.batch, "(pic character)", cardX, drawY + 65f * scale, textColor, 30f * scale);
+        font.drawTextHorizontalAligned(super.batch, "(pic character)", cardX, drawY + 65f * scale, textColor,
+                30f * scale);
 
         super.batch.setColor(new Color(0.85f, 0.85f, 0.85f, 1.0f));
         super.batch.draw(solidTexture, cardX, drawY - 10f * scale, podiumWidth, podiumHeight);
@@ -197,10 +200,12 @@ public class selectcharacter extends Scene {
         super.batch.setColor(accentColors[index]);
         super.batch.draw(playerTexture, cardX, drawY + 18f * scale, imageWidth, imageHeight);
 
-        font.drawTextHorizontalAligned(super.batch, characterNames[index], cardX, drawY - 115f * scale, Color.BLACK, 24f * scale);
+        font.drawTextHorizontalAligned(super.batch, characterNames[index], cardX, drawY - 115f * scale, Color.BLACK,
+                24f * scale);
 
         if (isSelected) {
-            font.drawTextHorizontalAligned(super.batch, "Selected", cardX, drawY - 145f * scale, accentColors[index], 22f * scale);
+            font.drawTextHorizontalAligned(super.batch, "Selected", cardX, drawY - 145f * scale, accentColors[index],
+                    22f * scale);
         }
 
         super.batch.setColor(Color.WHITE);
