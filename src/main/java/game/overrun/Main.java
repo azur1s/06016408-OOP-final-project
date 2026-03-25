@@ -14,6 +14,7 @@ import engine.graphics.FontAtlas;
 import engine.graphics.Texture;
 import engine.math.Vec2;
 import engine.ui.Button;
+import game.menu.PlayerData;
 import game.overrun.projectiles.ProjectileManager;
 import game.overrun.words.WordEntitiesManager;
 import game.overrun.words.WordEntity;
@@ -43,7 +44,7 @@ public class Main extends Scene {
 
         solidTexture = new Texture("textures/solid.png");
         backgroundTexture = new Texture("textures/background/stage1.png");
-        playerTexture = new Texture("textures/player.png");
+        playerTexture = new Texture(getSelectedPlayerTexturePath());
 
         font = new FontAtlas("GeistMono-Regular.otf", 32);
 
@@ -186,5 +187,21 @@ public class Main extends Scene {
     @Override
     public void cleanup() {
         solidTexture.cleanup();
+        backgroundTexture.cleanup();
+        playerTexture.cleanup();
+    }
+
+    private String getSelectedPlayerTexturePath() {
+        String[] texturePaths = {
+                "textures/player_1.png",
+                "textures/player_0.png",
+                "textures/player_3.png"
+        };
+
+        int index = PlayerData.selectedCharacter;
+        if (index < 0 || index >= texturePaths.length) {
+            index = 0;
+        }
+        return texturePaths[index];
     }
 }
