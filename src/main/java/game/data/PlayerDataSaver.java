@@ -1,4 +1,4 @@
-package game.menu;
+package game.data;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

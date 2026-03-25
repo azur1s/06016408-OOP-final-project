@@ -96,7 +96,7 @@ public class Mode extends Scene {
 
         // Coins Display
         Vec2 coinPos = super.layout.topRight(150, 50);
-        font.drawTextAligned(super.batch, "Coins: " + game.menu.PlayerData.coins, coinPos.x, coinPos.y,
+        font.drawTextAligned(super.batch, "Coins: " + game.data.PlayerData.coins, coinPos.x, coinPos.y,
                 Color.WHITE, 24);
 
         // draw dummy cards

@@ -14,7 +14,7 @@ import engine.graphics.FontAtlas;
 import engine.graphics.Texture;
 import engine.math.Vec2;
 import engine.ui.Button;
-import game.menu.PlayerData;
+import game.data.PlayerData;
 import game.overrun.projectiles.ProjectileManager;
 import game.overrun.words.WordEntitiesManager;
 import game.overrun.words.WordEntity;

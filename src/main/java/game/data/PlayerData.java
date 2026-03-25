@@ -1,4 +1,4 @@
-package game.menu;
+package game.data;
 
 public class PlayerData {
     // 99999 starting coins for testing

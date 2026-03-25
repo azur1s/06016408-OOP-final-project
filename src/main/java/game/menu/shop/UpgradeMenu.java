@@ -111,7 +111,7 @@ public class UpgradeMenu extends Scene {
                     "ITEM " + (i + 1),
                     btnTexture);
 
-            boolean isUnlocked = game.menu.PlayerData.unlockedItems[i];
+            boolean isUnlocked = game.data.PlayerData.unlockedItems[i];
 
             // ปุ่มจำลองสถานะการอัพเกรดข้างๆ
             UIButton upgradeStatusBtn = new UIButton(
@@ -149,15 +149,15 @@ public class UpgradeMenu extends Scene {
         backBtn.setOnClick(() -> Engine.setScene(new game.menu.mode.Mode()));
 
         mainUpgradeBtn.setOnClick(() -> {
-            if (!game.menu.PlayerData.unlockedItems[selectedItemIndex])
+            if (!game.data.PlayerData.unlockedItems[selectedItemIndex])
                 return;
 
             int cost = getUpgradeCost(selectedItemIndex, selectedStatIndex);
 
-            if (game.menu.PlayerData.hasEnoughCoins(cost)) {
-                game.menu.PlayerData.deductCoins(cost);
-                game.menu.PlayerData.itemStatsLevels[selectedItemIndex][selectedStatIndex]++;
-                game.menu.PlayerDataSaver.save();
+            if (game.data.PlayerData.hasEnoughCoins(cost)) {
+                game.data.PlayerData.deductCoins(cost);
+                game.data.PlayerData.itemStatsLevels[selectedItemIndex][selectedStatIndex]++;
+                game.data.PlayerDataSaver.save();
                 String[] statNames = { "Cooldown", "Damage", "Duration" };
                 System.out.println(
                         "Upgraded " + statNames[selectedStatIndex] + " of Item " + (selectedItemIndex + 1) + "!");
@@ -169,13 +169,13 @@ public class UpgradeMenu extends Scene {
     }
 
     private int getUpgradeCost(int itemIdx, int statIdx) {
-        int currentLevel = game.menu.PlayerData.itemStatsLevels[itemIdx][statIdx];
+        int currentLevel = game.data.PlayerData.itemStatsLevels[itemIdx][statIdx];
         // Base cost is 500, increases by 250 for each level
         return 500 + (currentLevel * 250);
     }
 
     private void updateUpgradeButtonText() {
-        if (!game.menu.PlayerData.unlockedItems[selectedItemIndex]) {
+        if (!game.data.PlayerData.unlockedItems[selectedItemIndex]) {
             mainUpgradeBtn.setText("UPGRADE");
             return;
         }
@@ -205,7 +205,7 @@ public class UpgradeMenu extends Scene {
 
         // Coins Display
         Vec2 coinPos = super.layout.topRight(150, 50);
-        font.drawTextAligned(super.batch, "Coins: " + game.menu.PlayerData.coins, coinPos.x, coinPos.y,
+        font.drawTextAligned(super.batch, "Coins: " + game.data.PlayerData.coins, coinPos.x, coinPos.y,
                 Color.WHITE, 24);
 
         // Render Title
@@ -223,7 +223,7 @@ public class UpgradeMenu extends Scene {
         super.batch.draw(solidTexture, infoPanelPos.x, infoPanelPos.y, 400, 480);
         super.batch.setColor(Color.WHITE);
 
-        boolean isUnlocked = game.menu.PlayerData.unlockedItems[selectedItemIndex];
+        boolean isUnlocked = game.data.PlayerData.unlockedItems[selectedItemIndex];
 
         // Render Info panel details
         font.drawTextAligned(super.batch, "ITEM " + (selectedItemIndex + 1), infoPanelPos.x, infoPanelPos.y + 180,
@@ -244,9 +244,9 @@ public class UpgradeMenu extends Scene {
             // --- STATS BARS CALCULATION ---
             float barStartX = infoPanelPos.x - 170;
 
-            float currentCooldownLevel = game.menu.PlayerData.itemStatsLevels[selectedItemIndex][0];
-            float currentDamageLevel = game.menu.PlayerData.itemStatsLevels[selectedItemIndex][1];
-            float currentDurationLevel = game.menu.PlayerData.itemStatsLevels[selectedItemIndex][2];
+            float currentCooldownLevel = game.data.PlayerData.itemStatsLevels[selectedItemIndex][0];
+            float currentDamageLevel = game.data.PlayerData.itemStatsLevels[selectedItemIndex][1];
+            float currentDurationLevel = game.data.PlayerData.itemStatsLevels[selectedItemIndex][2];
 
             float baseCooldown = 10f; // placeholder base values
             float baseDamage = 10f;

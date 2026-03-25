@@ -9,8 +9,8 @@ import engine.graphics.Color;
 import engine.graphics.FontAtlas;
 import engine.graphics.Texture;
 import engine.math.Vec2;
-import game.menu.PlayerData;
-import game.menu.PlayerDataSaver;
+import game.data.PlayerData;
+import game.data.PlayerDataSaver;
 import game.menu.components.UIButton;
 
 public class selectCharacter extends Scene {
