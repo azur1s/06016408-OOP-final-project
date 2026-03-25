@@ -11,9 +11,15 @@ import org.lwjgl.system.MemoryUtil;
 import engine.math.Vec2;
 import engine.utils.Resources;
 
+/**
+ * Font atlas built from a TrueType font for batched text rendering.
+ */
 public class FontAtlas {
+    /** Texture containing packed glyph bitmap data. */
     private final Texture texture;
+    /** Packed glyph metrics for printable ASCII characters (32..126). */
     private final STBTTPackedchar.Buffer charData;
+    /** Base font size used while packing glyphs. */
     private final int fontSize;
 
     /**
@@ -145,6 +151,13 @@ public class FontAtlas {
     /**
      * Draws text with the top-left corner of the text at (x, y) without any
      * alignment.
+     *
+     * @param batch texture batch used for rendering
+     * @param text  text to render
+     * @param x     anchor x position
+     * @param y     anchor y position
+     * @param color text color
+     * @param scale size scale multiplier
      */
     public void drawTextUnaligned(TextureBatch batch, String text, float x, float y, Color color, float scale) {
         drawText(batch, text, x, y, color, scale, false, false);
@@ -152,6 +165,13 @@ public class FontAtlas {
 
     /**
      * Draws text centered both horizontally and vertically around (x, y).
+     *
+     * @param batch texture batch used for rendering
+     * @param text  text to render
+     * @param x     anchor x position
+     * @param y     anchor y position
+     * @param color text color
+     * @param scale size scale multiplier
      */
     public void drawTextAligned(TextureBatch batch, String text, float x, float y, Color color, float scale) {
         drawText(batch, text, x, y, color, scale, true, true);
@@ -159,11 +179,21 @@ public class FontAtlas {
 
     /**
      * Draws text centered horizontally around x, but with the top of the text at y.
+     *
+     * @param batch texture batch used for rendering
+     * @param text  text to render
+     * @param x     anchor x position
+     * @param y     anchor y position
+     * @param color text color
+     * @param scale size scale multiplier
      */
     public void drawTextHorizontalAligned(TextureBatch batch, String text, float x, float y, Color color, float scale) {
         drawText(batch, text, x, y, color, scale, true, false);
     }
 
+    /**
+     * Releases native font data and texture resources.
+     */
     public void cleanup() {
         texture.cleanup();
         charData.free();
@@ -217,6 +247,7 @@ public class FontAtlas {
      *
      * @param text  The text to measure
      * @param scale Font size
+     * @return measured width in world units
      */
     public float getTextWidth(String text, float scale) {
         float scaleRatio = scale / fontSize;
@@ -237,6 +268,7 @@ public class FontAtlas {
      *
      * @param text  The text to measure
      * @param scale Font size
+     * @return measured height in world units
      */
     public float getTextHeight(String text, float scale) {
         float scaleRatio = scale / fontSize;

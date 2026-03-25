@@ -1,5 +1,10 @@
 package engine.graphics;
 
+/**
+ * A class for managing graphics-related state (timing, FPS, etc.) and
+ * functionality that can be accessed by renderers and other graphics
+ * components.
+ */
 public class Graphics {
     private float time;
     private float deltaTime = 0;
@@ -8,6 +13,12 @@ public class Graphics {
     private int framesThisSecond = 0;
     private double timeThisSecond = 0;
 
+    /**
+     * Updates frame timing and FPS counters.
+     *
+     * @param time      total elapsed runtime in seconds
+     * @param deltaTime elapsed time in seconds since previous frame
+     */
     public void updateTime(float time, float deltaTime) {
         this.time = time;
         this.deltaTime = deltaTime;

@@ -9,6 +9,10 @@ import engine.math.Matrix4f;
 import engine.math.Vec2;
 import engine.utils.Resources;
 
+/**
+ * Batches textured quad draw calls to reduce OpenGL state changes and draw
+ * submissions.
+ */
 public class TextureBatch {
     private static final Texture SOLID_TEXTURE = new Texture("textures/solid.png");
     private static final String TEXTURE_VERT = Resources.loadResourcesText("shaders/texture.vert");
@@ -35,10 +39,14 @@ public class TextureBatch {
     private Shader shader;
     private final Matrix4f projection = new Matrix4f();
 
+    /** Supported shader variants for this batcher. */
     public enum ShaderType {
         TEXTURE, MSDF
     }
 
+    /**
+     * Creates a texture batch with dynamic vertex buffers and default shader.
+     */
     public TextureBatch() {
         shader = new Shader(TEXTURE_VERT, TEXTURE_FRAG);
 
@@ -62,6 +70,9 @@ public class TextureBatch {
         glBindVertexArray(0);
     }
 
+    /**
+     * Begins a new drawing batch.
+     */
     public void begin() {
         if (isDrawing)
             throw new IllegalStateException("Already drawing! Call end() before beginning again.");
@@ -261,6 +272,11 @@ public class TextureBatch {
         texCount = 0;
     }
 
+    /**
+     * Sets the current tint color for subsequent draws.
+     *
+     * @param color tint color
+     */
     public void setColor(Color color) {
         // If color changed, flush the current batch before applying new color
         if (!color.equals(currentColor)) {
@@ -270,6 +286,11 @@ public class TextureBatch {
         }
     }
 
+    /**
+     * Enables or disables vertical texture coordinate flipping.
+     *
+     * @param flipped whether UVs should be sampled in flipped mode
+     */
     public void setFlipped(boolean flipped) {
         if (flipped != currentFlipped) {
             flush();
@@ -278,6 +299,9 @@ public class TextureBatch {
         }
     }
 
+    /**
+     * Ends drawing and flushes any remaining vertices.
+     */
     public void end() {
         if (!isDrawing)
             throw new IllegalStateException("SpriteBatch is not drawing!");
@@ -288,12 +312,20 @@ public class TextureBatch {
         currentFlipped = false;
     }
 
+    /**
+     * Updates the projection matrix used by the batch shader.
+     *
+     * @param projection projection matrix
+     */
     public void setProjection(Matrix4f projection) {
         if (isDrawing)
             flush(); // Flush before changing projection
         this.projection.set(projection);
     }
 
+    /**
+     * Deletes OpenGL resources owned by this batch.
+     */
     public void cleanup() {
         glDeleteBuffers(vboId);
         glDeleteVertexArrays(vaoId);

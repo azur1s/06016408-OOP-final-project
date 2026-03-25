@@ -8,6 +8,13 @@ package engine.entities;
  * PLAYER=0001, ENEMY=0010, PLAYER_PROJECTILE=0100, ENEMY_PROJECTILE=1000.
  * This allows combining layers with bitwise OR and checking membership with
  * bitwise AND &.
+ *
+ * For example, an entity on the PLAYER layer that should collide with ENEMY and
+ * PLAYER_PROJECTILE:
+ *
+ * <pre>
+ * int playerLayer = CollisionLayer.PLAYER;
+ * int playerMask = CollisionLayer.ENEMY | CollisionLayer.PLAYER_PROJECTILE;
  * </p>
  */
 public final class CollisionLayer {

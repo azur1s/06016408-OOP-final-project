@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
-import engine.Engine;
 import engine.entities.Collidable;
 import engine.graphics.AnimationClip;
 import engine.graphics.FontAtlas;

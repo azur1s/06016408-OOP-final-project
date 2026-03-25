@@ -11,6 +11,9 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.stb.STBImage.*;
 import static org.lwjgl.system.MemoryStack.stackPush;
 
+/**
+ * OpenGL 2D texture wrapper with image loading and GPU upload utilities.
+ */
 public class Texture {
     private final int id;
     private final int width;
@@ -19,6 +22,11 @@ public class Texture {
     private final float originX;
     private final float originY;
 
+    /**
+     * Loads a texture from a resource path.
+     *
+     * @param filePath resource path to image data
+     */
     public Texture(String filePath) {
         ByteBuffer image;
 
@@ -72,10 +80,26 @@ public class Texture {
                 "Texture loaded successfully: " + filePath + " (ID: " + id + ", " + width + "x" + height + ")");
     }
 
+    /**
+     * Creates a texture from raw RGBA bitmap data using a centered origin.
+     *
+     * @param bitmap pixel data in RGBA format
+     * @param width  texture width in pixels
+     * @param height texture height in pixels
+     */
     public Texture(ByteBuffer bitmap, int width, int height) {
         this(bitmap, width, height, width / 2.0f, height / 2.0f);
     }
 
+    /**
+     * Creates a texture from raw RGBA bitmap data.
+     *
+     * @param bitmap  pixel data in RGBA format
+     * @param width   texture width in pixels
+     * @param height  texture height in pixels
+     * @param originX origin x used for draw alignment
+     * @param originY origin y used for draw alignment
+     */
     public Texture(ByteBuffer bitmap, int width, int height, float originX, float originY) {
         this.width = width;
         this.height = height;
@@ -113,22 +137,27 @@ public class Texture {
         glDeleteTextures(id);
     }
 
+    /** @return texture width in pixels */
     public int getWidth() {
         return width;
     }
 
+    /** @return texture height in pixels */
     public int getHeight() {
         return height;
     }
 
+    /** @return OpenGL texture id */
     public int getId() {
         return id;
     }
 
+    /** @return draw origin x in pixels */
     public float getOriginX() {
         return originX;
     }
 
+    /** @return draw origin y in pixels */
     public float getOriginY() {
         return originY;
     }

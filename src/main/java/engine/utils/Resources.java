@@ -8,14 +8,25 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
 /**
- * Utility class for loading resources from the classpath (src/classpath)
+ * Utility class for loading resources from the application classpath
+ * (src/main/resources).
  */
 public final class Resources {
 
+    /**
+     * Utility class; not instantiable.
+     */
     private Resources() {
     }
 
-    public static ByteBuffer loadResourceToByteBuffer(String resourcePath) {
+    /**
+     * Loads a classpath resource into a direct {@link ByteBuffer}.
+     *
+     * @param resourcePath classpath-relative resource path
+     * @return buffer containing the resource bytes, flipped and ready for reading
+     * @throws RuntimeException if the resource cannot be found or read
+     */
+    public static ByteBuffer loadResourceToByteBuffer(String resourcePath) throws RuntimeException {
         byte[] bytes = loadResourceAsBytes(resourcePath);
         ByteBuffer buf = BufferUtils.createByteBuffer(bytes.length);
         buf.put(bytes);
@@ -23,15 +34,26 @@ public final class Resources {
         return buf;
     }
 
-    public static String loadResourcesText(String resourcePath) {
+    /**
+     * Loads a classpath resource as UTF-8 text.
+     *
+     * @param resourcePath classpath-relative resource path
+     * @return decoded UTF-8 string contents
+     * @throws RuntimeException if the resource cannot be found or read
+     */
+    public static String loadResourcesText(String resourcePath) throws RuntimeException {
         byte[] bytes = loadResourceAsBytes(resourcePath);
         return new String(bytes, StandardCharsets.UTF_8);
     }
 
     /**
-     * Shared logic to read an InputStream into a byte array.
+     * Loads a classpath resource as a byte array.
+     *
+     * @param resourcePath classpath-relative resource path
+     * @return raw resource bytes
+     * @throws RuntimeException if the resource cannot be found or read
      */
-    public static byte[] loadResourceAsBytes(String resourcePath) {
+    public static byte[] loadResourceAsBytes(String resourcePath) throws RuntimeException {
         // Use try-with-resources to ensure the InputStream is closed automatically
         try (InputStream src = Resources.class.getClassLoader().getResourceAsStream(resourcePath)) {
             if (src == null) {
