@@ -14,6 +14,8 @@ import engine.graphics.FontAtlas;
 import engine.graphics.Texture;
 import engine.math.Vec2;
 import engine.ui.Button;
+import game.data.Item;
+import game.data.ItemType;
 import game.data.PlayerData;
 import game.overrun.projectiles.ProjectileManager;
 import game.overrun.words.WordEntitiesManager;
@@ -102,6 +104,16 @@ public class Stage extends Scene {
     public void update(float delta) {
         if (Engine.input.isKeyPressed(GLFW_KEY_F3)) {
             debug = !debug;
+        }
+
+        if (Engine.input.isKeyPressed(GLFW_KEY_F1)) {
+            ItemType equippedItem = PlayerData.equippedItems[0];
+            if (equippedItem != null) {
+                Item item = PlayerData.getItemByType(equippedItem);
+                if (item != null) {
+                    item.activate(words);
+                }
+            }
         }
 
         if (!isPaused) {

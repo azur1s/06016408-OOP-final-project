@@ -44,7 +44,7 @@ public class PlayerDataSaver {
                 return;
             }
             // Check if data is valid
-            if (data.items == null || data.equippedItems == null) {
+            if (data.items == null) {
                 return;
             }
             data.applyToPlayerData();
@@ -56,33 +56,48 @@ public class PlayerDataSaver {
     private static class SaveData {
         int coins;
         int selectedCharacter;
-        Item[] items;
-        int[] equippedItems;
+        ItemState[] items;
+        Object[] equippedItems;
+
+        private static class ItemState {
+            String itemType;
+            boolean unlocked;
+            String name;
+            String description;
+            int cooldownLevel;
+            int damageLevel;
+            int durationLevel;
+        }
 
         static SaveData fromPlayerData() {
             SaveData data = new SaveData();
             data.coins = PlayerData.coins;
             data.selectedCharacter = PlayerData.selectedCharacter;
 
-            // Deep copy items
-            data.items = new Item[PlayerData.items.length];
+            data.items = new ItemState[PlayerData.items.length];
             for (int i = 0; i < PlayerData.items.length; i++) {
                 Item item = PlayerData.items[i];
                 if (item != null) {
-                    Item itemCopy = new Item();
-                    itemCopy.unlocked = item.unlocked;
-                    itemCopy.name = item.name;
-                    itemCopy.description = item.description;
-                    itemCopy.cooldownLevel = item.cooldownLevel;
-                    itemCopy.damageLevel = item.damageLevel;
-                    itemCopy.durationLevel = item.durationLevel;
-                    data.items[i] = itemCopy;
+                    ItemState state = new ItemState();
+                    ItemType type = PlayerData.getItemTypeForIndex(i);
+                    state.itemType = type == null ? null : type.name();
+                    state.unlocked = item.unlocked;
+                    state.name = item.name;
+                    state.description = item.description;
+                    state.cooldownLevel = item.cooldownLevel;
+                    state.damageLevel = item.damageLevel;
+                    state.durationLevel = item.durationLevel;
+                    data.items[i] = state;
                 } else {
                     data.items[i] = null;
                 }
             }
 
-            data.equippedItems = Arrays.copyOf(PlayerData.equippedItems, PlayerData.equippedItems.length);
+            data.equippedItems = new Object[PlayerData.equippedItems.length];
+            for (int i = 0; i < PlayerData.equippedItems.length; i++) {
+                ItemType equippedType = PlayerData.equippedItems[i];
+                data.equippedItems[i] = equippedType == null ? null : equippedType.name();
+            }
 
             return data;
         }
@@ -91,13 +106,21 @@ public class PlayerDataSaver {
             PlayerData.coins = this.coins;
             PlayerData.selectedCharacter = this.selectedCharacter;
 
-            for (int i = 0; i < this.items.length; i++) {
-                Item item = this.items[i];
+            PlayerData.items = PlayerData.createDefaultItems();
+
+            int itemCount = Math.min(PlayerData.items.length, this.items.length);
+            for (int i = 0; i < itemCount; i++) {
+                ItemState item = this.items[i];
                 if (item != null) {
-                    Item itemCopy = new Item();
+                    ItemType itemType = parseItemType(item.itemType, i);
+                    Item itemCopy = ItemFactory.create(itemType);
                     itemCopy.unlocked = item.unlocked;
-                    itemCopy.name = item.name;
-                    itemCopy.description = item.description;
+                    if (item.name != null) {
+                        itemCopy.name = item.name;
+                    }
+                    if (item.description != null) {
+                        itemCopy.description = item.description;
+                    }
                     itemCopy.cooldownLevel = item.cooldownLevel;
                     itemCopy.damageLevel = item.damageLevel;
                     itemCopy.durationLevel = item.durationLevel;
@@ -107,7 +130,51 @@ public class PlayerDataSaver {
                 }
             }
 
-            PlayerData.equippedItems = Arrays.copyOf(this.equippedItems, this.equippedItems.length);
+            Arrays.fill(PlayerData.equippedItems, null);
+            if (this.equippedItems != null) {
+                int slots = Math.min(PlayerData.equippedItems.length, this.equippedItems.length);
+                for (int i = 0; i < slots; i++) {
+                    PlayerData.equippedItems[i] = parseEquippedItemType(this.equippedItems[i]);
+                }
+            }
+        }
+
+        private ItemType parseItemType(String savedType, int index) {
+            if (savedType != null) {
+                try {
+                    return ItemType.valueOf(savedType);
+                } catch (IllegalArgumentException ignored) {
+                }
+            }
+            return PlayerData.getItemTypeForIndex(index);
+        }
+
+        private ItemType parseEquippedItemType(Object rawValue) {
+            if (rawValue == null) {
+                return null;
+            }
+
+            if (rawValue instanceof Number) {
+                int index = ((Number) rawValue).intValue();
+                if (index < 0) {
+                    return null;
+                }
+                return PlayerData.getItemTypeForIndex(index);
+            }
+
+            if (rawValue instanceof String) {
+                String typeName = (String) rawValue;
+                if (typeName.isBlank()) {
+                    return null;
+                }
+                try {
+                    return ItemType.valueOf(typeName);
+                } catch (IllegalArgumentException ignored) {
+                    return null;
+                }
+            }
+
+            return null;
         }
     }
 

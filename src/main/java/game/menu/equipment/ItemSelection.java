@@ -41,8 +41,8 @@ public class ItemSelection extends Scene {
                 "Back",
                 btnTexture);
 
-        int item1Index = game.data.PlayerData.equippedItems[0];
-        int item2Index = game.data.PlayerData.equippedItems[1];
+        int item1Index = game.data.PlayerData.getEquippedItemIndex(0);
+        int item2Index = game.data.PlayerData.getEquippedItemIndex(1);
 
         String item1Text = item1Index == -1 ? "" : "ITEM " + (item1Index + 1);
         String item2Text = item2Index == -1 ? "" : "ITEM " + (item2Index + 1);
@@ -85,7 +85,7 @@ public class ItemSelection extends Scene {
         playBtn.setOnClick(() -> {
             // TODO: ส่งคำสั่งเริ่มเกม พร้อมกับด่านที่บันทึกไว้ และไอเทมที่เลือกใช้งานใน UI
             // นี้
-            Engine.setScene(new game.overrun.Main());
+            Engine.setScene(new game.overrun.stage.Stage());
         });
 
         backBtn.setOnClick(() -> {

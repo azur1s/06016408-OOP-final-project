@@ -2,7 +2,9 @@ package game.data;
 
 import java.io.Serializable;
 
-public class Item implements Serializable {
+import game.overrun.words.WordEntitiesManager;
+
+public class Item implements ItemAbility, Serializable {
     public boolean unlocked = false;
 
     public String name;
@@ -11,4 +13,8 @@ public class Item implements Serializable {
     public int cooldownLevel = 0;
     public int damageLevel = 0;
     public int durationLevel = 0;
+
+    @Override
+    public void activate(WordEntitiesManager words) {
+    }
 }

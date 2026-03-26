@@ -12,6 +12,7 @@ import engine.graphics.Color;
 import engine.graphics.FontAtlas;
 import engine.graphics.Texture;
 import engine.math.Vec2;
+import game.data.ItemType;
 import game.data.PlayerData;
 import game.menu.components.UIButton;
 
@@ -49,8 +50,8 @@ public class ItemEquipMenu extends Scene {
             goBack();
         });
 
-        // Add buttons for each item (0 to 4)
-        for (int i = 0; i < 5; i++) {
+        // Add buttons for each item slot from catalog.
+        for (int i = 0; i < PlayerData.getItemCount(); i++) {
             final int itemIndex = i;
 
             float yOffset = -150 + (i * 80);
@@ -72,13 +73,10 @@ public class ItemEquipMenu extends Scene {
 
             itemBtn.setOnClick(() -> {
                 if (PlayerData.items[itemIndex] != null && PlayerData.items[itemIndex].unlocked) {
-                    // TODO (For Backend Devs): Add additional logic here if equipping an item
-                    // requires server validation
-                    // If this item is already in another slot, swap: move the current slot's item
-                    // to that slot
+                    ItemType selectedType = PlayerData.getItemTypeForIndex(itemIndex);
                     int itemCurrentSlot = -1;
                     for (int s = 0; s < PlayerData.equippedItems.length; s++) {
-                        if (s != slotToEquip && PlayerData.equippedItems[s] == itemIndex) {
+                        if (s != slotToEquip && PlayerData.equippedItems[s] == selectedType) {
                             itemCurrentSlot = s;
                             break;
                         }
@@ -86,11 +84,12 @@ public class ItemEquipMenu extends Scene {
                     if (itemCurrentSlot != -1) {
                         // Swap: put displaced item into the slot where selected item came from
                         PlayerData.equippedItems[itemCurrentSlot] = PlayerData.equippedItems[slotToEquip];
-                        System.out.println("Swapped: moved Item " + (PlayerData.equippedItems[itemCurrentSlot] + 1)
-                                + " to Slot " + (itemCurrentSlot + 1));
+                        int movedItemIndex = PlayerData.getItemIndexForType(PlayerData.equippedItems[itemCurrentSlot]);
+                        String movedItemLabel = movedItemIndex >= 0 ? "Item " + (movedItemIndex + 1) : "Empty";
+                        System.out.println("Swapped: moved " + movedItemLabel + " to Slot " + (itemCurrentSlot + 1));
                     }
                     // Equipping the item into the correct slot
-                    PlayerData.equippedItems[slotToEquip] = itemIndex;
+                    PlayerData.equippedItems[slotToEquip] = selectedType;
                     System.out.println("Equipped Item " + (itemIndex + 1) + " into Slot " + (slotToEquip + 1));
                     goBack();
                 } else {

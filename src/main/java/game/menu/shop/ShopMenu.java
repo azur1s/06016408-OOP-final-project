@@ -82,7 +82,7 @@ public class ShopMenu extends Scene {
         super.uiManager.add(toggleRightBtn);
 
         // ======= ITEM TAB SETUP =======
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < PlayerData.getItemCount(); i++) {
             final int index = i;
             // สร้างปุ่มชิ้นส่วนไอเทมทางซ้าย
             float yOffset = -150 + (i * 80);
@@ -223,10 +223,9 @@ public class ShopMenu extends Scene {
     }
 
     private void unlockItem(int itemIndex) {
-        Item item = game.data.PlayerData.items[itemIndex];
+        Item item = game.data.PlayerData.ensureItemAtIndex(itemIndex);
         if (item == null) {
-            item = new Item();
-            game.data.PlayerData.items[itemIndex] = item;
+            return;
         }
         item.unlocked = true;
     }

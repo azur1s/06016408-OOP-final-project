@@ -102,7 +102,7 @@ public class UpgradeMenu extends Scene {
         updateUpgradeButtonText();
 
         // ======= ITEM LIST SETUP =======
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < PlayerData.getItemCount(); i++) {
             final int index = i;
             float yOffset = -150 + (i * 80);
 
@@ -304,10 +304,9 @@ public class UpgradeMenu extends Scene {
     }
 
     private void increaseStatLevel(int itemIndex, int statIndex) {
-        Item item = game.data.PlayerData.items[itemIndex];
+        Item item = game.data.PlayerData.ensureItemAtIndex(itemIndex);
         if (item == null) {
-            item = new Item();
-            game.data.PlayerData.items[itemIndex] = item;
+            return;
         }
 
         switch (statIndex) {

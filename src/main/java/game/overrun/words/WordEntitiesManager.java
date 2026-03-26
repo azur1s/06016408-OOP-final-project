@@ -30,7 +30,7 @@ public class WordEntitiesManager {
     public float averageWordLength = 0f;
 
     /** List of word entites currently on the screen. */
-    Vector<WordEntity> entities = new Vector<>();
+    private Vector<WordEntity> entities = new Vector<>();
     public float[] laneCooldowns = new float[MAX_LANES];
     public float spawnCooldown = 0f;
     // Accumulated difficulty ramp that increases the speed of generated words over
@@ -305,6 +305,10 @@ public class WordEntitiesManager {
     // #endregion
     // ========================================================================
     // #region Utility methods for word entites/buffer
+
+    public Vector<WordEntity> getWordEntities() {
+        return entities;
+    }
 
     public void removeInactive() {
         entities.removeIf(entity -> !entity.active);

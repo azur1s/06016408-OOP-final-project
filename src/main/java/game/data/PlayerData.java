@@ -7,10 +7,19 @@ public class PlayerData {
     // Selected character index (0-2)
     public static int selectedCharacter = 0;
 
-    // Items (all locked by default except Item 1)
-    public static Item[] items = new Item[5];
-    // Equipped Items [Slot 1, Slot 2]. Value = Item Index (0-4), -1 = Empty
-    public static int[] equippedItems = { -1, -1 };
+    public static final ItemType[] ITEM_CATALOG = {
+            ItemType.FREEZE,
+            ItemType.FREEZE,
+            ItemType.FREEZE,
+            ItemType.FREEZE,
+            ItemType.FREEZE,
+    };
+
+    // Items are still stored by shop slot index for UI compatibility.
+    public static Item[] items = createDefaultItems();
+
+    // Equipped item IDs by slot. null means empty.
+    public static ItemType[] equippedItems = { null, null };
 
     // Skins (all locked by default)
     public static boolean[] unlockedSkins = { false, false, false };
@@ -32,5 +41,63 @@ public class PlayerData {
     public static boolean isItemUnlocked(int itemIndex) {
         Item item = game.data.PlayerData.items[itemIndex];
         return item != null && item.unlocked;
+    }
+
+    public static int getItemCount() {
+        return ITEM_CATALOG.length;
+    }
+
+    public static ItemType getItemTypeForIndex(int itemIndex) {
+        if (itemIndex < 0 || itemIndex >= ITEM_CATALOG.length) {
+            return null;
+        }
+        return ITEM_CATALOG[itemIndex];
+    }
+
+    public static int getItemIndexForType(ItemType itemType) {
+        if (itemType == null) {
+            return -1;
+        }
+
+        for (int i = 0; i < ITEM_CATALOG.length; i++) {
+            if (ITEM_CATALOG[i] == itemType) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public static int getEquippedItemIndex(int slot) {
+        if (slot < 0 || slot >= equippedItems.length) {
+            return -1;
+        }
+        return getItemIndexForType(equippedItems[slot]);
+    }
+
+    public static Item getItemByType(ItemType itemType) {
+        int index = getItemIndexForType(itemType);
+        if (index < 0 || index >= items.length) {
+            return null;
+        }
+        return items[index];
+    }
+
+    public static Item ensureItemAtIndex(int itemIndex) {
+        if (itemIndex < 0 || itemIndex >= items.length) {
+            return null;
+        }
+
+        if (items[itemIndex] == null) {
+            items[itemIndex] = ItemFactory.create(getItemTypeForIndex(itemIndex));
+        }
+        return items[itemIndex];
+    }
+
+    public static Item[] createDefaultItems() {
+        Item[] defaults = new Item[ITEM_CATALOG.length];
+        for (int i = 0; i < ITEM_CATALOG.length; i++) {
+            defaults[i] = ItemFactory.create(ITEM_CATALOG[i]);
+        }
+        return defaults;
     }
 }
