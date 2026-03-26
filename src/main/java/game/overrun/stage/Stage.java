@@ -42,7 +42,7 @@ public class Stage extends Scene {
     private boolean isPaused = false;
 
     public Stage() {
-        this(StageConfigs.stage1(), StageContext.defaultContext());
+        this(StageConfigs.STAGE_1, StageContext.defaultContext());
     }
 
     protected Stage(StageConfig config) {
@@ -58,7 +58,7 @@ public class Stage extends Scene {
     public void init(int width, int height) {
         Engine.audio.stopSound(config.soundToStopOnInit());
 
-        solidTexture = new Texture(config.solidTexturePath());
+        solidTexture = new Texture(StageConfigs.getSolidTexturePath());
         backgroundTexture = new Texture(config.backgroundTexturePath());
         playerTexture = new Texture(getSelectedPlayerTexturePath());
 
@@ -81,7 +81,7 @@ public class Stage extends Scene {
                 super.layout.topLeft(100, 50),
                 new Vec2(100, 50),
                 "Pause",
-            new Texture(config.buttonTexturePath()));
+                new Texture(StageConfigs.getButtonTexturePath()));
 
         pauseButton.setOnClick(() -> {
             isPaused = !isPaused;
@@ -97,7 +97,7 @@ public class Stage extends Scene {
                 super.layout.center(0, 0),
                 new Vec2(200, 50),
                 "Exit Game",
-                new Texture(config.buttonTexturePath()));
+                new Texture(StageConfigs.getButtonTexturePath()));
 
         exitButton.setOnClick(() -> {
             context.exitToMainMenu();
@@ -208,7 +208,7 @@ public class Stage extends Scene {
     }
 
     protected String getSelectedPlayerTexturePath() {
-        String[] texturePaths = config.playerTexturePaths();
+        String[] texturePaths = StageConfigs.getPlayerTexturePaths();
         int index = PlayerData.selectedCharacter;
         if (index < 0 || index >= texturePaths.length) {
             index = 0;

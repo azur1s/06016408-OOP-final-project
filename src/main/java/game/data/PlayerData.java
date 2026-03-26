@@ -13,6 +13,9 @@ public class PlayerData {
     // Skins (all locked by default)
     public static boolean[] unlockedSkins = { false, false, false };
 
+    // Unlocked Stages (Stage 1 unlocked by default)
+    public static boolean[] unlockedStages = { true, false, false, false, false };
+
     // Equipped Items [Slot 1, Slot 2]. Value = Item Index (0-4), -1 = Empty
     public static int[] equippedItems = { -1, -1 };
 
