@@ -1,6 +1,7 @@
 package game.data.items;
 
 import engine.Engine;
+import engine.graphics.Color;
 import game.data.Item;
 import game.overrun.words.WordEntitiesManager;
 import game.overrun.words.WordEntity;
@@ -13,13 +14,15 @@ public class Freeze extends Item {
 
     @Override
     public void activate(WordEntitiesManager words) {
-        System.out.println("Activating Freeze item ability!");
         for (WordEntity word : words.getWordEntities()) {
             float previousSpeed = word.speed;
+            Color previousColor = word.color;
             word.speed = 0f;
+            word.color = Color.BLUE;
             Engine.runAfter(() -> {
                 if (word.speed == 0f) {
                     word.speed = previousSpeed;
+                    word.color = previousColor;
                 }
             }, super.durationLevel + 3f);
         }

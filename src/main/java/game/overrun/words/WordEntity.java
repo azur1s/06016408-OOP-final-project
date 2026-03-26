@@ -17,6 +17,7 @@ public class WordEntity extends Entity {
     public static final float LANE_GAP = 20f;
     public static final float LANE_SPACING = LANE_HEIGHT + LANE_GAP;
 
+    public Color color = Color.WHITE;
     public AnimationClip clip;
 
     public String word;
@@ -59,7 +60,7 @@ public class WordEntity extends Entity {
     }
 
     public void render(TextureBatch batch, FontAtlas font) {
-        batch.setColor(Color.WHITE);
+        batch.setColor(this.color);
         batch.setFlipped(true); // TODO remove this when texture is fixed
         batch.draw(clip.getFrame(Engine.graphics.getTime()), position.x, position.y - 8f, size.x, size.y);
         batch.setFlipped(false);
@@ -120,18 +121,6 @@ public class WordEntity extends Entity {
             font.drawTextHorizontalAligned(batch, word.substring(0, progress),
                     pos.x - (font.getTextWidth(word, fontSize) / 2f) + (typedWidth / 2f), pos.y, typedColor, fontSize);
         }
-    }
-
-    public void setTemporarySpeed(float newSpeed, float duration) {
-        float previousSpeed = this.speed;
-        this.speed = newSpeed;
-        // After duration, reset speed back to what it was when this effect started
-        Engine.runAfter(() -> {
-            // Only reset if the speed hasn't been changed again in the meantime
-            if (this.speed == newSpeed) {
-                this.speed = previousSpeed;
-            }
-        }, duration);
     }
 
     public void setEffect(WordEffect effect) {
