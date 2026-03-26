@@ -21,7 +21,6 @@ import game.overrun.words.WordEntity;
 
 public class Stage extends Scene {
     private final StageConfig config;
-    private final StageContext context;
 
     private Texture solidTexture;
     private Texture backgroundTexture;
@@ -42,16 +41,11 @@ public class Stage extends Scene {
     private boolean isPaused = false;
 
     public Stage() {
-        this(StageConfigs.STAGE_1, StageContext.defaultContext());
+        this.config = StageConfigs.STAGE_1;
     }
 
-    protected Stage(StageConfig config) {
-        this(config, StageContext.defaultContext());
-    }
-
-    protected Stage(StageConfig config, StageContext context) {
+    public Stage(StageConfig config) {
         this.config = config;
-        this.context = context;
     }
 
     @Override
@@ -100,7 +94,7 @@ public class Stage extends Scene {
                 new Texture(StageConfigs.getButtonTexturePath()));
 
         exitButton.setOnClick(() -> {
-            context.exitToMainMenu();
+            Engine.setScene(new game.menu.Main());
         });
     }
 
