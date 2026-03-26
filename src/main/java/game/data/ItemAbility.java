@@ -1,5 +1,6 @@
 package game.data;
 
+import game.overrun.stage.Stage;
 import game.overrun.words.WordEntitiesManager;
 
 public interface ItemAbility {
@@ -10,5 +11,5 @@ public interface ItemAbility {
      * @param words The WordEntitiesManager instance, can be used to interact
      *              with the words on the screen.
      */
-    void activate(WordEntitiesManager words);
+    void activate(WordEntitiesManager words, Stage stage);
 }

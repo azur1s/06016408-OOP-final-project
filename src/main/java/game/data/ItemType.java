@@ -1,7 +1,7 @@
 package game.data;
 
 public enum ItemType {
-    FREEZE("Freeze");
+    FREEZE("Freeze"), SHIELD("Shield");
 
     private final String displayName;
 

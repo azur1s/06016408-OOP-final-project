@@ -2,6 +2,7 @@ package game.data;
 
 import java.io.Serializable;
 
+import game.overrun.stage.Stage;
 import game.overrun.words.WordEntitiesManager;
 
 public class Item implements ItemAbility, Serializable {
@@ -15,6 +16,6 @@ public class Item implements ItemAbility, Serializable {
     public int durationLevel = 0;
 
     @Override
-    public void activate(WordEntitiesManager words) {
+    public void activate(WordEntitiesManager words, Stage stage) {
     }
 }

@@ -27,6 +27,7 @@ public class Stage extends Scene {
     private Texture solidTexture;
     private Texture backgroundTexture;
     private Texture playerTexture;
+    public Color playerColor = Color.WHITE;
 
     private FontAtlas font;
 
@@ -108,10 +109,12 @@ public class Stage extends Scene {
 
         if (Engine.input.isKeyPressed(GLFW_KEY_F1)) {
             ItemType equippedItem = PlayerData.equippedItems[0];
+            System.out.println(
+                    "Activating Item in Slot 1: " + (equippedItem != null ? equippedItem.displayName() : "None"));
             if (equippedItem != null) {
                 Item item = PlayerData.getItemByType(equippedItem);
                 if (item != null) {
-                    item.activate(words);
+                    item.activate(words, this);
                 }
             }
         }
@@ -161,7 +164,7 @@ public class Stage extends Scene {
 
         // Draw player
         Vec2 playerPos = playerManager.getPosition();
-        super.batch.setColor(Color.WHITE);
+        super.batch.setColor(playerColor);
         super.batch.draw(playerTexture, playerPos.x, playerPos.y, 81f, 100f);
     }
 

@@ -13,7 +13,7 @@ public class Freeze extends Item {
     }
 
     @Override
-    public void activate(WordEntitiesManager words) {
+    public void activate(WordEntitiesManager words, game.overrun.stage.Stage stage) {
         for (WordEntity word : words.getWordEntities()) {
             float previousSpeed = word.speed;
             Color previousColor = word.color;

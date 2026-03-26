@@ -9,7 +9,7 @@ public class PlayerData {
 
     public static final ItemType[] ITEM_CATALOG = {
             ItemType.FREEZE,
-            ItemType.FREEZE,
+            ItemType.SHIELD,
             ItemType.FREEZE,
             ItemType.FREEZE,
             ItemType.FREEZE,
