@@ -12,6 +12,8 @@ import engine.graphics.Color;
 import engine.graphics.FontAtlas;
 import engine.graphics.Texture;
 import engine.math.Vec2;
+import game.data.Item;
+import game.data.PlayerData;
 import game.menu.components.UIButton;
 
 public class ShopMenu extends Scene {
@@ -90,7 +92,7 @@ public class ShopMenu extends Scene {
                     "ITEM " + (i + 1),
                     btnTexture);
 
-            boolean isUnlocked = game.data.PlayerData.unlockedItems[i];
+            boolean isUnlocked = PlayerData.isItemUnlocked(i);
             UIButton unlockStatusBtn = new UIButton(
                     super.layout.centerLeft(super.layout.res.x / 4f + 160, yOffset),
                     new Vec2(120, 60),
@@ -125,7 +127,7 @@ public class ShopMenu extends Scene {
         buyItemBtn = new UIButton(
                 super.layout.centerRight(super.layout.res.x / 4f + 30, 200),
                 new Vec2(180, 60),
-                game.data.PlayerData.unlockedItems[selectedItemIndex] ? "UNLOCKED"
+                PlayerData.isItemUnlocked(selectedItemIndex) ? "UNLOCKED"
                         : "BUY (" + ITEM_COST + " C)",
                 btnTexture);
         super.uiManager.add(buyItemBtn);
@@ -175,10 +177,10 @@ public class ShopMenu extends Scene {
 
         // Buy System Integration
         buyItemBtn.setOnClick(() -> {
-            if (!game.data.PlayerData.unlockedItems[selectedItemIndex]) {
+            if (!PlayerData.isItemUnlocked(selectedItemIndex)) {
                 if (game.data.PlayerData.hasEnoughCoins(ITEM_COST)) {
                     game.data.PlayerData.deductCoins(ITEM_COST);
-                    game.data.PlayerData.unlockedItems[selectedItemIndex] = true;
+                    unlockItem(selectedItemIndex);
                     game.data.PlayerDataSaver.save();
                     itemBoxBtns.get(selectedItemIndex * 2 + 1).setText("UNLOCKED");
                     System.out.println("Purchased ITEM " + (selectedItemIndex + 1));
@@ -212,12 +214,21 @@ public class ShopMenu extends Scene {
 
     private void updateBuyButtonText() {
         if (!isSkinTabSelected) {
-            if (game.data.PlayerData.unlockedItems[selectedItemIndex]) {
+            if (PlayerData.isItemUnlocked(selectedItemIndex)) {
                 buyItemBtn.setText("UNLOCKED");
             } else {
                 buyItemBtn.setText("BUY (" + ITEM_COST + " C)");
             }
         }
+    }
+
+    private void unlockItem(int itemIndex) {
+        Item item = game.data.PlayerData.items[itemIndex];
+        if (item == null) {
+            item = new Item();
+            game.data.PlayerData.items[itemIndex] = item;
+        }
+        item.unlocked = true;
     }
 
     @Override

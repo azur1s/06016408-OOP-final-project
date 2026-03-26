@@ -53,57 +53,58 @@ public class PlayerDataSaver {
     private static class SaveData {
         int coins;
         int selectedCharacter;
-        boolean[] unlockedItems;
-        boolean[] unlockedSkins;
+        Item[] items;
         int[] equippedItems;
-        int[][] itemStatsLevels;
 
         static SaveData fromPlayerData() {
             SaveData data = new SaveData();
             data.coins = PlayerData.coins;
             data.selectedCharacter = PlayerData.selectedCharacter;
-            data.unlockedItems = Arrays.copyOf(PlayerData.unlockedItems, PlayerData.unlockedItems.length);
-            data.unlockedSkins = Arrays.copyOf(PlayerData.unlockedSkins, PlayerData.unlockedSkins.length);
+
+            // Deep copy items
+            data.items = new Item[PlayerData.items.length];
+            for (int i = 0; i < PlayerData.items.length; i++) {
+                Item item = PlayerData.items[i];
+                if (item != null) {
+                    Item itemCopy = new Item();
+                    itemCopy.unlocked = item.unlocked;
+                    itemCopy.name = item.name;
+                    itemCopy.description = item.description;
+                    itemCopy.cooldownLevel = item.cooldownLevel;
+                    itemCopy.damageLevel = item.damageLevel;
+                    itemCopy.durationLevel = item.durationLevel;
+                    data.items[i] = itemCopy;
+                } else {
+                    data.items[i] = null;
+                }
+            }
+
             data.equippedItems = Arrays.copyOf(PlayerData.equippedItems, PlayerData.equippedItems.length);
 
-            data.itemStatsLevels = new int[PlayerData.itemStatsLevels.length][];
-            for (int i = 0; i < PlayerData.itemStatsLevels.length; i++) {
-                data.itemStatsLevels[i] = Arrays.copyOf(PlayerData.itemStatsLevels[i],
-                        PlayerData.itemStatsLevels[i].length);
-            }
             return data;
         }
 
         void applyToPlayerData() {
-            PlayerData.coins = coins;
-            if (selectedCharacter >= 0 && selectedCharacter <= 2) {
-                PlayerData.selectedCharacter = selectedCharacter;
+            PlayerData.coins = this.coins;
+            PlayerData.selectedCharacter = this.selectedCharacter;
+
+            for (int i = 0; i < this.items.length; i++) {
+                Item item = this.items[i];
+                if (item != null) {
+                    Item itemCopy = new Item();
+                    itemCopy.unlocked = item.unlocked;
+                    itemCopy.name = item.name;
+                    itemCopy.description = item.description;
+                    itemCopy.cooldownLevel = item.cooldownLevel;
+                    itemCopy.damageLevel = item.damageLevel;
+                    itemCopy.durationLevel = item.durationLevel;
+                    PlayerData.items[i] = itemCopy;
+                } else {
+                    PlayerData.items[i] = null;
+                }
             }
 
-            if (unlockedItems != null && unlockedItems.length == PlayerData.unlockedItems.length) {
-                PlayerData.unlockedItems = Arrays.copyOf(unlockedItems, unlockedItems.length);
-            }
-            if (unlockedSkins != null && unlockedSkins.length == PlayerData.unlockedSkins.length) {
-                PlayerData.unlockedSkins = Arrays.copyOf(unlockedSkins, unlockedSkins.length);
-            }
-            if (equippedItems != null && equippedItems.length == PlayerData.equippedItems.length) {
-                PlayerData.equippedItems = Arrays.copyOf(equippedItems, equippedItems.length);
-            }
-            if (itemStatsLevels != null && itemStatsLevels.length == PlayerData.itemStatsLevels.length) {
-                int[][] copied = new int[itemStatsLevels.length][];
-                boolean shapeValid = true;
-                for (int i = 0; i < itemStatsLevels.length; i++) {
-                    if (itemStatsLevels[i] == null
-                            || itemStatsLevels[i].length != PlayerData.itemStatsLevels[i].length) {
-                        shapeValid = false;
-                        break;
-                    }
-                    copied[i] = Arrays.copyOf(itemStatsLevels[i], itemStatsLevels[i].length);
-                }
-                if (shapeValid) {
-                    PlayerData.itemStatsLevels = copied;
-                }
-            }
+            PlayerData.equippedItems = Arrays.copyOf(this.equippedItems, this.equippedItems.length);
         }
     }
 

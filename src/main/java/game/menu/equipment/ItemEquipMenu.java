@@ -54,7 +54,7 @@ public class ItemEquipMenu extends Scene {
             final int itemIndex = i;
 
             float yOffset = -150 + (i * 80);
-            boolean isUnlocked = PlayerData.unlockedItems[itemIndex];
+            boolean isUnlocked = PlayerData.items[itemIndex] != null && PlayerData.items[itemIndex].unlocked;
 
             String btnText = "ITEM " + (itemIndex + 1);
             if (!isUnlocked) {
@@ -71,7 +71,7 @@ public class ItemEquipMenu extends Scene {
             super.uiManager.add(itemBtn);
 
             itemBtn.setOnClick(() -> {
-                if (PlayerData.unlockedItems[itemIndex]) {
+                if (PlayerData.items[itemIndex] != null && PlayerData.items[itemIndex].unlocked) {
                     // TODO (For Backend Devs): Add additional logic here if equipping an item
                     // requires server validation
                     // If this item is already in another slot, swap: move the current slot's item

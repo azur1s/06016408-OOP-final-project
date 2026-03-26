@@ -12,6 +12,8 @@ import engine.graphics.Color;
 import engine.graphics.FontAtlas;
 import engine.graphics.Texture;
 import engine.math.Vec2;
+import game.data.Item;
+import game.data.PlayerData;
 import game.menu.components.UIButton;
 
 public class UpgradeMenu extends Scene {
@@ -111,7 +113,7 @@ public class UpgradeMenu extends Scene {
                     "ITEM " + (i + 1),
                     btnTexture);
 
-            boolean isUnlocked = game.data.PlayerData.unlockedItems[i];
+            boolean isUnlocked = PlayerData.isItemUnlocked(i);
 
             // ปุ่มจำลองสถานะการอัพเกรดข้างๆ
             UIButton upgradeStatusBtn = new UIButton(
@@ -149,14 +151,14 @@ public class UpgradeMenu extends Scene {
         backBtn.setOnClick(() -> Engine.setScene(new game.menu.mode.Mode()));
 
         mainUpgradeBtn.setOnClick(() -> {
-            if (!game.data.PlayerData.unlockedItems[selectedItemIndex])
+            if (!PlayerData.isItemUnlocked(selectedItemIndex))
                 return;
 
             int cost = getUpgradeCost(selectedItemIndex, selectedStatIndex);
 
             if (game.data.PlayerData.hasEnoughCoins(cost)) {
                 game.data.PlayerData.deductCoins(cost);
-                game.data.PlayerData.itemStatsLevels[selectedItemIndex][selectedStatIndex]++;
+                increaseStatLevel(selectedItemIndex, selectedStatIndex);
                 game.data.PlayerDataSaver.save();
                 String[] statNames = { "Cooldown", "Damage", "Duration" };
                 System.out.println(
@@ -169,13 +171,13 @@ public class UpgradeMenu extends Scene {
     }
 
     private int getUpgradeCost(int itemIdx, int statIdx) {
-        int currentLevel = game.data.PlayerData.itemStatsLevels[itemIdx][statIdx];
+        int currentLevel = getStatLevel(itemIdx, statIdx);
         // Base cost is 500, increases by 250 for each level
         return 500 + (currentLevel * 250);
     }
 
     private void updateUpgradeButtonText() {
-        if (!game.data.PlayerData.unlockedItems[selectedItemIndex]) {
+        if (!PlayerData.isItemUnlocked(selectedItemIndex)) {
             mainUpgradeBtn.setText("UPGRADE");
             return;
         }
@@ -223,7 +225,7 @@ public class UpgradeMenu extends Scene {
         super.batch.draw(solidTexture, infoPanelPos.x, infoPanelPos.y, 400, 480);
         super.batch.setColor(Color.WHITE);
 
-        boolean isUnlocked = game.data.PlayerData.unlockedItems[selectedItemIndex];
+        boolean isUnlocked = PlayerData.isItemUnlocked(selectedItemIndex);
 
         // Render Info panel details
         font.drawTextAligned(super.batch, "ITEM " + (selectedItemIndex + 1), infoPanelPos.x, infoPanelPos.y + 180,
@@ -244,9 +246,9 @@ public class UpgradeMenu extends Scene {
             // --- STATS BARS CALCULATION ---
             float barStartX = infoPanelPos.x - 170;
 
-            float currentCooldownLevel = game.data.PlayerData.itemStatsLevels[selectedItemIndex][0];
-            float currentDamageLevel = game.data.PlayerData.itemStatsLevels[selectedItemIndex][1];
-            float currentDurationLevel = game.data.PlayerData.itemStatsLevels[selectedItemIndex][2];
+            float currentCooldownLevel = getStatLevel(selectedItemIndex, 0);
+            float currentDamageLevel = getStatLevel(selectedItemIndex, 1);
+            float currentDurationLevel = getStatLevel(selectedItemIndex, 2);
 
             float baseCooldown = 10f; // placeholder base values
             float baseDamage = 10f;
@@ -282,6 +284,45 @@ public class UpgradeMenu extends Scene {
         super.batch.setColor(new Color(0.4f, 0.4f, 0.4f, 1.0f));
         super.batch.draw(solidTexture, fillCenterX, y, fillWidth, 20);
         super.batch.setColor(Color.WHITE);
+    }
+
+    private int getStatLevel(int itemIndex, int statIndex) {
+        Item item = game.data.PlayerData.items[itemIndex];
+        if (item == null) {
+            return 0;
+        }
+        switch (statIndex) {
+            case 0:
+                return item.cooldownLevel;
+            case 1:
+                return item.damageLevel;
+            case 2:
+                return item.durationLevel;
+            default:
+                return 0;
+        }
+    }
+
+    private void increaseStatLevel(int itemIndex, int statIndex) {
+        Item item = game.data.PlayerData.items[itemIndex];
+        if (item == null) {
+            item = new Item();
+            game.data.PlayerData.items[itemIndex] = item;
+        }
+
+        switch (statIndex) {
+            case 0:
+                item.cooldownLevel++;
+                break;
+            case 1:
+                item.damageLevel++;
+                break;
+            case 2:
+                item.durationLevel++;
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
