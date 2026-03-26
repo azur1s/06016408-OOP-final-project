@@ -122,6 +122,18 @@ public class WordEntity extends Entity {
         }
     }
 
+    public void setTemporarySpeed(float newSpeed, float duration) {
+        float previousSpeed = this.speed;
+        this.speed = newSpeed;
+        // After duration, reset speed back to what it was when this effect started
+        Engine.runAfter(() -> {
+            // Only reset if the speed hasn't been changed again in the meantime
+            if (this.speed == newSpeed) {
+                this.speed = previousSpeed;
+            }
+        }, duration);
+    }
+
     public void setEffect(WordEffect effect) {
         this.effect = effect;
     }
