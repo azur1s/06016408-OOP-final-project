@@ -11,7 +11,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class PlayerDataSaver {
-
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     // Windows: C:\Users\Username\Documents\project\save\playerdata.json
     // macOS/Linux: /home/username/Documents/project/save/playerdata.json
@@ -42,6 +41,10 @@ public class PlayerDataSaver {
             String json = Files.readString(SAVE_FILE, StandardCharsets.UTF_8);
             SaveData data = GSON.fromJson(json, SaveData.class);
             if (data == null) {
+                return;
+            }
+            // Check if data is valid
+            if (data.items == null || data.equippedItems == null) {
                 return;
             }
             data.applyToPlayerData();
