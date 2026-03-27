@@ -17,32 +17,34 @@ import engine.ui.Button;
 import game.data.Item;
 import game.data.ItemType;
 import game.data.PlayerData;
+import game.overrun.InputHandler;
+import game.overrun.PlayerManager;
 import game.overrun.projectiles.ProjectileManager;
 import game.overrun.words.WordEntitiesManager;
 import game.overrun.words.WordEntity;
 
 // TODO: Make enemy texture configurable per stage.
 public class Stage extends Scene {
-    private final StageConfig config;
+    protected final StageConfig config;
 
-    private Texture solidTexture;
-    private Texture backgroundTexture;
-    private Texture playerTexture;
+    protected Texture solidTexture;
+    protected Texture backgroundTexture;
+    protected Texture playerTexture;
     public Color playerColor = Color.WHITE;
 
-    private FontAtlas font;
+    protected FontAtlas font;
 
-    private CollisionManager collision;
-    private game.overrun.PlayerManager playerManager;
-    private ProjectileManager projectiles;
-    private WordEntitiesManager words;
-    private game.overrun.InputHandler inputHandler;
+    protected CollisionManager collision;
+    protected PlayerManager playerManager;
+    protected ProjectileManager projectiles;
+    protected WordEntitiesManager words;
+    protected InputHandler inputHandler;
 
-    private Button pauseButton;
-    private Button exitButton;
+    protected Button pauseButton;
+    protected Button exitButton;
 
-    private boolean debug = false;
-    private boolean isPaused = false;
+    protected boolean debug = false;
+    protected boolean isPaused = false;
 
     public Stage() {
         this(StageConfigs.STAGE_1);
@@ -63,17 +65,16 @@ public class Stage extends Scene {
         font = new FontAtlas(config.fontPath(), config.fontSize());
 
         collision = new CollisionManager();
-        playerManager = new game.overrun.PlayerManager(words);
+        playerManager = new PlayerManager(words);
         projectiles = new ProjectileManager();
         projectiles.playerManager = playerManager;
 
-        words = new WordEntitiesManager();
+        words = new WordEntitiesManager(this.config.entityTexture(), this.config.manualSpawn());
         words.init();
-        words.addNewEntites(1);
         words.addListener(playerManager);
         words.addListener(projectiles);
 
-        inputHandler = new game.overrun.InputHandler(words);
+        inputHandler = new InputHandler(words);
 
         pauseButton = new Button(
                 super.layout.topLeft(100, 50),

@@ -1,20 +1,30 @@
 package game.overrun.stage;
 
+import engine.graphics.AnimationClip;
+
 public class StageConfig {
     private final String soundToStopOnInit;
     private final String backgroundTexturePath;
     private final String fontPath;
     private final int fontSize;
 
+    private final AnimationClip entityTexture;
+    private final boolean manualSpawn;
+
     public StageConfig(
             String soundToStopOnInit,
             String backgroundTexturePath,
             String fontPath,
-            int fontSize) {
+            int fontSize,
+            AnimationClip entityTexture,
+            boolean manualSpawn) {
         this.soundToStopOnInit = soundToStopOnInit;
         this.backgroundTexturePath = backgroundTexturePath;
         this.fontPath = fontPath;
         this.fontSize = fontSize;
+
+        this.entityTexture = entityTexture;
+        this.manualSpawn = manualSpawn;
     }
 
     public String soundToStopOnInit() {
@@ -31,5 +41,13 @@ public class StageConfig {
 
     public int fontSize() {
         return fontSize;
+    }
+
+    public AnimationClip entityTexture() {
+        return entityTexture;
+    }
+
+    public boolean manualSpawn() {
+        return manualSpawn;
     }
 }

@@ -127,11 +127,6 @@ public class StageMenu extends Scene {
 
     @Override
     public void renderUI(float delta) {
-        // Title
-        Vec2 titlePos = super.layout.center(0, -100);
-        // font.drawTextAligned(super.batch, "Select Stage", titlePos.x, titlePos.y,
-        // Color.WHITE, 64);
-
         // Render buttons
         super.uiManager.render(super.batch, font, mouseScreen);
     }

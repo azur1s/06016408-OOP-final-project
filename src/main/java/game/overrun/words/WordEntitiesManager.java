@@ -51,8 +51,19 @@ public class WordEntitiesManager {
 
     AnimationClip wordAnimationClip;
 
+    /**
+     * If true, new word entities will not be automatically spawned via timers and
+     * completion.
+     */
+    public boolean manualSpawn;
+
     // ========================================================================
     // #region Initialization, rendering, and updating
+
+    public WordEntitiesManager(AnimationClip wordAnimationClip, boolean manualSpawn) {
+        this.wordAnimationClip = wordAnimationClip;
+        this.manualSpawn = manualSpawn;
+    }
 
     public void init() {
         String path = "words/words_java.txt";
@@ -79,13 +90,6 @@ public class WordEntitiesManager {
         System.out.println(
                 "Loaded " + possibleWordList.length
                         + " words from " + path);
-
-        wordAnimationClip = new AnimationClip(new Texture[] {
-                new Texture("textures/entities/stage1/e1_1.png"),
-                new Texture("textures/entities/stage1/e1_2.png"),
-                new Texture("textures/entities/stage1/e1_3.png"),
-                new Texture("textures/entities/stage1/e1_4.png"),
-        }, 0.2f);
     }
 
     public void render(TextureBatch batch, FontAtlas font) {
@@ -97,7 +101,7 @@ public class WordEntitiesManager {
     public void update(float delta) {
         // Decrease lane cooldowns every second
         spawnCooldown -= delta;
-        if (spawnCooldown <= 0) {
+        if (spawnCooldown <= 0 && !manualSpawn) {
             addNewEntites(1);
             spawnCooldown = SPAWN_INTERVAL - difficultyRamp;
         }
