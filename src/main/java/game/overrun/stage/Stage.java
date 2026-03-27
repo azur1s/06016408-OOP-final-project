@@ -216,7 +216,7 @@ public class Stage extends Scene {
         float healthPercent = (float) playerManager.health / playerManager.maxHealth;
         super.batch.setColor(Color.BLACK);
         super.batch.draw(solidTexture, healthBarWidth / 2f, 0, healthBarWidth, healthBarHeight);
-        super.batch.setColor(Color.RED);
+        super.batch.setColor(new Color(1f, 0.41f, 0.71f, 1f));
         super.batch.draw(solidTexture, healthBarWidth / 2f + (healthBarWidth * (healthPercent - 1f) / 2f), 0,
                 healthBarWidth * healthPercent, healthBarHeight);
         super.batch.setColor(Color.WHITE);
