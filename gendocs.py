@@ -20,10 +20,6 @@ with open(output_csv, "w", newline="", encoding="utf-8") as f:
         for file in files:
             if file.endswith(".java"):
                 file_path = os.path.join(root, file)
-                # Format path to be "engine/Engine.java"
-                formatted_path = os.path.relpath(file_path, source_dir)\
-                    .replace(os.sep, "/")\
-                    .replace("main/java/", "") # Remove "main/java/" if present
 
                 with open(file_path, "r", encoding="utf-8") as f:
                     content = f.read()
@@ -91,7 +87,7 @@ with open(output_csv, "w", newline="", encoding="utf-8") as f:
                                 note_text = '\n'.join(comment_buffer)
 
                                 # Write the row including the note_text
-                                writer.writerow(['Custom', java_type, formatted_path, method_sig, '', '', note_text])
+                                writer.writerow(['Custom', java_type, file, method_sig, '', '', note_text])
 
                         # If the line was code (not a comment, empty, annotation, or method declaration),
                         # we clear the buffer so older comments don't attach to the next method.
