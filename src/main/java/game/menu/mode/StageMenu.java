@@ -20,7 +20,6 @@ public class StageMenu extends Scene {
     private Texture buttonTexture;
     private Texture[] stageButtonTextures;
     private Texture unlockedProgressBackground;
-    private Button backButton;
     private Button[] stageButtons;
 
     @Override
@@ -29,20 +28,7 @@ public class StageMenu extends Scene {
         buttonTexture = new Texture(StageConfigs.getButtonTexturePath());
         unlockedProgressBackground = new Texture(StageConfigs.getStageBackgroundPaths());
 
-        // Create back button
-        backButton = new UIButton(
-                super.layout.topLeft(100, 50),
-                new Vec2(100, 50),
-                "Back",
-                buttonTexture);
-
-        backButton.setOnClick(() -> {
-            Engine.setScene(new game.menu.mode.Mode());
-        });
-
         createStageButtons();
-
-        super.uiManager.add(backButton);
     }
 
     // TODO: fix each button position within the scene to make it fit the background
@@ -51,12 +37,17 @@ public class StageMenu extends Scene {
         stageButtons = new Button[STAGE_COUNT];
         stageButtonTextures = new Texture[STAGE_COUNT];
         String[] stageButtonPaths = StageConfigs.getStageButtonPaths();
-        Vec2 buttonSize = new Vec2(720, 339);
+        Vec2[] stageButtonSizes = {
+                new Vec2(719, 313),
+                new Vec2(696, 313),
+                new Vec2(685, 339),
+                new Vec2(720, 339)
+        };
         Vec2[] stageOffsets = {
-                new Vec2(220f, -169.5f), // Stage 1 : upper right
-                new Vec2(-220f, -80f), // Stage 2 : upper left
-                new Vec2(220f, 120f), // Stage 3 : lower right
-                new Vec2(-220f, 120f), // Stage 4 : lower left
+                new Vec2(255f, -179.5f), // Stage 1 : upper right
+                new Vec2(-270f, -179.5f), // Stage 2 : upper left
+                new Vec2(270f, 166.5f), // Stage 3 : lower right
+                new Vec2(-255f, 166.5f), // Stage 4 : lower left
         };
 
         for (int stageIndex = 0; stageIndex < STAGE_COUNT; stageIndex++) {
@@ -73,7 +64,7 @@ public class StageMenu extends Scene {
             }
             Button stageButton = new UIButton(
                     super.layout.center(stageOffset.x, stageOffset.y),
-                    buttonSize,
+                    stageIndex < stageButtonSizes.length ? stageButtonSizes[stageIndex] : new Vec2(720, 339),
                     "",
                     stageTexture);
 
