@@ -67,7 +67,7 @@ public class selectCharacter extends Scene {
             final int index = i;
             UIButton button = new UIButton(
                     super.layout.center(xOffsets[i], -10f),
-                    new Vec2(200, 300),
+                    new Vec2(256, 300),
                     "",
                     new Color(1f, 1f, 1f, 0.02f),
                     new Color(1f, 1f, 1f, 0.06f),
@@ -90,7 +90,7 @@ public class selectCharacter extends Scene {
 
         selectButton = new UIButton(
                 super.layout.bottomCenter(0, 90),
-                new Vec2(260, 70),
+                new Vec2(256* 0.8f, 92*0.8f),
                 "",
                 selectedCharacterTexture);
         selectButton.setOnClick(() -> {
@@ -102,7 +102,7 @@ public class selectCharacter extends Scene {
 
         backButton = new UIButton(
                 super.layout.topLeft(100, 50),
-                new Vec2(100, 50),
+                new Vec2(256* 0.6f, 92*0.6f),
                 "",
                 backTexture);
         backButton.setOnClick(() -> Engine.setScene(new game.menu.Main())); // has a bug if you click back when it's back to main menu, it has 2 time sound effect but it must be 1 time        
@@ -138,7 +138,7 @@ public class selectCharacter extends Scene {
         super.batch.draw(backgroundTexture, backgroundPos.x, backgroundPos.y, backgroundSize.x, backgroundSize.y);
 
         Vec2 titlePos = super.layout.topCenter(0, 100);
-        font.drawTextAligned(super.batch, "Select Your Character", titlePos.x, titlePos.y, Color.BLACK, 72);
+        font.drawTextAligned(super.batch, "Select Your Character", titlePos.x, titlePos.y, Color.WHITE, 72);
 
         float[] xPositions = {
                 super.layout.center(280f, -10f).x,
@@ -198,7 +198,6 @@ public class selectCharacter extends Scene {
                 ? accentColors[index]
                 : new Color(0.86f, 0.86f, 0.86f, 1.0f);
         Color shadowColor = new Color(0f, 0f, 0f, 0.10f + pulse * 0.04f);
-        Color textColor = isSelected ? accentColors[index] : new Color(0.75f, 0.75f, 0.75f, 1.0f);
 
         super.batch.setColor(shadowColor);
         super.batch.draw(solidTexture, cardX, drawY - 12f, shadowWidth, shadowHeight);
