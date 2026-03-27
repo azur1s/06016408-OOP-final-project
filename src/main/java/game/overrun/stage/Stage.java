@@ -45,7 +45,7 @@ public class Stage extends Scene {
     private boolean isPaused = false;
 
     public Stage() {
-        this.config = StageConfigs.STAGE_1;
+        this(StageConfigs.STAGE_1);
     }
 
     public Stage(StageConfig config) {
@@ -84,7 +84,6 @@ public class Stage extends Scene {
         pauseButton.setOnClick(() -> {
             isPaused = !isPaused;
             if (isPaused) {
-                // Change text or texture when paused if needed
                 System.out.println("Game Paused");
             } else {
                 System.out.println("Game Resumed");
@@ -133,7 +132,6 @@ public class Stage extends Scene {
             words.removeInactive();
             projectiles.removeInactive();
         } else {
-            // Update exit button only when paused
             exitButton.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
         }
 
@@ -144,12 +142,10 @@ public class Stage extends Scene {
     public void renderWorld(float delta) {
         glClearColor(0.4f, 0.4f, 0.4f, 1.0f);
 
-        // Draw background
         super.batch.setColor(Color.WHITE);
         super.batch.draw(backgroundTexture, 0, 0, Engine.width, Engine.height);
 
         if (debug) {
-            // draw 4 lanes for the words to move in
             for (int i = 0; i < 4; i++) {
                 float y = (i - 2) * WordEntity.LANE_SPACING + WordEntity.LANE_Y_OFFSET;
                 super.batch.setColor(i % 2 == 0
@@ -163,7 +159,6 @@ public class Stage extends Scene {
         words.render(super.batch, font);
         projectiles.render(super.batch);
 
-        // Draw player
         Vec2 playerPos = playerManager.getPosition();
         super.batch.setColor(playerColor);
         super.batch.draw(playerTexture, playerPos.x, playerPos.y, 81f, 100f);
@@ -173,24 +168,19 @@ public class Stage extends Scene {
     public void renderUI(float delta) {
         pauseButton.render(super.batch, font, mouseScreen);
 
-        // Draw health bar at bottom left
         float healthBarWidth = Engine.width;
         float healthBarHeight = 40f;
         float healthPercent = (float) playerManager.health / playerManager.maxHealth;
-        // Black background
         super.batch.setColor(Color.BLACK);
         super.batch.draw(solidTexture, healthBarWidth / 2f, 0, healthBarWidth, healthBarHeight);
-        // Red foreground
         super.batch.setColor(Color.RED);
         super.batch.draw(solidTexture, healthBarWidth / 2f + (healthBarWidth * (healthPercent - 1f) / 2f), 0,
                 healthBarWidth * healthPercent, healthBarHeight);
-        // Health text
         super.batch.setColor(Color.WHITE);
         font.drawTextUnaligned(super.batch, "Health: " + playerManager.health + "/" + playerManager.maxHealth, 30,
                 40, Color.WHITE, 16);
 
         if (isPaused) {
-            // Darken the screen when paused
             super.batch.setColor(new Color(0f, 0f, 0f, 0.5f));
             super.batch.draw(solidTexture, Engine.width * 0.5f, Engine.height * 0.5f, Engine.width, Engine.height);
             super.batch.setColor(Color.WHITE);

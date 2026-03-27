@@ -20,6 +20,14 @@ public class ItemSelection extends Scene {
     private UIButton item1Btn;
     private UIButton item2Btn;
 
+    // Overrun will have OverrunStage as the next Scene, and normal stage will have
+    // Stage 1-4 as next.
+    private Scene nextScene;
+
+    public ItemSelection(Scene nextScene) {
+        this.nextScene = nextScene;
+    }
+
     @Override
     public void init(int width, int height) {
         font = new FontAtlas("GeistMono-Regular.otf", 32);
@@ -85,12 +93,11 @@ public class ItemSelection extends Scene {
         playBtn.setOnClick(() -> {
             // TODO: ส่งคำสั่งเริ่มเกม พร้อมกับด่านที่บันทึกไว้ และไอเทมที่เลือกใช้งานใน UI
             // นี้
-            Engine.setScene(new game.overrun.stage.Stage());
+            Engine.setScene(nextScene);
         });
 
         backBtn.setOnClick(() -> {
-            // ถ้าย้อนกลับคือกลับไปหน้าเลือกด่าน
-            Engine.setScene(new game.menu.mode.StageMenu());
+            Engine.setScene(new game.menu.mode.Mode());
         });
     }
 
@@ -104,9 +111,7 @@ public class ItemSelection extends Scene {
 
         // Texts
         Vec2 titlePos = super.layout.center(0, -150);
-        // TODO: คนทำระบบ ให้แสดงชื่อด่านที่ผู้เล่นเพิ่งเลือกมาจากหน้าก่อนหน้าแทน
-        // Hardcoded "Stage 1"
-        font.drawTextAligned(super.batch, "Stage 1", titlePos.x, titlePos.y, Color.WHITE, 64);
+        font.drawTextAligned(super.batch, "Stage", titlePos.x, titlePos.y, Color.WHITE, 64);
 
         Vec2 selectItemPos = super.layout.center(0, -70);
         font.drawTextAligned(super.batch, "Select Item", selectItemPos.x, selectItemPos.y, Color.WHITE, 24);

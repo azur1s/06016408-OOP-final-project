@@ -105,7 +105,7 @@ public class ItemEquipMenu extends Scene {
         if ("Overrun".equals(sourceMenu)) {
             Engine.setScene(new game.menu.mode.OverrunMenu());
         } else {
-            Engine.setScene(new game.menu.equipment.ItemSelection());
+            Engine.setScene(new game.menu.equipment.ItemSelection(new game.menu.mode.StageMenu()));
         }
     }
 

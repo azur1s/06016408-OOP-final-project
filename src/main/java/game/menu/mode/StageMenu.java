@@ -8,65 +8,107 @@ import engine.graphics.Color;
 import engine.graphics.FontAtlas;
 import engine.graphics.Texture;
 import engine.math.Vec2;
+import engine.ui.Button;
+import game.data.PlayerData;
 import game.menu.components.UIButton;
+import game.overrun.stage.StageConfigs;
 
 public class StageMenu extends Scene {
-    private FontAtlas font;
-    private Texture btnTexture;
-    private UIButton backBtn;
+    private static final int STAGE_COUNT = 4;
 
-    // โหนดสำหรับโชว์ด่านย่อย
-    private UIButton node1;
-    private UIButton node2;
-    private UIButton node3;
-    private UIButton node4;
+    private FontAtlas font;
+    private Texture buttonTexture;
+    private Texture unlockedProgressBackground;
+    private Button backButton;
+    private Button[] stageButtons;
 
     @Override
     public void init(int width, int height) {
-        // TODO: Change BGM to Stage specific music here later
-        // Example:
-        // Engine.audio.loadSound("bgm_stage", "audio/stage_song.ogg");
-        // Engine.audio.playSound("bgm_stage", true);
-
         font = new FontAtlas("GeistMono-Regular.otf", 32);
-        btnTexture = new Texture("textures/button_test.png");
-        Vec2 nodeSize = new Vec2(100, 100);
+        buttonTexture = new Texture(StageConfigs.getButtonTexturePath());
+        unlockedProgressBackground = new Texture(getUnlockedProgressBackgroundPath());
 
-        backBtn = new UIButton(
+        // Create back button
+        backButton = new UIButton(
                 super.layout.topLeft(100, 50),
                 new Vec2(100, 50),
                 "Back",
-                btnTexture);
+                buttonTexture);
 
-        // นำปุ่มมาเรียงไว้ตรงกลางหน้าจอ (0,0 ของ layout.center คือจุดกึ่งกลางจอพอดี)
-        node1 = new UIButton(super.layout.center(-250, -50), nodeSize, "4", btnTexture);
-        node2 = new UIButton(super.layout.center(-100, 30), nodeSize, "3", btnTexture);
-        node3 = new UIButton(super.layout.center(100, -30), nodeSize, "2", btnTexture);
-        node4 = new UIButton(super.layout.center(250, 40), nodeSize, "1", btnTexture);
-
-        super.uiManager.add(backBtn);
-        super.uiManager.add(node1);
-        super.uiManager.add(node2);
-        super.uiManager.add(node3);
-        super.uiManager.add(node4);
-
-        // TODO: สำหรับคนทำระบบ ให้เพิ่มโค้ดเช็คว่าด่านไหนถูกปลดล็อคแล้วบ้าง
-        // หากด่านไหนยังไม่ปลดล็อค อาจจะเปลี่ยนสีปุ่มให้เป็นสีเทา หรือ set setOnClick
-        // เป็น null เพื่อไม่ให้กดได้
-        // TODO: เมื่อผู้เล่นกดเลือกด่าน ให้เก็บ state ไว้ว่าเล่นด่านอะไร แล้วเปิดหน้า
-        // ItemSelection ต่อ
-        Runnable onNodeSelected = () -> {
-            Engine.setScene(new game.menu.equipment.ItemSelection());
-        };
-
-        node1.setOnClick(onNodeSelected);
-        node2.setOnClick(onNodeSelected);
-        node3.setOnClick(onNodeSelected);
-        node4.setOnClick(onNodeSelected);
-
-        backBtn.setOnClick(() -> {
+        backButton.setOnClick(() -> {
             Engine.setScene(new game.menu.mode.Mode());
         });
+
+        createStageButtons();
+
+        super.uiManager.add(backButton);
+    }
+
+    private String getUnlockedProgressBackgroundPath() {
+        int unlockedCount = 0;
+        int total = Math.min(STAGE_COUNT, PlayerData.unlockedStages.length);
+        for (int i = 0; i < total; i++) {
+            if (PlayerData.unlockedStages[i]) {
+                unlockedCount++;
+            }
+        }
+
+        return switch (unlockedCount) {
+            case 4 -> "textures/background/stagelocked/All_unlocked.jpg";
+            case 3 -> "textures/background/stagelocked/Locked1.jpg";
+            case 2 -> "textures/background/stagelocked/Locked2.jpg";
+            default -> "textures/background/stagelocked/Locked3.jpg";
+        };
+    }
+
+    // TODO: Create custom button with texture and size of the texture background we
+    // have
+    private void createStageButtons() {
+        stageButtons = new Button[STAGE_COUNT];
+        Vec2 buttonSize = new Vec2(160, 70);
+        Vec2[] stageOffsets = {
+                new Vec2(220f, -80f), // Stage 1 : upper right
+                new Vec2(-220f, -80f), // Stage 2 : upper left
+                new Vec2(220f, 120f), // Stage 3 : lower right
+                new Vec2(-220f, 120f), // Stage 4 : lower left
+        };
+
+        for (int stageIndex = 0; stageIndex < STAGE_COUNT; stageIndex++) {
+            if (stageIndex >= PlayerData.unlockedStages.length || !PlayerData.unlockedStages[stageIndex]) {
+                continue;
+            }
+
+            final int launchIndex = stageIndex;
+            Vec2 stageOffset = stageOffsets[stageIndex];
+            Button stageButton = new UIButton(
+                    super.layout.center(stageOffset.x, stageOffset.y),
+                    buttonSize,
+                    "Stage " + (stageIndex + 1),
+                    buttonTexture);
+
+            stageButton.setOnClick(() -> launchStage(launchIndex));
+            stageButtons[stageIndex] = stageButton;
+            super.uiManager.add(stageButton);
+        }
+    }
+
+    private void launchStage(int stageIndex) {
+        switch (stageIndex) {
+            case 0:
+                Engine.setScene(new game.overrun.stage.Stage1());
+                break;
+            case 1:
+                Engine.setScene(new game.overrun.stage.Stage2());
+                break;
+            case 2:
+                Engine.setScene(new game.overrun.stage.Stage3());
+                break;
+            case 3:
+                Engine.setScene(new game.overrun.stage.Stage4());
+                break;
+            default:
+                Engine.setScene(new game.overrun.stage.Stage1());
+        }
     }
 
     @Override
@@ -74,24 +116,32 @@ public class StageMenu extends Scene {
     }
 
     @Override
+    public void renderWorld(float delta) {
+        glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+
+        if (unlockedProgressBackground != null) {
+            super.batch.setColor(Color.WHITE);
+            super.batch.draw(unlockedProgressBackground, 0, 0, Engine.width, Engine.height);
+        }
+    }
+
+    @Override
     public void renderUI(float delta) {
-        glClearColor(0.4f, 0.4f, 0.4f, 1.0f);
+        // Title
+        Vec2 titlePos = super.layout.center(0, -100);
+        // font.drawTextAligned(super.batch, "Select Stage", titlePos.x, titlePos.y,
+        // Color.WHITE, 64);
 
-        // TODO: วาดเส้นประเชื่อมโหนด หรือวาดภาพพื้นหลังของกล่องตรงนี้
-        // super.batch.draw( ...เส้นเชื่อมด่าน... );
-
-        // Texts
-        Vec2 mapTitlePos = super.layout.center(0, -150);
-        font.drawTextAligned(super.batch, "Stage Map", mapTitlePos.x, mapTitlePos.y, Color.WHITE, 64);
-
+        // Render buttons
         super.uiManager.render(super.batch, font, mouseScreen);
     }
 
     @Override
     public void cleanup() {
-        if (font != null)
-            font.cleanup();
-        if (btnTexture != null)
-            btnTexture.cleanup();
+        font.cleanup();
+        if (buttonTexture != null)
+            buttonTexture.cleanup();
+        if (unlockedProgressBackground != null)
+            unlockedProgressBackground.cleanup();
     }
 }

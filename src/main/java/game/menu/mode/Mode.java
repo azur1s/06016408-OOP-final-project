@@ -66,7 +66,7 @@ public class Mode extends Scene {
         super.uiManager.add(backBtn);
 
         stageBtn.setOnClick(() -> {
-            Engine.setScene(new game.menu.mode.StageMenu());
+            Engine.setScene(new game.menu.equipment.ItemSelection(new game.menu.mode.StageMenu()));
         });
 
         overrunBtn.setOnClick(() -> {

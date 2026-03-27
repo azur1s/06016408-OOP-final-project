@@ -89,7 +89,7 @@ public class OverrunMenu extends Scene {
         playBtn.setOnClick(() -> {
             // TODO: ส่งคำสั่งเริ่มเกมในโหมด Overrun (อาจจะสร้าง Scene สำหรับ Overrun
             // แทนหรือส่งพารามิเตอร์)
-            Engine.setScene(new game.overrun.stage.SelectStage());
+            Engine.setScene(new game.overrun.stage.OverrunStage());
         });
 
         backBtn.setOnClick(() -> {
