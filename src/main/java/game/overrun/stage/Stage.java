@@ -21,6 +21,7 @@ import game.overrun.projectiles.ProjectileManager;
 import game.overrun.words.WordEntitiesManager;
 import game.overrun.words.WordEntity;
 
+// TODO: Make enemy texture configurable per stage.
 public class Stage extends Scene {
     private final StageConfig config;
 
