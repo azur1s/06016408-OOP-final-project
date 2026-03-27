@@ -1,7 +1,7 @@
 package game.data;
 
+import engine.graphics.TextureBatch;
 import game.overrun.stage.Stage;
-import game.overrun.words.WordEntitiesManager;
 
 public interface ItemAbility {
     /**
@@ -10,6 +10,17 @@ public interface ItemAbility {
      *
      * @param words The WordEntitiesManager instance, can be used to interact
      *              with the words on the screen.
+     * @param stage The current Stage instance, can be used to access player and
+     *              enemy information for ability effects.
      */
-    void activate(WordEntitiesManager words, Stage stage);
+    void activate(Stage stage);
+
+    /**
+     * Render any visual effects related to the item.
+     *
+     * @param stage The current Stage instance, can be used to access player and
+     *              enemy information for rendering purposes.
+     * @param batch The TextureBatch used for rendering
+     */
+    void render(Stage stage, TextureBatch batch);
 }

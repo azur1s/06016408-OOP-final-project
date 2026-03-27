@@ -2,11 +2,13 @@ package game.data;
 
 import java.io.Serializable;
 
+import engine.graphics.TextureBatch;
 import game.overrun.stage.Stage;
-import game.overrun.words.WordEntitiesManager;
 
 public class Item implements ItemAbility, Serializable {
     public boolean unlocked = false;
+
+    public String iconPath;
 
     public String name;
     public String description;
@@ -16,6 +18,10 @@ public class Item implements ItemAbility, Serializable {
     public int durationLevel = 0;
 
     @Override
-    public void activate(WordEntitiesManager words, Stage stage) {
+    public void activate(Stage stage) {
+    }
+
+    @Override
+    public void render(Stage stage, TextureBatch batch) {
     }
 }

@@ -35,9 +35,9 @@ public class Stage extends Scene {
     protected FontAtlas font;
 
     protected CollisionManager collision;
-    protected PlayerManager playerManager;
-    protected ProjectileManager projectiles;
-    protected WordEntitiesManager words;
+    public PlayerManager playerManager;
+    public ProjectileManager projectiles;
+    public WordEntitiesManager words;
     protected InputHandler inputHandler;
 
     protected Button pauseButton;
@@ -116,7 +116,7 @@ public class Stage extends Scene {
             if (equippedItem != null) {
                 Item item = PlayerData.getItemByType(equippedItem);
                 if (item != null) {
-                    item.activate(words, this);
+                    item.activate(this);
                 }
             }
         } else if (Engine.input.isKeyPressed(GLFW_KEY_2)) {
@@ -126,7 +126,7 @@ public class Stage extends Scene {
             if (equippedItem != null) {
                 Item item = PlayerData.getItemByType(equippedItem);
                 if (item != null) {
-                    item.activate(words, this);
+                    item.activate(this);
                 }
             }
         }
@@ -184,6 +184,22 @@ public class Stage extends Scene {
         Vec2 playerPos = playerManager.getPosition();
         super.batch.setColor(playerColor);
         super.batch.draw(playerTexture, playerPos.x, playerPos.y, 81f, 100f);
+
+        // Render active item effects (e.g. shield)
+        ItemType equippedItem1 = PlayerData.equippedItems[0];
+        if (equippedItem1 != null) {
+            Item item1 = PlayerData.getItemByType(equippedItem1);
+            if (item1 != null) {
+                item1.render(this, super.batch);
+            }
+        }
+        ItemType equippedItem2 = PlayerData.equippedItems[1];
+        if (equippedItem2 != null) {
+            Item item2 = PlayerData.getItemByType(equippedItem2);
+            if (item2 != null) {
+                item2.render(this, super.batch);
+            }
+        }
     }
 
     @Override
