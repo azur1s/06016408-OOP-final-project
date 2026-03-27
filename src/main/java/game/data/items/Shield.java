@@ -1,14 +1,19 @@
 package game.data.items;
 
 import engine.Engine;
+import engine.graphics.AnimationClip;
 import engine.graphics.Color;
 import engine.graphics.Texture;
 import engine.graphics.TextureBatch;
+import engine.math.Vec2;
 import game.data.Item;
 import game.overrun.stage.Stage;
 
 public class Shield extends Item {
-    private static final Texture SHIELD_ACTIVE_TEXTURE = new Texture("textures/items/shield_active.png");
+    private static final AnimationClip SHIELD_ACTIVE_TEXTURE = new AnimationClip(new Texture[] {
+            new Texture("textures/items/shield_active_1.png"),
+            new Texture("textures/items/shield_active_2.png"),
+    }, 0.2f);
     private static final Texture ICON_TEXTURE = new Texture("textures/items/icon_shield.png");
 
     private boolean active = false;
@@ -36,9 +41,9 @@ public class Shield extends Item {
     public void render(Stage stage, TextureBatch batch) {
         if (active) {
             float yScale = 1f + (float) Math.sin(Engine.graphics.getTime() * 4f) * 0.1f;
-            batch.draw(SHIELD_ACTIVE_TEXTURE,
-                    stage.playerManager.getPosition().x,
-                    (stage.playerManager.getPosition().y + 80f) * yScale,
+            batch.drawAnimation(SHIELD_ACTIVE_TEXTURE,
+                    new Vec2(stage.playerManager.getPosition().x,
+                            (stage.playerManager.getPosition().y + 80f) * yScale),
                     64, 64);
         }
     }

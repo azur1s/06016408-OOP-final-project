@@ -12,9 +12,9 @@ public class PlayerData {
     public static final ItemType[] ITEM_CATALOG = {
             ItemType.FREEZE,
             ItemType.SHIELD,
-            ItemType.FREEZE,
-            ItemType.FREEZE,
-            ItemType.FREEZE,
+            ItemType.TORNADO,
+            ItemType.TORNADO,
+            ItemType.TORNADO,
     };
 
     // Items are still stored by shop slot index for UI compatibility.

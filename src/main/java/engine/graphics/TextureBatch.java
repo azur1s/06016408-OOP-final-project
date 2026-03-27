@@ -5,6 +5,7 @@ import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
 
+import engine.Engine;
 import engine.math.Matrix4f;
 import engine.math.Vec2;
 import engine.utils.Resources;
@@ -170,8 +171,8 @@ public class TextureBatch {
      * @param w        The width
      * @param h        The height
      */
-    public void drawAnimation(AnimationClip clip, Vec2 position, float time, float w, float h) {
-        draw(clip.getFrame(time), position, w, h);
+    public void drawAnimation(AnimationClip clip, Vec2 position, float w, float h) {
+        draw(clip.getFrame(Engine.graphics.getTime()), position, w, h);
     }
 
     /**
