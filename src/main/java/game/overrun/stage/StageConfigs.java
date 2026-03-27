@@ -17,8 +17,7 @@ public final class StageConfigs {
                     new Texture("textures/entities/stage1/e1_2.png"),
                     new Texture("textures/entities/stage1/e1_3.png"),
                     new Texture("textures/entities/stage1/e1_4.png"),
-            }, 0.2f),
-            false);
+            }, 0.2f));
 
     public static final StageConfig STAGE_1 = new StageConfig(
             "bgm_main",
@@ -31,7 +30,12 @@ public final class StageConfigs {
                     new Texture("textures/entities/stage1/e1_3.png"),
                     new Texture("textures/entities/stage1/e1_4.png"),
             }, 0.2f),
-            true);
+            new SpawnPhase[] {
+                    new SpawnPhase(5, 1),
+                    new SpawnPhase(10, 10),
+                    new SpawnPhase(15, 20)
+            },
+            60f * 2f);
 
     public static final StageConfig STAGE_2 = new StageConfig(
             "bgm_main",
@@ -44,7 +48,12 @@ public final class StageConfigs {
                     new Texture("textures/entities/stage1/e1_3.png"),
                     new Texture("textures/entities/stage1/e1_4.png"),
             }, 0.2f),
-            true);
+            new SpawnPhase[] {
+                    new SpawnPhase(10, 1),
+                    new SpawnPhase(15, 10),
+                    new SpawnPhase(20, 20)
+            },
+            60f * 3f);
 
     public static final StageConfig STAGE_3 = new StageConfig(
             "bgm_main",
@@ -57,7 +66,12 @@ public final class StageConfigs {
                     new Texture("textures/entities/stage1/e1_3.png"),
                     new Texture("textures/entities/stage1/e1_4.png"),
             }, 0.2f),
-            true);
+            new SpawnPhase[] {
+                    new SpawnPhase(15, 1),
+                    new SpawnPhase(20, 10),
+                    new SpawnPhase(25, 20)
+            },
+            60f * 4f);
 
     public static final StageConfig STAGE_4 = new StageConfig(
             "bgm_main",
@@ -70,7 +84,12 @@ public final class StageConfigs {
                     new Texture("textures/entities/stage1/e1_3.png"),
                     new Texture("textures/entities/stage1/e1_4.png"),
             }, 0.2f),
-            true);
+            new SpawnPhase[] {
+                    new SpawnPhase(20, 1),
+                    new SpawnPhase(25, 10),
+                    new SpawnPhase(30, 20)
+            },
+            60f * 5f);
 
     public static String[] getPlayerTexturePaths() {
         return new String[] {
