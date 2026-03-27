@@ -80,6 +80,19 @@ public final class StageConfigs {
         };
     }
 
+    public static String getStageBackgroundPaths() {
+        return "textures/background/stagelocked/allLocked.jpg";
+    }
+
+    public static String[] getStageButtonPaths() {
+        return new String[] {
+                "textures/stage1.png",
+                "textures/stage2.png",
+                "textures/stage3.png",
+                "textures/stage4.png",
+        };
+    }
+
     public static String getSolidTexturePath() {
         return "textures/solid.png";
     }

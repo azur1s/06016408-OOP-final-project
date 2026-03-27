@@ -27,7 +27,7 @@ public class PlayerData {
     public static boolean[] unlockedSkins = { false, false, false };
 
     // Unlocked Stages (Stage 1 unlocked by default)
-    public static boolean[] unlockedStages = { true, false, false, false, false };
+    public static boolean[] unlockedStages = { true, true, true, true };
 
     // Helper functions for readability
     public static boolean hasEnoughCoins(int cost) {

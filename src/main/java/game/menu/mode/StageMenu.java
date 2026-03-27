@@ -18,6 +18,7 @@ public class StageMenu extends Scene {
 
     private FontAtlas font;
     private Texture buttonTexture;
+    private Texture[] stageButtonTextures;
     private Texture unlockedProgressBackground;
     private Button backButton;
     private Button[] stageButtons;
@@ -26,7 +27,7 @@ public class StageMenu extends Scene {
     public void init(int width, int height) {
         font = new FontAtlas("GeistMono-Regular.otf", 32);
         buttonTexture = new Texture(StageConfigs.getButtonTexturePath());
-        unlockedProgressBackground = new Texture(getUnlockedProgressBackgroundPath());
+        unlockedProgressBackground = new Texture(StageConfigs.getStageBackgroundPaths());
 
         // Create back button
         backButton = new UIButton(
@@ -44,30 +45,15 @@ public class StageMenu extends Scene {
         super.uiManager.add(backButton);
     }
 
-    private String getUnlockedProgressBackgroundPath() {
-        int unlockedCount = 0;
-        int total = Math.min(STAGE_COUNT, PlayerData.unlockedStages.length);
-        for (int i = 0; i < total; i++) {
-            if (PlayerData.unlockedStages[i]) {
-                unlockedCount++;
-            }
-        }
-
-        return switch (unlockedCount) {
-            case 4 -> "textures/background/stagelocked/All_unlocked.jpg";
-            case 3 -> "textures/background/stagelocked/Locked1.jpg";
-            case 2 -> "textures/background/stagelocked/Locked2.jpg";
-            default -> "textures/background/stagelocked/Locked3.jpg";
-        };
-    }
-
-    // TODO: Create custom button with texture and size of the texture background we
-    // have
+    // TODO: fix each button position within the scene to make it fit the background
+    // image better
     private void createStageButtons() {
         stageButtons = new Button[STAGE_COUNT];
-        Vec2 buttonSize = new Vec2(160, 70);
+        stageButtonTextures = new Texture[STAGE_COUNT];
+        String[] stageButtonPaths = StageConfigs.getStageButtonPaths();
+        Vec2 buttonSize = new Vec2(720, 339);
         Vec2[] stageOffsets = {
-                new Vec2(220f, -80f), // Stage 1 : upper right
+                new Vec2(220f, -169.5f), // Stage 1 : upper right
                 new Vec2(-220f, -80f), // Stage 2 : upper left
                 new Vec2(220f, 120f), // Stage 3 : lower right
                 new Vec2(-220f, 120f), // Stage 4 : lower left
@@ -80,11 +66,16 @@ public class StageMenu extends Scene {
 
             final int launchIndex = stageIndex;
             Vec2 stageOffset = stageOffsets[stageIndex];
+            Texture stageTexture = buttonTexture;
+            if (stageIndex < stageButtonPaths.length) {
+                stageTexture = new Texture(stageButtonPaths[stageIndex]);
+                stageButtonTextures[stageIndex] = stageTexture;
+            }
             Button stageButton = new UIButton(
                     super.layout.center(stageOffset.x, stageOffset.y),
                     buttonSize,
-                    "Stage " + (stageIndex + 1),
-                    buttonTexture);
+                    "",
+                    stageTexture);
 
             stageButton.setOnClick(() -> launchStage(launchIndex));
             stageButtons[stageIndex] = stageButton;
@@ -136,6 +127,13 @@ public class StageMenu extends Scene {
         font.cleanup();
         if (buttonTexture != null)
             buttonTexture.cleanup();
+        if (stageButtonTextures != null) {
+            for (Texture stageButtonTexture : stageButtonTextures) {
+                if (stageButtonTexture != null) {
+                    stageButtonTexture.cleanup();
+                }
+            }
+        }
         if (unlockedProgressBackground != null)
             unlockedProgressBackground.cleanup();
     }
