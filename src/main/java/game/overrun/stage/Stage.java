@@ -116,7 +116,8 @@ public class Stage extends Scene {
         if (equippedItem1 != null) {
             Item item1 = PlayerData.getItemByType(equippedItem1);
             if (item1 != null) {
-                item1.update(delta);
+                if (!isPaused)
+                    item1.update(delta);
                 if (Engine.input.isKeyPressed(GLFW_KEY_1) && item1.canActivate()) {
                     System.out.println(
                             "Activating Item in Slot 1: "
@@ -129,7 +130,8 @@ public class Stage extends Scene {
         if (equippedItem2 != null) {
             Item item2 = PlayerData.getItemByType(equippedItem2);
             if (item2 != null) {
-                item2.update(delta);
+                if (!isPaused)
+                    item2.update(delta);
                 if (Engine.input.isKeyPressed(GLFW_KEY_2) && item2.canActivate()) {
                     System.out.println(
                             "Activating Item in Slot 2: "
@@ -258,7 +260,7 @@ public class Stage extends Scene {
             ItemType equippedItem = PlayerData.equippedItems[i];
             if (equippedItem != null) {
                 Item item = PlayerData.getItemByType(equippedItem);
-                if (item != null) {
+                if (item != null && item.icon != null) {
                     // draw item icon
                     super.batch.setColor(Color.WHITE);
                     super.batch.draw(item.icon,
