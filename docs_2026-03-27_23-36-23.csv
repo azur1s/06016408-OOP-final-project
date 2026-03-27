@@ -1,0 +1,602 @@
+Owner,Type,Path,Method,KPI,Rate,Note
+Custom,Class,Lwjgl3Main,public void run(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,private void init(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,private void loop(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,private void cleanup(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public static void main(String[] args),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+Custom,Class,PlayerManager,public PlayerManager(WordEntitiesManager words),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,"public void update(float delta, int charCount)",ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public boolean isDead(),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void hurt(int damage),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void addScore(int points),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public Vec2 getPosition(),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void onWordCompleted(WordEntity wordEntity),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void onWordMissed(WordEntity wordEntity),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void onWordProgress(WordEntity wordEntity),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+Custom,Class,InputHandler,public InputHandler(WordEntitiesManager words),ให้พัฒนา Class ขึ้นเอง (Custom Class),,
+,,,public void update(),ให้พัฒนา Class ขึ้นเอง (Custom Class),,
+Custom,Interface,WordEffect,record Normal() implements WordEffect,ให้พัฒนา Interface ขึ้นเอง (Custom Interface),,
+,,,record Hidden(int count) implements WordEffect,ให้พัฒนา Interface ขึ้นเอง (Custom Interface),,"Hides the last N characters of the word until the user types enough correct
+characters to reveal them."
+,,,"record Repeat(int count, int typedCount) implements WordEffect",ให้พัฒนา Interface ขึ้นเอง (Custom Interface),,User have to type this word N times in a row to complete it.
+,,,public Repeat(int count),ให้พัฒนา Interface ขึ้นเอง (Custom Interface),,
+,,,public Repeat incrementTypedCount(),ให้พัฒนา Interface ขึ้นเอง (Custom Interface),,
+,,,public boolean isCompleted(),ให้พัฒนา Interface ขึ้นเอง (Custom Interface),,
+,,,static WordEffect randomEffect(WordEntity wordEntity),ให้พัฒนา Interface ขึ้นเอง (Custom Interface),,
+,,,static float getScoreMultipler(WordEffect effect),ให้พัฒนา Interface ขึ้นเอง (Custom Interface),,
+,,,static float getDamageMultipler(WordEffect effect),ให้พัฒนา Interface ขึ้นเอง (Custom Interface),,
+Custom,Class,WordEntitiesManager,"public WordEntitiesManager(AnimationClip wordAnimationClip, boolean manualSpawn)",ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void init(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,"public void render(TextureBatch batch, FontAtlas font)",ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void update(float delta),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void addListener(WordEntitiesListener listener),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,private int selectLane(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Selects a lane for a new word entity to spawn in based on the lane cooldowns.
+Lanes with no cooldown are selected, and if there are multiple, one is
+randomly chosen. If all lanes are on cooldown, a random lane is selected."
+,,,private List<String> generateUniqueWordsCandidate(int count),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Generates a list of unique candidate words not already in the current word
+list."
+,,,public void addNewEntites(int count),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Generates a new word entity/entites and adds it to the current word list.
+Ensured that the generated word(s) is not already in the current word list."
+,,,public void checkAndRemoveMatchedWord(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Checks if any word in the current word list matches the current input
+buffer (prefixes), if so, removes the matched word and generates a new
+one. Also handles clearing the input buffer if necessary."
+,,,public Vector<WordEntity> getWordEntities(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void removeInactive(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public ArrayList<Collidable> getCollidables(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void clearWordList(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void clearInputBuffer(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void addInputChar(char c),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void removeInputChar(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+Custom,Class,WordEntity,"public WordEntity(AnimationClip clip, String word, float xPosition, float speed, int lane)",ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public int getLayer(),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public int getMask(),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void onCollision(Collidable other),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void update(float delta),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,"public void render(TextureBatch batch, FontAtlas font)",ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void setEffect(WordEffect effect),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+Custom,Class,Stage,public Stage(),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public Stage(StageConfig config),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,"public void init(int width, int height)",ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void update(float delta),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void renderWorld(float delta),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void renderUI(float delta),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void cleanup(),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,protected String getSelectedPlayerTexturePath(),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+Custom,Class,Stage1,public Stage1(),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+Custom,Class,OverrunStage,public OverrunStage(),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public OverrunStage(StageConfig config),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+Custom,Class,SpawnPhase,"public SpawnPhase(int count, int timerAt)",ให้พัฒนา Class ขึ้นเอง (Custom Class),,
+Custom,Class,StageConfig,public String soundToStopOnInit(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public String backgroundTexturePath(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public String fontPath(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public int fontSize(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public AnimationClip entityTexture(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public boolean manualSpawn(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public SpawnPhase[] spawnPhases(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public float maxTime(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+Custom,Class,StageConfigs,private StageConfigs(),ให้พัฒนา Class ขึ้นเอง (Custom Class),,
+,,,new AnimationClip(new Texture[],ให้พัฒนา Class ขึ้นเอง (Custom Class),,
+,,,new AnimationClip(new Texture[],ให้พัฒนา Class ขึ้นเอง (Custom Class),,
+,,,new AnimationClip(new Texture[],ให้พัฒนา Class ขึ้นเอง (Custom Class),,
+,,,new AnimationClip(new Texture[],ให้พัฒนา Class ขึ้นเอง (Custom Class),,
+,,,new AnimationClip(new Texture[],ให้พัฒนา Class ขึ้นเอง (Custom Class),,
+,,,public static String[] getPlayerTexturePaths(),ให้พัฒนา Class ขึ้นเอง (Custom Class),,
+,,,public static String getStageBackgroundPaths(),ให้พัฒนา Class ขึ้นเอง (Custom Class),,
+,,,public static String[] getStageButtonPaths(),ให้พัฒนา Class ขึ้นเอง (Custom Class),,
+,,,public static String getSolidTexturePath(),ให้พัฒนา Class ขึ้นเอง (Custom Class),,
+,,,public static String getButtonTexturePath(),ให้พัฒนา Class ขึ้นเอง (Custom Class),,
+,,,public static StageConfig getStageConfig(int stageIndex),ให้พัฒนา Class ขึ้นเอง (Custom Class),,
+,,,public static String getStageName(int stageIndex),ให้พัฒนา Class ขึ้นเอง (Custom Class),,
+Custom,Class,Stage3,public Stage3(),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+Custom,Class,Stage2,public Stage2(),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+Custom,Class,Stage4,public Stage4(),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+Custom,Class,Projectile,"public Projectile(Vec2 position, Vec2 size, Vec2 direction, float speed)",ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void update(float delta),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void render(TextureBatch batch),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void onCollision(Collidable other),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public int getLayer(),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public int getMask(),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+Custom,Class,ProjectileManager,public void spawnProjectile(Projectile projectile),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void update(float delta),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void render(TextureBatch batch),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void removeInactive(),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public ArrayList<Collidable> getCollidables(),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void onWordCompleted(WordEntity wordEntity),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void onWordMissed(WordEntity wordEntity),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void onWordProgress(WordEntity wordEntity),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+Custom,Class,Main,"public void init(int width, int height)",ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void update(float delta),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void renderUI(float delta),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void cleanup(),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+Custom,Class,Setting,"public void init(int width, int height)",ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void update(float delta),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void renderUI(float delta),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void cleanup(),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+Custom,Class,tutorial,"public void init(int width, int height)",ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void update(float delta),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void renderUI(float delta),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void cleanup(),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+Custom,Class,StageMenu,"public void init(int width, int height)",ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,private void createStageButtons(),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,image better
+,,,private void launchStage(int stageIndex),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void update(float delta),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void renderWorld(float delta),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void renderUI(float delta),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void cleanup(),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+Custom,Class,Mode,"public void init(int width, int height)",ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void update(float delta),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void renderUI(float delta),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void cleanup(),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+Custom,Class,OverrunMenu,"public void init(int width, int height)",ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void update(float delta),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void renderUI(float delta),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void cleanup(),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+Custom,Class,ShopMenu,"public void init(int width, int height)",ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,private void updateBuyButtonText(),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,private void unlockItem(int itemIndex),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void update(float delta),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void renderUI(float delta),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void cleanup(),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+Custom,Class,UpgradeMenu,"public void init(int width, int height)",ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,Removed constant UPGRADE_COST to use dynamic formula
+,,,"private int getUpgradeCost(int itemIdx, int statIdx)",ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,private void updateUpgradeButtonText(),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void update(float delta),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void renderUI(float delta),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,"private void drawStatBar(String label, float x, float y, float currentVal, float maxVal)",ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,"private int getStatLevel(int itemIndex, int statIndex)",ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,"private void increaseStatLevel(int itemIndex, int statIndex)",ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void cleanup(),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+Custom,Class,UISlider,"public UISlider(Vec2 position, Vec2 size, String label, float initialValue, Texture bgTexture)",ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+Custom,Class,UIButton,"public UIButton(Vec2 position, Vec2 size, String text, Texture bgTexture)",ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void setOnClick(Runnable onClick),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,Add a callback called when the button is clicked.
+Custom,Class,selectCharacter,"public void init(int width, int height)",ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void update(float delta),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void renderUI(float delta),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void cleanup(),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,"private void drawCharacterCard(int index, float cardX, float cardY)",ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,"private float approach(float current, float target, float amount)",ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+Custom,Class,ItemEquipMenu,"public ItemEquipMenu(int slotToEquip, String sourceMenu)",ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,"public void init(int width, int height)",ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,private void goBack(),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void update(float delta),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void renderUI(float delta),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void cleanup(),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+Custom,Class,ItemSelection,public ItemSelection(Scene nextScene),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,"public void init(int width, int height)",ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void update(float delta),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void renderUI(float delta),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void cleanup(),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+Custom,Class,ItemFactory,private ItemFactory(),ให้พัฒนา Class ขึ้นเอง (Custom Class),,
+,,,public static Item create(ItemType itemType),ให้พัฒนา Class ขึ้นเอง (Custom Class),,
+Custom,Class,PlayerDataSaver,public static void save(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public static void load(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,static SaveData fromPlayerData(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,void applyToPlayerData(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,"private ItemType parseItemType(String savedType, int index)",ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,private ItemType parseEquippedItemType(Object rawValue),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+Custom,Enum,ItemType,ItemType(String displayName),,,
+,,,public String displayName(),,,
+Custom,Class,PlayerData,public static boolean hasEnoughCoins(int cost),ให้พัฒนา Class ขึ้นเอง (Custom Class),,Helper functions for readability
+,,,public static void deductCoins(int amount),ให้พัฒนา Class ขึ้นเอง (Custom Class),,
+,,,public static boolean isItemUnlocked(int itemIndex),ให้พัฒนา Class ขึ้นเอง (Custom Class),,
+,,,public static int getItemCount(),ให้พัฒนา Class ขึ้นเอง (Custom Class),,
+,,,public static ItemType getItemTypeForIndex(int itemIndex),ให้พัฒนา Class ขึ้นเอง (Custom Class),,
+,,,public static int getItemIndexForType(ItemType itemType),ให้พัฒนา Class ขึ้นเอง (Custom Class),,
+,,,public static int getEquippedItemIndex(int slot),ให้พัฒนา Class ขึ้นเอง (Custom Class),,
+,,,public static Item getItemByType(ItemType itemType),ให้พัฒนา Class ขึ้นเอง (Custom Class),,
+,,,public static Item ensureItemAtIndex(int itemIndex),ให้พัฒนา Class ขึ้นเอง (Custom Class),,
+,,,public static Item[] createDefaultItems(),ให้พัฒนา Class ขึ้นเอง (Custom Class),,
+Custom,Class,Item,public void update(float deltaTime),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public boolean canActivate(),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public float getCooldownTime(),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public float getActiveTime(),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public float getCooldownDuration(),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public float getDuration(),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void setTimer(),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void activate(Stage stage),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,"public void render(Stage stage, TextureBatch batch)",ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+Custom,Class,Freeze,public Freeze(),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void activate(Stage stage),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+Custom,Class,Shield,public Shield(),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void activate(Stage stage),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,"public void render(Stage stage, TextureBatch batch)",ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+Custom,Class,GameConfig,public static int getWidth(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public static int getHeight(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public static Vec2 getResolution(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+Custom,Abstract Class,Scene,"public void internalInit(int width, int height)",ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,Internal methods called by the engine/LWJGL main loop
+,,,"public void internalResize(int width, int height)",ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void internalTick(float delta),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void internalCleanup(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,"public void init(int width, int height)",ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"User-level methods
+Initializes the scene. Called once when the scene is first loaded."
+,,,public void update(float delta),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,Updates the game state.
+,,,public void renderWorld(float delta),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Renders the world (game objects, background, etc.) in world space using the
+world camera."
+,,,public void renderUI(float delta),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Renders the UI (menus, buttons, text, etc.) in screen space using the UI
+camera."
+,,,"public void resize(int width, int height)",ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,Called when the window is resized.
+,,,public void cleanup(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,Called when the scene is being destroyed.
+,,,protected boolean usesGlobalExitPrompt(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,private void initExitPrompt(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,private void layoutExitPromptButtons(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,private void updateExitPrompt(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,private void renderExitPrompt(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,private void cleanupExitPrompt(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+Custom,Class,Engine,"ScheduledTask(float executeAt, Runnable action)",ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public static void setScene(Scene newScene),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public static Scene getCurrentScene(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,"public static void runAfter(Runnable action, float delaySeconds)",ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,Schedules an action to run on the game thread after delaySeconds.
+,,,synchronized (scheduledTasksLock),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public static void tickScheduledTasks(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,Called once per frame from the main loop to execute due scheduled actions.
+,,,synchronized (scheduledTasksLock),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public static void requestExit(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public static void setWindow(long win),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+Custom,Class,Input,"public void updateKeyState(int key, int action)",ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,"public void updateMousePosition(float xpos, float ypos)",ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void endFrame(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Wipe the keysPressed array at the end of each frame to ensure
+isKeyPressed only returns true once per key press."
+,,,public boolean isKeyDown(int key),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,Checks if a key is currently held down.
+,,,public boolean isKeyPressed(int key),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Checks if a key was just pressed (transitioned from up to down).
+This will return true only once per key press."
+,,,public Vec2 getMousePosition(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,"public void updateMouseButtonState(int button, int action)",ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public boolean isMouseButtonPressed(int button),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public boolean isMouseButtonReleased(int button),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+Custom,Class,AudioManager,public float getMasterVolume(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void setMasterVolume(float masterVolume),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public float getBgmVolume(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void setBgmVolume(float bgmVolume),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public float getSfxVolume(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void setSfxVolume(float sfxVolume),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,private void updateAllActiveSourcesVolume(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public AudioManager(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,"public void loadSound(String name, String filePath)",ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Loads an OGG file into an OpenAL buffer and stores it under ""name"". If the
+file path has already been loaded, reuses the existing buffer instead of
+loading it again.
+พารามิเตอร์ name     The name to reference the sound by
+พารามิเตอร์ filePath Path to OGG file to load"
+,,,public void playSound(String name),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Plays the sound identified by ""name"". If that same named sound is already
+active, it is restarted."
+,,,"public void playSound(String name, boolean loop)",ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Plays the sound identified by ""name"" with an option to loop."
+,,,"public void playSoundIfNotPlaying(String name, boolean loop)",ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Plays the sound identified by ""name"" only if it is not already active. If
+that same named sound is already active, this method does nothing."
+,,,public void stopSound(String name),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void cleanup(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+Custom,Class,Layout,"public Layout(float width, float height)",ให้พัฒนา Class ขึ้นเอง (Custom Class),,"Creates a layout helper for the given resolution.
+พารามิเตอร์ width  viewport width
+พารามิเตอร์ height viewport height"
+,,,"public void resize(float width, float height)",ให้พัฒนา Class ขึ้นเอง (Custom Class),,"Updates the resolution used for layout calculations.
+พารามิเตอร์ width  viewport width
+พารามิเตอร์ height viewport height"
+,,,"public Vec2 bottomLeft(float x, float y)",ให้พัฒนา Class ขึ้นเอง (Custom Class),,"Methods for aligning UI elements to different parts of the screen.
+Positions an element from the bottom-left corner."
+,,,"public Vec2 bottomCenter(float x, float y)",ให้พัฒนา Class ขึ้นเอง (Custom Class),,Positions an element from the bottom-center anchor.
+,,,"public Vec2 bottomRight(float x, float y)",ให้พัฒนา Class ขึ้นเอง (Custom Class),,Positions an element from the bottom-right corner.
+,,,"public Vec2 centerLeft(float x, float y)",ให้พัฒนา Class ขึ้นเอง (Custom Class),,Positions an element from the center-left anchor.
+,,,"public Vec2 center(float x, float y)",ให้พัฒนา Class ขึ้นเอง (Custom Class),,Positions an element from the center anchor.
+,,,"public Vec2 centerRight(float x, float y)",ให้พัฒนา Class ขึ้นเอง (Custom Class),,Positions an element from the center-right anchor.
+,,,"public Vec2 topLeft(float x, float y)",ให้พัฒนา Class ขึ้นเอง (Custom Class),,Positions an element from the top-left corner.
+,,,"public Vec2 topCenter(float x, float y)",ให้พัฒนา Class ขึ้นเอง (Custom Class),,Positions an element from the top-center anchor.
+,,,"public Vec2 topRight(float x, float y)",ให้พัฒนา Class ขึ้นเอง (Custom Class),,Positions an element from the top-right corner.
+,,,public Vec2 fullWidth(float height),ให้พัฒนา Class ขึ้นเอง (Custom Class),,"Methods for UI sizing that scales with screen resolution.
+Returns a size spanning the full width and a fixed height."
+,,,public Vec2 fullHeight(float width),ให้พัฒนา Class ขึ้นเอง (Custom Class),,Returns a size spanning the full height and a fixed width.
+,,,public Vec2 fullScreen(),ให้พัฒนา Class ขึ้นเอง (Custom Class),,Returns the full-screen size vector.
+Custom,Class,Button,"public Button(Vec2 position, Vec2 size, String text, Texture bgTexture)",ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Creates a button with default background and text hover colors.
+พารามิเตอร์ position  button center position
+พารามิเตอร์ size      button dimensions
+พารามิเตอร์ text      label text
+พารามิเตอร์ bgTexture texture used to draw the button body"
+,,,"public Button(Vec2 position, Vec2 size, String text, Color color, Color hoverColor, Texture bgTexture)",ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Creates a button with custom background colors and default text colors.
+พารามิเตอร์ position   button center position
+พารามิเตอร์ size       button dimensions
+พารามิเตอร์ text       label text
+พารามิเตอร์ color      background color in normal state
+พารามิเตอร์ hoverColor background color when hovered
+พารามิเตอร์ bgTexture  texture used to draw the button body"
+,,,public void setText(String text),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Set the text displayed on the button.
+พารามิเตอร์ text text to display"
+,,,public void setOnClick(Runnable onClick),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Add a callback called when the button is clicked.
+พารามิเตอร์ onClick callback invoked on click"
+,,,public void setOnHover(Runnable onHover),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Add a callback called when the button is hovered.
+พารามิเตอร์ onHover callback invoked while hovered"
+,,,public void setOnEnter(Runnable onEnter),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Add a callback called when the mouse enters the button area.
+พารามิเตอร์ onEnter callback invoked on hover enter"
+,,,public void setOnLeave(Runnable onLeave),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Add a callback called when the mouse leaves the button area.
+พารามิเตอร์ onLeave callback invoked on hover leave"
+,,,"public void update(Vec2 mousePos, boolean mousePressed)",ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,"public void render(TextureBatch batch, FontAtlas font, Vec2 mousePos)",ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Renders this button and its text label.
+พารามิเตอร์ batch    texture batch used for drawing
+พารามิเตอร์ font     font atlas used for text rendering
+พารามิเตอร์ mousePos current mouse position used for hover coloring"
+,,,public boolean isHovered(Vec2 mousePos),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Checks whether a point lies inside the button bounds.
+พารามิเตอร์ mousePos point to test
+ส่งข้อมูลออก {@code true} when inside the button area"
+,,,public void cleanup(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,Releases button-owned resources.
+Custom,Class,UIManager,public UIManager(),ให้พัฒนา Class ขึ้นเอง (Custom Class),,Creates an empty UI manager.
+,,,public void add(Button button),ให้พัฒนา Class ขึ้นเอง (Custom Class),,"Adds a button to the managed UI list.
+พารามิเตอร์ button button to add"
+,,,public void add(Slider slider),ให้พัฒนา Class ขึ้นเอง (Custom Class),,"Adds a slider to the managed UI list.
+พารามิเตอร์ slider slider to add"
+,,,"public void update(Vec2 mousePos, boolean mouseReleased)",ให้พัฒนา Class ขึ้นเอง (Custom Class),,"Updates all managed controls from current input state.
+พารามิเตอร์ mousePos      current mouse position in UI coordinates
+พารามิเตอร์ mouseReleased mouse button action for button update flow"
+,,,"public void render(TextureBatch batch, FontAtlas font, Vec2 mouseScreen)",ให้พัฒนา Class ขึ้นเอง (Custom Class),,"Renders all managed controls.
+พารามิเตอร์ batch       texture batch used for drawing
+พารามิเตอร์ font        font atlas used for text rendering
+พารามิเตอร์ mouseScreen current mouse position for hover-aware rendering"
+,,,public void cleanup(),ให้พัฒนา Class ขึ้นเอง (Custom Class),,Cleans up resources owned by managed controls.
+,,,public ArrayList<Button> getButtons(),ให้พัฒนา Class ขึ้นเอง (Custom Class),,"Returns currently managed buttons.
+ส่งข้อมูลออก button list"
+Custom,Class,Slider,"public Slider(Vec2 position, Vec2 size, String label, float initialValue, Texture bgTexture)",ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Creates a slider with default colors.
+พารามิเตอร์ position     slider center position
+พารามิเตอร์ size         slider total dimensions
+พารามิเตอร์ label        label text shown beside the bar
+พารามิเตอร์ initialValue initial value in [0, 1]
+พารามิเตอร์ bgTexture    texture used to draw slider bar regions"
+,,,public void setOnValueChanged(OnValueChangedCallback callback),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Set a callback to be called when the slider value changes. The callback will
+receive the new slider value (0.0 to 1.0) as a parameter.
+พารามิเตอร์ callback callback invoked on value change"
+,,,public void setValue(float value),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Set the slider value (0.0 to 1.0). This will not trigger the onValueChanged
+callback.
+พารามิเตอร์ value new slider value"
+,,,public float getValue(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Get the current slider value (0.0 to 1.0).
+ส่งข้อมูลออก current normalized slider value"
+,,,"public void update(Vec2 mousePos, boolean mousePressed)",ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,"public void render(TextureBatch batch, FontAtlas font, Vec2 mousePos)",ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Renders label, background bar, and current fill amount.
+พารามิเตอร์ batch    texture batch used for drawing
+พารามิเตอร์ font     font atlas used for text rendering
+พารามิเตอร์ mousePos current mouse position for hover styling"
+,,,public boolean isHovered(Vec2 mousePos),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Checks whether a point lies inside the slider bounds.
+พารามิเตอร์ mousePos point to test
+ส่งข้อมูลออก {@code true} when inside slider bounds"
+Custom,Class,Resources,private Resources(),ให้พัฒนา Class ขึ้นเอง (Custom Class),,Utility class; not instantiable.
+,,,public static ByteBuffer loadResourceToByteBuffer(String resourcePath) throws RuntimeException,ให้พัฒนา Class ขึ้นเอง (Custom Class),,"Loads a classpath resource into a direct {@link ByteBuffer}.
+พารามิเตอร์ resourcePath classpath-relative resource path
+ส่งข้อมูลออก buffer containing the resource bytes, flipped and ready for reading
+throw RuntimeException if the resource cannot be found or read"
+,,,public static String loadResourcesText(String resourcePath) throws RuntimeException,ให้พัฒนา Class ขึ้นเอง (Custom Class),,"Loads a classpath resource as UTF-8 text.
+พารามิเตอร์ resourcePath classpath-relative resource path
+ส่งข้อมูลออก decoded UTF-8 string contents
+throw RuntimeException if the resource cannot be found or read"
+,,,public static byte[] loadResourceAsBytes(String resourcePath) throws RuntimeException,ให้พัฒนา Class ขึ้นเอง (Custom Class),,"Loads a classpath resource as a byte array.
+พารามิเตอร์ resourcePath classpath-relative resource path
+ส่งข้อมูลออก raw resource bytes
+throw RuntimeException if the resource cannot be found or read"
+Custom,Class,Matrix4f,public Matrix4f(),ให้พัฒนา Class ขึ้นเอง (Custom Class),,
+,,,public void set(Matrix4f other),ให้พัฒนา Class ขึ้นเอง (Custom Class),,
+,,,public void setIdentity(),ให้พัฒนา Class ขึ้นเอง (Custom Class),,Sets this matrix to the Identity Matrix
+,,,"public static Matrix4f multiply(Matrix4f a, Matrix4f b)",ให้พัฒนา Class ขึ้นเอง (Custom Class),,Multiplies two 4x4 matrices and returns the result as a new Matrix4f
+,,,"public static Matrix4f translate(float x, float y, float z)",ให้พัฒนา Class ขึ้นเอง (Custom Class),,"Creates a translation matrix for the given x, y, z translation values.
+The resulting matrix will move points by (x, y, z) when applied to them."
+,,,"public static Matrix4f scale(float x, float y, float z)",ให้พัฒนา Class ขึ้นเอง (Custom Class),,"Creates a scaling matrix for the given x, y, z scaling factors.
+The resulting matrix will scale points by (x, y, z) when applied to them."
+,,,public static Matrix4f rotateY(float angleDegrees),ให้พัฒนา Class ขึ้นเอง (Custom Class),,"Creates a rotation matrix that rotates points around the Y-axis by the given
+angle in degrees."
+,,,public static Matrix4f invert(Matrix4f m),ให้พัฒนา Class ขึ้นเอง (Custom Class),,"Calculates the inverse of a matrix by using Analytic solution.
+See https://en.wikipedia.org/wiki/Invertible_matrix#Analytic_solution
+If the matrix is not invertible (determinant is zero), this method returns an
+identity matrix."
+,,,"public void setOrtho(float left, float right, float bottom, float top, float near, float far)",ให้พัฒนา Class ขึ้นเอง (Custom Class),,"Creates an orthographic projection matrix that maps a specified cube region
+(left, right, bottom, top, near, far) to normalized device coordinates (-1 to
+1 in all axes)."
+,,,"public static Vec3 transform(Matrix4f m, Vec3 v)",ให้พัฒนา Class ขึ้นเอง (Custom Class),,"Transforms a Vec3 by this matrix. Useful for converting between
+coordinate spaces (e.g. world to screen coordinates)."
+Custom,Class,Vec3,"public Vec3(float x, float y, float z)",ให้พัฒนา Class ขึ้นเอง (Custom Class),,
+,,,public Vec3 add(Vec3 v),ให้พัฒนา Class ขึ้นเอง (Custom Class),,
+,,,public Vec3 scale(float s),ให้พัฒนา Class ขึ้นเอง (Custom Class),,
+,,,public float length(),ให้พัฒนา Class ขึ้นเอง (Custom Class),,Magnitude/Length
+,,,public Vec3 normalize(),ให้พัฒนา Class ขึ้นเอง (Custom Class),,Normalization (turning the vector into a unit vector of length 1)
+,,,public float dot(Vec3 v),ให้พัฒนา Class ขึ้นเอง (Custom Class),,
+,,,public Vec3 cross(Vec3 v),ให้พัฒนา Class ขึ้นเอง (Custom Class),,
+,,,"public void set(float x, float y)",ให้พัฒนา Class ขึ้นเอง (Custom Class),,
+,,,"public void set(float x, float y, float z)",ให้พัฒนา Class ขึ้นเอง (Custom Class),,
+Custom,Class,Vec2,"public Vec2(float x, float y)",ให้พัฒนา Class ขึ้นเอง (Custom Class),,
+,,,public Vec2 add(Vec2 v),ให้พัฒนา Class ขึ้นเอง (Custom Class),,
+,,,public Vec2 sub(Vec2 v),ให้พัฒนา Class ขึ้นเอง (Custom Class),,
+,,,public Vec2 mul(float scalar),ให้พัฒนา Class ขึ้นเอง (Custom Class),,
+,,,public float length(),ให้พัฒนา Class ขึ้นเอง (Custom Class),,
+,,,"public static float distance(Vec2 a, Vec2 b)",ให้พัฒนา Class ขึ้นเอง (Custom Class),,
+,,,public Vec2 normalize(),ให้พัฒนา Class ขึ้นเอง (Custom Class),,
+,,,"public static boolean isPointInRect(Vec2 point, Vec2 rectPos, Vec2 rectSize)",ให้พัฒนา Class ขึ้นเอง (Custom Class),,
+,,,public void set(Vec2 other),ให้พัฒนา Class ขึ้นเอง (Custom Class),,
+,,,"public void set(float x, float y)",ให้พัฒนา Class ขึ้นเอง (Custom Class),,
+,,,public Vec2 copy(),ให้พัฒนา Class ขึ้นเอง (Custom Class),,
+,,,public String toString(),ให้พัฒนา Class ขึ้นเอง (Custom Class),,
+Custom,Class,Texture,"CachedTexture(int id, int width, int height)",ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public Texture(String filePath),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Loads a texture from a resource path.
+พารามิเตอร์ filePath resource path to image data"
+,,,synchronized (CACHE_LOCK),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Synchronize to prevent multiple threads from loading the same texture
+simultaneously"
+,,,"public Texture(ByteBuffer bitmap, int width, int height)",ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Creates a texture from raw RGBA bitmap data using a centered origin.
+พารามิเตอร์ bitmap pixel data in RGBA format
+พารามิเตอร์ width  texture width in pixels
+พารามิเตอร์ height texture height in pixels"
+,,,"public Texture(ByteBuffer bitmap, int width, int height, float originX, float originY)",ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Creates a texture from raw RGBA bitmap data.
+พารามิเตอร์ bitmap  pixel data in RGBA format
+พารามิเตอร์ width   texture width in pixels
+พารามิเตอร์ height  texture height in pixels
+พารามิเตอร์ originX origin x used for draw alignment
+พารามิเตอร์ originY origin y used for draw alignment"
+,,,public void bind(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void cleanup(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Deletes the texture from GPU memory. Should be called when the texture is
+no longer needed."
+,,,synchronized (CACHE_LOCK),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public int getWidth(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,ส่งข้อมูลออก texture width in pixels
+,,,public int getHeight(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,ส่งข้อมูลออก texture height in pixels
+,,,public int getId(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,ส่งข้อมูลออก OpenGL texture id
+,,,public float getOriginX(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,ส่งข้อมูลออก draw origin x in pixels
+,,,public float getOriginY(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,ส่งข้อมูลออก draw origin y in pixels
+Custom,Class,AnimationClip,"public AnimationClip(Texture[] frames, float frameDuration)",ให้พัฒนา Class ขึ้นเอง (Custom Class),,"Creates an animation clip from an array of texture frames.
+พารามิเตอร์ frames        The frames of the animation
+พารามิเตอร์ frameDuration The duration of each frame in seconds"
+,,,public Texture getFrame(float time),ให้พัฒนา Class ขึ้นเอง (Custom Class),,"Returns the frame for a given playback time.
+พารามิเตอร์ time elapsed animation time in seconds
+ส่งข้อมูลออก frame texture at the current time"
+Custom,Class,Shader,"public Shader(String vertexSrc, String fragmentSrc)",ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Creates and links a shader program from vertex and fragment source code.
+พารามิเตอร์ vertexSrc   vertex shader source
+พารามิเตอร์ fragmentSrc fragment shader source"
+,,,"private int compileShader(int type, String source)",ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,"public void setUniform1i(String name, int value)",ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Sets an integer uniform value.
+พารามิเตอร์ name  uniform name
+พารามิเตอร์ value uniform value"
+,,,"public void setUniform4f(String name, float r, float g, float b, float a)",ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Sets a vec4 float uniform value.
+พารามิเตอร์ name uniform name
+พารามิเตอร์ r    red component
+พารามิเตอร์ g    green component
+พารามิเตอร์ b    blue component
+พารามิเตอร์ a    alpha component"
+,,,"public void setUniformMat4f(String name, Matrix4f matrix)",ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Sets a 4x4 matrix uniform value.
+พารามิเตอร์ name   uniform name
+พารามิเตอร์ matrix matrix value"
+,,,public void bind(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,Binds this shader program for subsequent draw calls.
+,,,public void dispose(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,Deletes the underlying OpenGL program.
+Custom,Class,OrthoCamera,"public OrthoCamera(int viewportWidth, int viewportHeight, boolean centerCamera)",ให้พัฒนา Class ขึ้นเอง (Custom Class),,"Creates an orthographic camera with an initial viewport.
+พารามิเตอร์ viewportWidth  viewport width
+พารามิเตอร์ viewportHeight viewport height
+พารามิเตอร์ centerCamera   whether world origin should be centered"
+,,,"public void setOrtho(float viewportWidth, float viewportHeight, boolean centerCamera)",ให้พัฒนา Class ขึ้นเอง (Custom Class),,"Sets up the camera's projection and view matrices for orthographic rendering.
+พารามิเตอร์ viewportWidth  viewport width
+พารามิเตอร์ viewportHeight viewport height
+พารามิเตอร์ centerCamera   Whether to center the camera on the viewport. If true,
+(0, 0) will be the center of the viewport. If false,
+(0, 0) will be the bottom-left corner."
+,,,public void update(),ให้พัฒนา Class ขึ้นเอง (Custom Class),,"Recalculates the matrices. Must be called every time we move the camera's
+position or change the viewport size."
+,,,public Vec2 screenToWorld(Vec2 screenCoords),ให้พัฒนา Class ขึ้นเอง (Custom Class),,"Converts screen coordinates (bottom-left origin) to world coordinates based
+on the current camera position and viewport size.
+พารามิเตอร์ screenCoords screen-space coordinates
+ส่งข้อมูลออก world-space coordinates"
+,,,"public Vec2 screenToWorld(float screenX, float screenY)",ให้พัฒนา Class ขึ้นเอง (Custom Class),,"Converts screen coordinates (bottom-left origin) to world coordinates based
+on the current camera position and viewport size.
+พารามิเตอร์ screenX screen x coordinate
+พารามิเตอร์ screenY screen y coordinate
+ส่งข้อมูลออก world-space coordinates"
+,,,public Vec2 worldToScreen(Vec2 worldCoords),ให้พัฒนา Class ขึ้นเอง (Custom Class),,"Converts world coordinates to screen coordinates (bottom-left origin).
+พารามิเตอร์ worldCoords world-space coordinates
+ส่งข้อมูลออก screen-space coordinates"
+,,,"public Vec2 worldToScreen(float worldX, float worldY)",ให้พัฒนา Class ขึ้นเอง (Custom Class),,"Converts world coordinates to screen coordinates (bottom-left origin).
+พารามิเตอร์ worldX world x coordinate
+พารามิเตอร์ worldY world y coordinate
+ส่งข้อมูลออก screen-space coordinates"
+Custom,Class,FontAtlas,"public FontAtlas(String ttfFilePath, int fontSize)",ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Creates a font atlas from the specified TTF file and font size/resolution.
+พารามิเตอร์ ttfFilePath The path to the TTF file.
+พารามิเตอร์ fontSize    The size of the font."
+,,,"public void drawTextUnaligned(TextureBatch batch, String text, float x, float y, Color color, float scale)",ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Draws text with the top-left corner of the text at (x, y) without any
+alignment.
+พารามิเตอร์ batch texture batch used for rendering
+พารามิเตอร์ text  text to render
+พารามิเตอร์ x     anchor x position
+พารามิเตอร์ y     anchor y position
+พารามิเตอร์ color text color
+พารามิเตอร์ scale size scale multiplier"
+,,,"public void drawTextAligned(TextureBatch batch, String text, float x, float y, Color color, float scale)",ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Draws text centered both horizontally and vertically around (x, y).
+พารามิเตอร์ batch texture batch used for rendering
+พารามิเตอร์ text  text to render
+พารามิเตอร์ x     anchor x position
+พารามิเตอร์ y     anchor y position
+พารามิเตอร์ color text color
+พารามิเตอร์ scale size scale multiplier"
+,,,"public void drawTextHorizontalAligned(TextureBatch batch, String text, float x, float y, Color color, float scale)",ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Draws text centered horizontally around x, but with the top of the text at y.
+พารามิเตอร์ batch texture batch used for rendering
+พารามิเตอร์ text  text to render
+พารามิเตอร์ x     anchor x position
+พารามิเตอร์ y     anchor y position
+พารามิเตอร์ color text color
+พารามิเตอร์ scale size scale multiplier"
+,,,public void cleanup(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,Releases native font data and texture resources.
+,,,private float getTextMinY(String text),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Helper methods
+Calculates the minimum Y offset of the characters in the text."
+,,,private float getTextMaxY(String text),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,Calculates the maximum Y offset of the characters in the text.
+,,,"public float getTextWidth(String text, float scale)",ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Calculates the width of the given text string when rendered with this font
+atlas at the specified font size.
+พารามิเตอร์ text  The text to measure
+พารามิเตอร์ scale Font size
+ส่งข้อมูลออก measured width in world units"
+,,,"public float getTextHeight(String text, float scale)",ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Calculates the height of the given text string when rendered with this font
+atlas at the specified font size.
+พารามิเตอร์ text  The text to measure
+พารามิเตอร์ scale Font size
+ส่งข้อมูลออก measured height in world units"
+,,,"public Vec2 measure(String text, float scale)",ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Measures the dimensions of the given text string when rendered with this font
+atlas at the specified font size.
+พารามิเตอร์ text  The text to measure
+พารามิเตอร์ scale Font size
+ส่งข้อมูลออก A Vec2 containing the width (x) and height (y) of the text"
+Custom,Class,Graphics,"public void updateTime(float time, float deltaTime)",ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Updates frame timing and FPS counters.
+พารามิเตอร์ time      total elapsed runtime in seconds
+พารามิเตอร์ deltaTime elapsed time in seconds since previous frame"
+,,,public float getTime(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,Returns the total time in seconds since the application started.
+,,,public float getDeltaTime(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,The time span between the current frame and the last frame in seconds.
+,,,public int getFramesPerSecond(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,Returns the average number of frames per second.
+Custom,Class,TextureBatch,public TextureBatch(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,Creates a texture batch with dynamic vertex buffers and default shader.
+,,,public void begin(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,Begins a new drawing batch.
+,,,"public void draw(Texture texture, Vec2 position, float w, float h)",ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Adds a texture to the batch.
+พารามิเตอร์ texture  The texture to add
+พารามิเตอร์ position The position
+พารามิเตอร์ w        The width
+พารามิเตอร์ h        The height"
+,,,"public void draw(Texture texture, float x, float y, float w, float h)",ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Adds a texture to the batch.
+พารามิเตอร์ texture The texture to add
+พารามิเตอร์ x       The x position
+พารามิเตอร์ y       The y position
+พารามิเตอร์ w       The width
+พารามิเตอร์ h       The height"
+,,,"public void drawAnimation(AnimationClip clip, Vec2 position, float time, float w, float h)",ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Draws a frame from an animation clip.
+พารามิเตอร์ clip     AnimationClip to draw
+พารามิเตอร์ position The position
+พารามิเตอร์ time     The time within the animation
+พารามิเตอร์ w        The width
+พารามิเตอร์ h        The height"
+,,,"public void drawRect(Vec2 position, Vec2 size, Color color)",ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Draws a solid rectangle with the given color.
+พารามิเตอร์ position
+พารามิเตอร์ size
+พารามิเตอร์ color"
+,,,public void flush(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,Sends the current batch to the GPU and draws it.
+,,,public void setColor(Color color),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Sets the current tint color for subsequent draws.
+พารามิเตอร์ color tint color"
+,,,public void setFlipped(boolean flipped),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Enables or disables vertical texture coordinate flipping.
+พารามิเตอร์ flipped whether UVs should be sampled in flipped mode"
+,,,public void end(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,Ends drawing and flushes any remaining vertices.
+,,,public void setProjection(Matrix4f projection),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,"Updates the projection matrix used by the batch shader.
+พารามิเตอร์ projection projection matrix"
+,,,public void cleanup(),ใช้หลักการ การห่อหุ้ม (Encapsulation) กับ class & abstract class ที่ผู้ใช้สร้างขึ้นเอง,,Deletes OpenGL resources owned by this batch.
+Custom,Class,Color,"public Color(float r, float g, float b, float a)",ให้พัฒนา Class ขึ้นเอง (Custom Class),,"Creates a color from normalized RGBA components.
+พารามิเตอร์ r red component
+พารามิเตอร์ g green component
+พารามิเตอร์ b blue component
+พารามิเตอร์ a alpha component"
+,,,public boolean equals(Object obj),ให้พัฒนา Class ขึ้นเอง (Custom Class),,"Compares two colors by exact float component equality.
+พารามิเตอร์ obj object to compare
+ส่งข้อมูลออก {@code true} if all RGBA components are equal"
+Custom,Class,CollisionManager,public void detectAndDispatch(List<Collidable> collidables),ให้พัฒนา Class ขึ้นเอง (Custom Class),,"Detects collisions between active collidables and dispatches
+{@link Collidable#onCollision(Collidable)} for both participants when
+overlap is found.
+พารามิเตอร์ collidables objects to test for collisions"
+Custom,Class,AABB,"public AABB(Vec2 min, Vec2 max)",ให้พัฒนา Class ขึ้นเอง (Custom Class),,"Creates an axis-aligned bounding box from two corners.
+พารามิเตอร์ min the minimum corner
+พารามิเตอร์ max the maximum corner"
+,,,public boolean intersects(AABB other),ให้พัฒนา Class ขึ้นเอง (Custom Class),,"Checks whether this box overlaps another box.
+พารามิเตอร์ other the other bounding box to test against
+ส่งข้อมูลออก {@code true} if the two boxes overlap; otherwise {@code false}"
+Custom,Class,Entity,"public Entity(Vec2 position, Vec2 size)",ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,"Creates a new entity with the given position and size.
+<p>
+Size is used to calculate the bounding box, centered on the position.
+</p>
+พารามิเตอร์ position initial center position
+พารามิเตอร์ size     dimensions used to compute the bounding box extents"
+,,,public void update(float delta),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,"Updates entity state.
+พารามิเตอร์ delta elapsed time in seconds since the previous frame"
+,,,public void render(),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,Renders the entity.
+,,,"public void move(Vec2 delta, float deltaTime)",ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,"Moves the entity by the given direction/offset scaled by delta time and
+updates the bounding box accordingly.
+พารามิเตอร์ delta     movement vector applied this frame
+พารามิเตอร์ deltaTime elapsed time in seconds used as scale for movement"
+,,,public AABB getBoundingBox(),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,Collidable interface implementation
+,,,public int getLayer(),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,"Returns the collision layer bit for this entity.
+ส่งข้อมูลออก layer bitmask; default is {@code 0}"
+,,,public int getMask(),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,"Returns the collision mask used to filter target layers.
+ส่งข้อมูลออก collision mask bitmask; default is {@code 0}"
+,,,public boolean isActive(),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,
+,,,public void onCollision(Collidable other),ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง,,"Handles collision callbacks.
+พารามิเตอร์ other the collidable collided with"

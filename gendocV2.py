@@ -10,7 +10,10 @@ source_dir = "src"
 output_csv = f"docs_{current_time}.csv"
 
 DECL_PATTERN = re.compile(
-    r"\b(?:(public|protected|private)\s+)?(abstract\s+)?(class|interface|enum)\s+(\w+)([^\{]*)\{"
+    r"^\s*(?:(public|protected|private)\s+)?"
+    r"((?:(?:abstract|final|static|sealed|non-sealed|strictfp)\s+)*)"
+    r"(class|interface|enum)\s+(\w+)([^\{\n]*)\{",
+    re.MULTILINE,
 )
 
 KPI_INHERITANCE = "ใช้หลักการ การสืบทอด (Inheritance) กับ class & abstract class & interface  ที่ผู้ใช้สร้างขึ้นเอง"
@@ -100,10 +103,11 @@ def clean_param_type(param_text):
     return type_text
 
 
-def infer_type_kind(kind, abstract_kw):
+def infer_type_kind(kind, modifiers):
+    modifier_tokens = set((modifiers or "").split())
     if kind == "interface":
         return "Interface"
-    if kind == "class" and abstract_kw:
+    if kind == "class" and "abstract" in modifier_tokens:
         return "Abstract Class"
     if kind == "class":
         return "Class"
@@ -120,13 +124,13 @@ def build_custom_type_index(java_files):
             content = f.read()
 
         for match in DECL_PATTERN.finditer(content):
-            abstract_kw = match.group(2)
+            modifiers = match.group(2)
             kind = match.group(3)
             type_name = match.group(4)
 
             if kind == "interface":
                 custom_interfaces.add(type_name)
-            elif kind == "class" and abstract_kw:
+            elif kind == "class" and "abstract" in set((modifiers or "").split()):
                 custom_abstract_classes.add(type_name)
             elif kind == "class":
                 custom_classes.add(type_name)
@@ -148,11 +152,11 @@ def extract_type_header(content):
     if not match:
         return None
 
-    abstract_kw = match.group(2)
+    modifiers = match.group(2)
     kind = match.group(3)
     name = match.group(4)
     tail = match.group(5) or ""
-    type_kind = infer_type_kind(kind, abstract_kw)
+    type_kind = infer_type_kind(kind, modifiers)
 
     extends_list = []
     implements_list = []
@@ -196,6 +200,41 @@ def extract_private_field_names(lines):
         if field_match:
             private_fields.add(field_match.group(1))
     return private_fields
+
+
+def normalize_comment_text(comment_lines):
+    cleaned_lines = []
+
+    for raw_line in comment_lines:
+        text = raw_line.strip()
+
+        text = re.sub(r"^/\*+", "", text).strip()
+        text = re.sub(r"\*/$", "", text).strip()
+        text = re.sub(r"^\*+", "", text).strip()
+        text = re.sub(r"^//+", "", text).strip()
+        text = re.sub(r"\{@inheritDoc\}", "", text, flags=re.IGNORECASE).strip()
+
+        # Translate common Javadoc tags into requested output wording.
+        text = re.sub(r"(?i)^@param\b", "พารามิเตอร์", text)
+        text = re.sub(r"(?i)^@return\b", "ส่งข้อมูลออก", text)
+        text = re.sub(r"(?i)^@throws\b", "throw", text)
+
+        if not text:
+            continue
+
+        # Drop non-doc noise in comments.
+        if re.fullmatch(r"=+", text):
+            continue
+        if re.match(r"^(?:#\s*)?region\b", text, flags=re.IGNORECASE):
+            continue
+        if re.match(r"^(?:#\s*)?endregion\b", text, flags=re.IGNORECASE):
+            continue
+        if re.match(r"^TODO\b\s*:?.*$", text, flags=re.IGNORECASE):
+            continue
+
+        cleaned_lines.append(text)
+
+    return "\n".join(cleaned_lines)
 
 
 def kpis_for_method(context):
@@ -242,6 +281,7 @@ with open(output_csv, "w", newline="", encoding="utf-8") as f:
 
     for file_path in java_files:
         file_name = os.path.basename(file_path)
+        file_name_no_ext, _ = os.path.splitext(file_name)
 
         with open(file_path, "r", encoding="utf-8") as file_obj:
             content = file_obj.read()
@@ -312,7 +352,7 @@ with open(output_csv, "w", newline="", encoding="utf-8") as f:
                             "method_sig": method_sig,
                             "method_name": method_name,
                             "param_types": param_types,
-                            "note_text": "\n".join(comment_buffer),
+                            "note_text": normalize_comment_text(comment_buffer),
                             "is_override": any(
                                 ann.startswith("@Override") for ann in annotation_buffer
                             ),
@@ -350,6 +390,7 @@ with open(output_csv, "w", newline="", encoding="utf-8") as f:
             and (has_getter_or_setter or has_public_or_protected_method)
         )
 
+        is_first_row_for_file = True
         for method in methods:
             context = {
                 "type_kind": type_header["type_kind"],
@@ -363,18 +404,25 @@ with open(output_csv, "w", newline="", encoding="utf-8") as f:
                 "custom_interfaces": custom_interfaces,
             }
 
-            kpi_text = " ; ".join(kpis_for_method(context))
+            # Use only one KPI per method, prioritizing the first KPI in order.
+            method_kpis = kpis_for_method(context)
+            kpi_text = method_kpis[0] if method_kpis else ""
+
+            owner_cell = "Custom" if is_first_row_for_file else ""
+            type_cell = type_header["type_kind"] if is_first_row_for_file else ""
+            path_cell = file_name_no_ext if is_first_row_for_file else ""
 
             writer.writerow(
                 [
-                    "Custom",
-                    type_header["type_kind"],
-                    file_name,
+                    owner_cell,
+                    type_cell,
+                    path_cell,
                     method["method_sig"],
                     kpi_text,
                     "",
                     method["note_text"],
                 ]
             )
+            is_first_row_for_file = False
 
 print(f"Documentation generated in {output_csv}")
