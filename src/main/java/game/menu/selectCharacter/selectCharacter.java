@@ -100,12 +100,12 @@ public class selectCharacter extends Scene {
                 new Vec2(100, 50),
                 "Back",
                 buttonTexture);
-        backButton.setOnClick(() -> Engine.setScene(new game.menu.mode.Mode()));
+        backButton.setOnClick(() -> Engine.setScene(new game.menu.Main())); // has a bug if you click back when it's back to main menu, it has 2 time sound effect but it must be 1 time        
         super.uiManager.add(backButton);
     }
 
-    @Override
-    public void update(float delta) {
+        @Override
+        public void update(float delta) {
         for (UIButton button : characterButtons) {
             button.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
         }
