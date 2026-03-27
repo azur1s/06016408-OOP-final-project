@@ -13,8 +13,8 @@ public class PlayerData {
             ItemType.FREEZE,
             ItemType.SHIELD,
             ItemType.TORNADO,
-            ItemType.TORNADO,
-            ItemType.TORNADO,
+            ItemType.METEOR,
+            ItemType.METEOR,
     };
 
     // Items are still stored by shop slot index for UI compatibility.

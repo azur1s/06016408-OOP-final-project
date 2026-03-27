@@ -16,8 +16,6 @@ public class Shield extends Item {
     }, 0.2f);
     private static final Texture ICON_TEXTURE = new Texture("textures/items/icon_shield.png");
 
-    private boolean active = false;
-
     public Shield() {
         this.name = "Shield";
         this.description = "Become invincible for a short duration, preventing all damage from enemies.";

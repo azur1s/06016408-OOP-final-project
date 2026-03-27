@@ -21,6 +21,8 @@ public class Item implements ItemAbility, Serializable {
     protected float cooldownTime = 0f;
     protected float activeTime = 0f;
 
+    protected boolean active = false;
+
     public void update(float deltaTime) {
         if (cooldownTime > 0f) {
             cooldownTime -= deltaTime;
