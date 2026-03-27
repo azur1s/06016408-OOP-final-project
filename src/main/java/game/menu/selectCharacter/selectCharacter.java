@@ -51,7 +51,7 @@ public class selectCharacter extends Scene {
                 new Texture("textures/player_3.png")
         };
 
-        pendingSelection = PlayerData.selectedCharacter;
+        pendingSelection = 1;
         cardScaleAnimations = new float[3];
         cardLiftAnimations = new float[3];
         clickPulseAnimations = new float[3];
@@ -91,7 +91,7 @@ public class selectCharacter extends Scene {
         selectButton.setOnClick(() -> {
             PlayerData.selectedCharacter = pendingSelection;
             PlayerDataSaver.save();
-            Engine.setScene(new game.menu.mode.Mode());
+            Engine.setScene(new game.menu.tutorial.tutorial());
         });
         super.uiManager.add(selectButton);
 
