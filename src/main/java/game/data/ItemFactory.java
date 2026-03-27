@@ -4,6 +4,7 @@ import game.data.items.Freeze;
 import game.data.items.Meteor;
 import game.data.items.Shield;
 import game.data.items.Tornado;
+import game.data.items.Turret;
 
 public final class ItemFactory {
     private ItemFactory() {
@@ -23,6 +24,8 @@ public final class ItemFactory {
                 return new Tornado();
             case METEOR:
                 return new Meteor();
+            case TURRET:
+                return new Turret();
             default:
                 return new Item();
         }
