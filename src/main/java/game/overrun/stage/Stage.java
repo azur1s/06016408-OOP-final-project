@@ -109,24 +109,29 @@ public class Stage extends Scene {
             debug = !debug;
         }
 
-        if (Engine.input.isKeyPressed(GLFW_KEY_1)) {
-            ItemType equippedItem = PlayerData.equippedItems[0];
-            System.out.println(
-                    "Activating Item in Slot 1: " + (equippedItem != null ? equippedItem.displayName() : "None"));
-            if (equippedItem != null) {
-                Item item = PlayerData.getItemByType(equippedItem);
-                if (item != null) {
-                    item.activate(this);
+        ItemType equippedItem1 = PlayerData.equippedItems[0];
+        if (equippedItem1 != null) {
+            Item item1 = PlayerData.getItemByType(equippedItem1);
+            if (item1 != null) {
+                item1.update(delta);
+                if (Engine.input.isKeyPressed(GLFW_KEY_1) && item1.canActivate()) {
+                    System.out.println(
+                            "Activating Item in Slot 1: "
+                                    + (equippedItem1 != null ? equippedItem1.displayName() : "None"));
+                    item1.activate(this);
                 }
             }
-        } else if (Engine.input.isKeyPressed(GLFW_KEY_2)) {
-            ItemType equippedItem = PlayerData.equippedItems[1];
-            System.out.println(
-                    "Activating Item in Slot 2: " + (equippedItem != null ? equippedItem.displayName() : "None"));
-            if (equippedItem != null) {
-                Item item = PlayerData.getItemByType(equippedItem);
-                if (item != null) {
-                    item.activate(this);
+        }
+        ItemType equippedItem2 = PlayerData.equippedItems[1];
+        if (equippedItem2 != null) {
+            Item item2 = PlayerData.getItemByType(equippedItem2);
+            if (item2 != null) {
+                item2.update(delta);
+                if (Engine.input.isKeyPressed(GLFW_KEY_2) && item2.canActivate()) {
+                    System.out.println(
+                            "Activating Item in Slot 2: "
+                                    + (equippedItem2 != null ? equippedItem2.displayName() : "None"));
+                    item2.activate(this);
                 }
             }
         }
@@ -217,6 +222,53 @@ public class Stage extends Scene {
         super.batch.setColor(Color.WHITE);
         font.drawTextUnaligned(super.batch, "Health: " + playerManager.health + "/" + playerManager.maxHealth, 30,
                 40, Color.WHITE, 16);
+
+        // draw item icons and cooldowns at bottom center
+        for (int i = 0; i < PlayerData.equippedItems.length; i++) {
+            // draw background for item slot
+            super.batch.setColor(new Color(0f, 0f, 0f, 0.5f));
+            float slotSize = 64f;
+            float slotSpacing = 20f;
+            float totalWidth = PlayerData.equippedItems.length * slotSize
+                    + (PlayerData.equippedItems.length - 1) * slotSpacing;
+            float startX = (Engine.width - totalWidth) / 2f;
+            float x = startX + i * (slotSize + slotSpacing);
+            float y = Engine.height - slotSize - 20f;
+            super.batch.draw(solidTexture,
+                    x + slotSize / 2f,
+                    y + slotSize / 2f,
+                    slotSize, slotSize);
+
+            ItemType equippedItem = PlayerData.equippedItems[i];
+            if (equippedItem != null) {
+                Item item = PlayerData.getItemByType(equippedItem);
+                if (item != null) {
+                    // draw item icon
+                    super.batch.setColor(Color.WHITE);
+                    super.batch.draw(item.icon,
+                            x + slotSize / 2f,
+                            y + slotSize / 2f,
+                            slotSize, slotSize);
+
+                    // draw cooldown overlay from bottom to top
+                    float cooldownPercent = item.getCooldownTime() / item.getCooldownDuration();
+                    if (cooldownPercent > 0f) {
+                        super.batch.setColor(new Color(0f, 0f, 0f, 0.5f));
+                        super.batch.draw(solidTexture,
+                                x + slotSize / 2f,
+                                y + slotSize / 2f - slotSize * (1f - cooldownPercent) / 2f,
+                                slotSize, slotSize * cooldownPercent);
+                    }
+                }
+            }
+
+            // draw slot number key
+            font.drawTextUnaligned(super.batch,
+                    String.valueOf(i + 1),
+                    x + slotSize - 15f,
+                    y + slotSize - 10f,
+                    Color.WHITE, 12);
+        }
 
         if (isPaused) {
             super.batch.setColor(new Color(0f, 0f, 0f, 0.5f));

@@ -15,18 +15,20 @@ public class Shield extends Item {
     public Shield() {
         this.name = "Shield";
         this.description = "Become invincible for a short duration, preventing all damage from enemies.";
-        this.iconPath = "textures/items/icon_shield.png";
+        this.icon = new Texture("textures/items/icon_shield.png");
     }
 
     @Override
     public void activate(Stage stage) {
+        this.setTimer();
+
         this.active = true;
         Color previousColor = stage.playerColor;
         stage.playerColor = new Color(255 / 255f, 211 / 255f, 54 / 255f, 255 / 255f);
         Engine.runAfter(() -> {
             this.active = false;
             stage.playerColor = previousColor;
-        }, super.durationLevel + 5f);
+        }, super.activeTime);
     }
 
     @Override

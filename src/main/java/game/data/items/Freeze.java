@@ -2,6 +2,7 @@ package game.data.items;
 
 import engine.Engine;
 import engine.graphics.Color;
+import engine.graphics.Texture;
 import game.data.Item;
 import game.overrun.stage.Stage;
 import game.overrun.words.WordEntity;
@@ -10,11 +11,13 @@ public class Freeze extends Item {
     public Freeze() {
         this.name = "Freeze";
         this.description = "Freezes all enemies on screen for a short duration.";
-        this.iconPath = "textures/items/icon_freeze.png";
+        this.icon = new Texture("textures/items/icon_freeze.png");
     }
 
     @Override
     public void activate(Stage stage) {
+        this.setTimer();
+
         for (WordEntity word : stage.words.getWordEntities()) {
             float previousSpeed = word.speed;
             Color previousColor = word.color;
@@ -25,7 +28,7 @@ public class Freeze extends Item {
                     word.speed = previousSpeed;
                     word.color = previousColor;
                 }
-            }, super.durationLevel + 3f);
+            }, super.activeTime);
         }
     }
 }
