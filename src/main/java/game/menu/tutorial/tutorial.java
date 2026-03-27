@@ -15,22 +15,21 @@ import game.menu.components.UIButton;
 public class tutorial extends Scene{
 
     private FontAtlas font;
-    private Texture backgroundTexture, nextButtonTexture;
+    private Texture backgroundTexture, readyButtonTexture;
     private UIButton nextButton;
     
     @Override
     public void init(int width, int height) {
 
         font = new FontAtlas("GeistMono-Regular.otf", 32);
-        nextButtonTexture = new Texture("textures/button_test.png");
+        readyButtonTexture = new Texture("textures/tutorial/btn_ready.png");
         backgroundTexture = new Texture("textures/solid.png");
 
-        Vec2 btnSize = new Vec2(140, 50);
         nextButton = new UIButton(
-                super.layout.bottomCenter(0, 90),
-                btnSize,
-                "I'm Ready",
-                nextButtonTexture);
+                super.layout.bottomCenter(0, 80),
+                new Vec2(256* 0.65f, 92*0.65f),
+                "",
+                readyButtonTexture);
 
         super.uiManager.add(nextButton);
 
@@ -64,7 +63,7 @@ public class tutorial extends Scene{
                 "Good luck, and have fun playing!"
         };
 
-        Vec2 TopicPos = super.layout.topCenter(0, 100);
+        Vec2 TopicPos = super.layout.topCenter(0, 120);
         font.drawTextAligned(batch, "Welcome to the Tutorial!", TopicPos.x, TopicPos.y, Color.BLACK, 32);
         TopicPos.y -= 180;
         for (String line : tutorialText) {
@@ -79,6 +78,6 @@ public class tutorial extends Scene{
     public void cleanup() {
         font.cleanup();
         backgroundTexture.cleanup();
-        nextButtonTexture.cleanup();
+        readyButtonTexture.cleanup();
     }
 }
