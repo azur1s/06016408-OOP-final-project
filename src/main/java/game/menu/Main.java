@@ -53,10 +53,12 @@ public class Main extends Scene {
         super.uiManager.add(quitButton);
 
         playButton.setOnClick(() -> {
-            if (PlayerData.selectedCharacter == -1)
+            if (PlayerData.selectedCharacter != -1 && PlayerData.hasCompletedTutorial)
                 Engine.setScene(new game.menu.mode.Mode());
-            else
+            else if (PlayerData.selectedCharacter == -1)
                 Engine.setScene(new game.menu.selectCharacter.selectCharacter());
+            else
+                Engine.setScene(new game.menu.tutorial.tutorial());                
         });
 
         settingButton.setOnClick(() -> {
