@@ -35,7 +35,7 @@ public class Engine {
 
     public static void setScene(Scene newScene) {
         if (currentScene != null)
-            currentScene.cleanup();
+            currentScene.internalCleanup();
         currentScene = newScene;
         currentScene.internalInit(width, height);
     }
