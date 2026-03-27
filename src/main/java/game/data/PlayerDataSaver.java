@@ -56,6 +56,7 @@ public class PlayerDataSaver {
     private static class SaveData {
         int coins;
         int selectedCharacter;
+        boolean hasCompletedTutorial;
         ItemState[] items;
         Object[] equippedItems;
 
@@ -73,6 +74,7 @@ public class PlayerDataSaver {
             SaveData data = new SaveData();
             data.coins = PlayerData.coins;
             data.selectedCharacter = PlayerData.selectedCharacter;
+            data.hasCompletedTutorial = PlayerData.hasCompletedTutorial;
 
             data.items = new ItemState[PlayerData.items.length];
             for (int i = 0; i < PlayerData.items.length; i++) {
@@ -105,7 +107,8 @@ public class PlayerDataSaver {
         void applyToPlayerData() {
             PlayerData.coins = this.coins;
             PlayerData.selectedCharacter = this.selectedCharacter;
-
+            PlayerData.hasCompletedTutorial = this.hasCompletedTutorial;
+            
             PlayerData.items = PlayerData.createDefaultItems();
 
             int itemCount = Math.min(PlayerData.items.length, this.items.length);

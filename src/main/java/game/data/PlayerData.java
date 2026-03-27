@@ -5,7 +5,9 @@ public class PlayerData {
     public static int coins = 99999;
 
     // Selected character index (0-2)
-    public static int selectedCharacter = 0;
+    public static int selectedCharacter = -1;
+
+    public static boolean hasCompletedTutorial = false;
 
     public static final ItemType[] ITEM_CATALOG = {
             ItemType.FREEZE,
