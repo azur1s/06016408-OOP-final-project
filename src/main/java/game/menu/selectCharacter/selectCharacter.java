@@ -17,13 +17,16 @@ public class selectCharacter extends Scene {
     private FontAtlas font;
     private Texture solidTexture;
     private Texture buttonTexture;
+    private Texture backgroundTexture;
+    private Texture selectedCharacterTexture;
+    private Texture backTexture;
     private Texture[] characterTextures;
 
     private UIButton[] characterButtons;
     private UIButton selectButton;
     private UIButton backButton;
 
-    private final String[] characterNames = { "Character 1", "Character 2", "Character 3" };
+    private final String[] characterNames = { "Ruby", "Sapphire", "Emerald" };
     private final Color[] accentColors = {
             new Color(0.96f, 0.55f, 0.26f, 1.0f),
             new Color(0.27f, 0.70f, 0.95f, 1.0f),
@@ -44,7 +47,9 @@ public class selectCharacter extends Scene {
     public void init(int width, int height) {
         font = new FontAtlas("GeistMono-Regular.otf", 32);
         solidTexture = new Texture("textures/solid.png");
-        buttonTexture = new Texture("textures/button_test.png");
+        backgroundTexture = new Texture("textures/bg.png");
+        selectedCharacterTexture = new Texture("textures/selectCharacter/btn_select.png");
+        backTexture = new Texture("textures/btn_back.png");
         characterTextures = new Texture[] {
                 new Texture("textures/player_1.png"),
                 new Texture("textures/player_0.png"),
@@ -86,8 +91,8 @@ public class selectCharacter extends Scene {
         selectButton = new UIButton(
                 super.layout.bottomCenter(0, 90),
                 new Vec2(260, 70),
-                "Select",
-                buttonTexture);
+                "",
+                selectedCharacterTexture);
         selectButton.setOnClick(() -> {
             PlayerData.selectedCharacter = pendingSelection;
             PlayerDataSaver.save();
@@ -98,8 +103,8 @@ public class selectCharacter extends Scene {
         backButton = new UIButton(
                 super.layout.topLeft(100, 50),
                 new Vec2(100, 50),
-                "Back",
-                buttonTexture);
+                "",
+                backTexture);
         backButton.setOnClick(() -> Engine.setScene(new game.menu.Main())); // has a bug if you click back when it's back to main menu, it has 2 time sound effect but it must be 1 time        
         super.uiManager.add(backButton);
     }
@@ -127,6 +132,10 @@ public class selectCharacter extends Scene {
     @Override
     public void renderUI(float delta) {
         glClearColor(0.96f, 0.96f, 0.96f, 1.0f);
+
+        Vec2 backgroundPos = super.layout.center(0, 0);
+        Vec2 backgroundSize = new Vec2(super.layout.res.x, super.layout.res.y);
+        super.batch.draw(backgroundTexture, backgroundPos.x, backgroundPos.y, backgroundSize.x, backgroundSize.y);
 
         Vec2 titlePos = super.layout.topCenter(0, 100);
         font.drawTextAligned(super.batch, "Select Your Character", titlePos.x, titlePos.y, Color.BLACK, 72);
@@ -204,9 +213,6 @@ public class selectCharacter extends Scene {
                 panelHeight);
         super.batch.draw(solidTexture, cardX + panelWidth * 0.5f - borderThickness * 0.5f, drawY, borderThickness,
                 panelHeight);
-
-        font.drawTextHorizontalAligned(super.batch, "(pic character)", cardX, drawY + 65f * scale, textColor,
-                30f * scale);
 
         super.batch.setColor(new Color(
                 Math.max(0f, accentColors[index].r - 0.10f),
