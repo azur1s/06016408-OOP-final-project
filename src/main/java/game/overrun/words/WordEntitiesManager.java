@@ -10,7 +10,6 @@ import java.util.Vector;
 import engine.entities.Collidable;
 import engine.graphics.AnimationClip;
 import engine.graphics.FontAtlas;
-import engine.graphics.Texture;
 import engine.graphics.TextureBatch;
 import engine.utils.Resources;
 
@@ -227,7 +226,7 @@ public class WordEntitiesManager {
                     // Random x position off the right edge
                     700f,
                     // Calculate speed based on word length, longer words move slower
-                    20f + (maxWordLength - word.length()) * 2f
+                    30f + (maxWordLength - word.length()) * 2f
                     // Random variation for fun
                             + (float) Math.random() * 20f - 10f,
                     selectLane());

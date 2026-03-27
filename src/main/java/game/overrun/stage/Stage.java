@@ -45,6 +45,7 @@ public class Stage extends Scene {
 
     protected boolean debug = false;
     protected boolean isPaused = false;
+    protected boolean deathRewardsGranted = false;
 
     public Stage() {
         this(StageConfigs.STAGE_1);
@@ -120,7 +121,7 @@ public class Stage extends Scene {
             }
         }
 
-        if (!isPaused) {
+        if (!isPaused && !playerManager.isDead()) {
             inputHandler.update();
             words.update(delta);
             projectiles.update(delta);
@@ -133,7 +134,17 @@ public class Stage extends Scene {
             words.removeInactive();
             projectiles.removeInactive();
         } else {
-            exitButton.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
+            if (isPaused) {
+                exitButton.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
+            } else if (playerManager.isDead()) {
+                if (!deathRewardsGranted) {
+                    // Update player data
+                    PlayerData.coins += playerManager.score / 10;
+                    deathRewardsGranted = true;
+                }
+
+                exitButton.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
+            }
         }
 
         pauseButton.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
@@ -190,6 +201,14 @@ public class Stage extends Scene {
 
             Vec2 pauseTextPos = super.layout.center(0, -100);
             font.drawTextAligned(super.batch, "PAUSED", pauseTextPos.x, pauseTextPos.y, Color.WHITE, 64);
+        } else if (playerManager.isDead()) {
+            super.batch.setColor(new Color(0f, 0f, 0f, 0.5f));
+            super.batch.draw(solidTexture, Engine.width * 0.5f, Engine.height * 0.5f, Engine.width, Engine.height);
+            super.batch.setColor(Color.WHITE);
+
+            Vec2 gameOverTextPos = super.layout.center(0, -100);
+            font.drawTextAligned(super.batch, "Game Over", gameOverTextPos.x, gameOverTextPos.y, Color.WHITE, 64);
+            exitButton.render(super.batch, font, mouseScreen);
         }
 
         if (debug) {

@@ -43,6 +43,10 @@ public class PlayerManager implements WordEntitiesListener {
         }
     }
 
+    public boolean isDead() {
+        return health <= 0;
+    }
+
     public void hurt(int damage) {
         health -= damage;
         if (health < 0)
@@ -63,14 +67,15 @@ public class PlayerManager implements WordEntitiesListener {
         // TODO lerp
         playerPosition.set(playerPosition.x, wordEntity.position.y);
 
-        // float streakMultiplier = 1 + (streaks * 0.1f) + (-(streaksTimer - 3) *
-        // 0.05f);
+        float streakMultiplier = 1 + (streaks * 0.1f) + (-(streaksTimer - 3) *
+                0.05f);
 
-        // addScore((int) (10 * wordEntity.word.length()
-        // * WordEffect.getScoreMultipler(wordEntity.effect)
-        // * streakMultiplier));
-        // streaks++;
-        // streaksTimer = 0f;
+        addScore((int) (10 * wordEntity.word.length()
+                * WordEffect.getScoreMultipler(wordEntity.effect)
+                * streakMultiplier));
+        streaks++;
+        streaksTimer = 0f;
+        System.out.println("Score: " + score + " Streaks: " + streaks + " WPM: " + lastWpm);
     }
 
     @Override
