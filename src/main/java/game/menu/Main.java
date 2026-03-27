@@ -20,6 +20,7 @@ public class Main extends Scene {
     private UIButton quitButton;
     private Texture backgroundTexture;
     private Texture startTexture, settingTexture, quitTexture;
+
     @Override
     public void init(int width, int height) {
         PlayerDataSaver.load();
@@ -92,14 +93,13 @@ public class Main extends Scene {
         float logoScale = 1.3f + 0.05f * (float) Math.sin(Engine.graphics.getTime() * 0.5f);
 
         Vec2 backgroundPos = super.layout.center(0, 0);
-        Vec2 backgroundSize = new Vec2(super.layout.res.x,super.layout.res.y);
+        Vec2 backgroundSize = new Vec2(super.layout.res.x, super.layout.res.y);
 
-        super.batch.draw(backgroundTexture, backgroundPos, backgroundSize.x,backgroundSize.y);
+        super.batch.draw(backgroundTexture, backgroundPos, backgroundSize.x, backgroundSize.y);
 
         Vec2 logoPos = super.layout.centerLeft(super.layout.res.x * 1.27f / 4f + 50f, 0f);
         super.batch.setColor(Color.WHITE);
         super.batch.draw(logo, logoPos.x, logoPos.y, 3800f / 6f * logoScale, 3000f / 6f * logoScale);
-
 
         super.uiManager.render(super.batch, font, mouseScreen);
     }
@@ -108,5 +108,9 @@ public class Main extends Scene {
     public void cleanup() {
         PlayerDataSaver.save();
         logo.cleanup();
+        backgroundTexture.cleanup();
+        startTexture.cleanup();
+        settingTexture.cleanup();
+        quitTexture.cleanup();
     }
 }

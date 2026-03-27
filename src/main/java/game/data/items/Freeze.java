@@ -8,10 +8,12 @@ import game.overrun.stage.Stage;
 import game.overrun.words.WordEntity;
 
 public class Freeze extends Item {
+    private static final Texture ICON_TEXTURE = new Texture("textures/items/icon_freeze.png");
+
     public Freeze() {
         this.name = "Freeze";
         this.description = "Freezes all enemies on screen for a short duration.";
-        this.icon = new Texture("textures/items/icon_freeze.png");
+        this.icon = ICON_TEXTURE;
     }
 
     @Override

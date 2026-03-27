@@ -8,14 +8,15 @@ import game.data.Item;
 import game.overrun.stage.Stage;
 
 public class Shield extends Item {
-    private Texture shieldActiveTexture = new Texture("textures/items/shield_active.png");
+    private static final Texture SHIELD_ACTIVE_TEXTURE = new Texture("textures/items/shield_active.png");
+    private static final Texture ICON_TEXTURE = new Texture("textures/items/icon_shield.png");
 
     private boolean active = false;
 
     public Shield() {
         this.name = "Shield";
         this.description = "Become invincible for a short duration, preventing all damage from enemies.";
-        this.icon = new Texture("textures/items/icon_shield.png");
+        this.icon = ICON_TEXTURE;
     }
 
     @Override
@@ -35,7 +36,7 @@ public class Shield extends Item {
     public void render(Stage stage, TextureBatch batch) {
         if (active) {
             float yScale = 1f + (float) Math.sin(Engine.graphics.getTime() * 4f) * 0.1f;
-            batch.draw(shieldActiveTexture,
+            batch.draw(SHIELD_ACTIVE_TEXTURE,
                     stage.playerManager.getPosition().x,
                     (stage.playerManager.getPosition().y + 80f) * yScale,
                     64, 64);

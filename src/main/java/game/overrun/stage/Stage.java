@@ -26,6 +26,7 @@ import game.overrun.words.WordEntity;
 // TODO: Make enemy texture configurable per stage.
 public class Stage extends Scene {
     protected final StageConfig config;
+    protected float timer = 0f;
 
     protected Texture solidTexture;
     protected Texture backgroundTexture;
@@ -105,6 +106,8 @@ public class Stage extends Scene {
 
     @Override
     public void update(float delta) {
+        timer += delta;
+
         if (Engine.input.isKeyPressed(GLFW_KEY_F3)) {
             debug = !debug;
         }
@@ -163,6 +166,19 @@ public class Stage extends Scene {
         }
 
         pauseButton.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
+
+        if (config.manualSpawn()) {
+            for (SpawnPhase phase : config.spawnPhases()) {
+                if (!phase.spawned && timer >= phase.timerAt) {
+                    words.addNewEntites(phase.count);
+                    phase.spawned = true;
+                }
+            }
+
+            if (timer >= config.maxTime() && !deathRewardsGranted) {
+                playerManager.hurt(99999);
+            }
+        }
     }
 
     @Override

@@ -108,8 +108,9 @@ public class PlayerDataSaver {
             PlayerData.coins = this.coins;
             PlayerData.selectedCharacter = this.selectedCharacter;
             PlayerData.hasCompletedTutorial = this.hasCompletedTutorial;
-            
-            PlayerData.items = PlayerData.createDefaultItems();
+
+            // Rebuild the item array once from save data to avoid duplicate item creation.
+            PlayerData.items = new Item[PlayerData.ITEM_CATALOG.length];
 
             int itemCount = Math.min(PlayerData.items.length, this.items.length);
             for (int i = 0; i < itemCount; i++) {
@@ -131,6 +132,12 @@ public class PlayerDataSaver {
                 } else {
                     PlayerData.items[i] = null;
                 }
+            }
+
+            // Keep default behavior for any newly added catalog entries not present in
+            // older saves.
+            for (int i = itemCount; i < PlayerData.items.length; i++) {
+                PlayerData.items[i] = ItemFactory.create(PlayerData.getItemTypeForIndex(i));
             }
 
             Arrays.fill(PlayerData.equippedItems, null);
