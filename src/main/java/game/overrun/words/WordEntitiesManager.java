@@ -293,7 +293,7 @@ public class WordEntitiesManager {
             }
             // Decrease the spawn timer
             spawnCooldown -= 0.5f;
-            difficultyRamp += 0.1f;
+            difficultyRamp += 0.2f;
             // Cap the difficulty ramp
             difficultyRamp = Math.min(difficultyRamp, SPAWN_INTERVAL - (SPAWN_INTERVAL / 2f));
         }

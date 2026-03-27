@@ -15,8 +15,6 @@ public class Tornado extends Item {
     }, 0.1f);
     private static final Texture ICON_TEXTURE = new Texture("textures/items/icon_tornado.png");
 
-    private boolean active = false;
-
     public Tornado() {
         this.name = "Tornado";
         this.description = "Summon a tornado that pushes back enemies in its path.";
@@ -40,9 +38,6 @@ public class Tornado extends Item {
                 }
             }, t);
         }
-        // for (WordEntity word : stage.words.getWordEntities()) {
-        // word.position = word.position.add(new Vec2(100f, 0f));
-        // }
     }
 
     @Override
