@@ -3,8 +3,12 @@ package engine;
 import static org.lwjgl.glfw.GLFW.*;
 
 import engine.graphics.OrthoCamera;
+import engine.graphics.Color;
+import engine.graphics.FontAtlas;
+import engine.graphics.Texture;
 import engine.graphics.TextureBatch;
 import engine.math.Vec2;
+import engine.ui.Button;
 import engine.ui.Layout;
 import engine.ui.UIManager;
 
@@ -38,6 +42,13 @@ public abstract class Scene {
 
     protected Layout layout;
 
+    private boolean exitPromptVisible = false;
+    private FontAtlas exitPromptFont;
+    private Texture exitPromptPanelTexture;
+    private Texture exitPromptButtonTexture;
+    private Button confirmExitButton;
+    private Button cancelExitButton;
+
     // Internal methods called by the engine/LWJGL main loop
 
     public void internalInit(int width, int height) {
@@ -45,6 +56,7 @@ public abstract class Scene {
         this.camera = new OrthoCamera(width, height, true);
         this.uiCamera = new OrthoCamera(width, height, false);
         this.layout = new Layout(width, height);
+        initExitPrompt();
         init(width, height);
     }
 
@@ -52,6 +64,7 @@ public abstract class Scene {
         this.camera.setOrtho(width, height, true);
         this.uiCamera.setOrtho(width, height, false);
         this.layout.resize(width, height);
+        layoutExitPromptButtons();
         resize(width, height);
     }
 
@@ -63,9 +76,20 @@ public abstract class Scene {
         this.mouseScreen.set(new Vec2(rawMousePos.x, this.camera.viewportHeight - rawMousePos.y));
         this.mouseWorld.set(this.camera.screenToWorld(rawMousePos));
 
-        this.uiManager.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
+        boolean exitPromptToggled = false;
+        if (usesGlobalExitPrompt() && Engine.input.isKeyPressed(GLFW_KEY_ESCAPE)) {
+            exitPromptVisible = !exitPromptVisible;
+            exitPromptToggled = true;
+        }
 
-        update(delta);
+        if (exitPromptVisible) {
+            updateExitPrompt();
+        } else {
+            this.uiManager.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
+            if (!exitPromptToggled) {
+                update(delta);
+            }
+        }
 
         this.batch.setProjection(this.camera.combined);
         this.batch.begin();
@@ -75,6 +99,9 @@ public abstract class Scene {
         this.batch.setProjection(this.uiCamera.combined);
         this.batch.begin();
         renderUI(delta);
+        if (exitPromptVisible) {
+            renderExitPrompt();
+        }
         this.batch.end();
     }
 
@@ -82,6 +109,7 @@ public abstract class Scene {
         if (batch != null)
             batch.cleanup();
         cleanup();
+        cleanupExitPrompt();
     }
 
     // User-level methods
@@ -123,4 +151,85 @@ public abstract class Scene {
      */
     public void cleanup() {
     };
+
+    protected boolean usesGlobalExitPrompt() {
+        return true;
+    }
+
+    private void initExitPrompt() {
+        exitPromptFont = new FontAtlas("GeistMono-Regular.otf", 28);
+        exitPromptPanelTexture = new Texture("textures/solid.png");
+        exitPromptButtonTexture = new Texture("textures/button_test.png");
+
+        confirmExitButton = new Button(
+                new Vec2(0, 0),
+                new Vec2(180, 60),
+                "Exit",
+                exitPromptButtonTexture);
+        confirmExitButton.setOnClick(Engine::requestExit);
+
+        cancelExitButton = new Button(
+                new Vec2(0, 0),
+                new Vec2(180, 60),
+                "Cancel",
+                exitPromptButtonTexture);
+        cancelExitButton.setOnClick(() -> exitPromptVisible = false);
+
+        layoutExitPromptButtons();
+    }
+
+    private void layoutExitPromptButtons() {
+        if (layout == null || confirmExitButton == null || cancelExitButton == null) {
+            return;
+        }
+
+        confirmExitButton = new Button(
+                layout.center(-110, 80),
+                new Vec2(180, 60),
+                "Exit",
+                exitPromptButtonTexture);
+        confirmExitButton.setOnClick(Engine::requestExit);
+
+        cancelExitButton = new Button(
+                layout.center(110, 80),
+                new Vec2(180, 60),
+                "Cancel",
+                exitPromptButtonTexture);
+        cancelExitButton.setOnClick(() -> exitPromptVisible = false);
+    }
+
+    private void updateExitPrompt() {
+        boolean mouseReleased = Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT);
+        confirmExitButton.update(mouseScreen, mouseReleased);
+        cancelExitButton.update(mouseScreen, mouseReleased);
+    }
+
+    private void renderExitPrompt() {
+        batch.setColor(new Color(0f, 0f, 0f, 0.55f));
+        batch.draw(exitPromptPanelTexture, layout.res.x * 0.5f, layout.res.y * 0.5f, layout.res.x, layout.res.y);
+
+        Vec2 panelPos = layout.center(0, 0);
+        Vec2 panelSize = new Vec2(520, 260);
+        batch.setColor(new Color(0.95f, 0.90f, 0.78f, 1.0f));
+        batch.draw(exitPromptPanelTexture, panelPos.x, panelPos.y, panelSize.x, panelSize.y);
+
+        exitPromptFont.drawTextAligned(batch, "Exit Game?", panelPos.x, panelPos.y + 40, Color.BLACK, 38);
+        exitPromptFont.drawTextAligned(batch, "Press ESC again to close", panelPos.x, panelPos.y, Color.BLACK, 18);
+
+        batch.setColor(Color.WHITE);
+        confirmExitButton.render(batch, exitPromptFont, mouseScreen);
+        cancelExitButton.render(batch, exitPromptFont, mouseScreen);
+    }
+
+    private void cleanupExitPrompt() {
+        if (exitPromptFont != null) {
+            exitPromptFont.cleanup();
+        }
+        if (exitPromptPanelTexture != null) {
+            exitPromptPanelTexture.cleanup();
+        }
+        if (exitPromptButtonTexture != null) {
+            exitPromptButtonTexture.cleanup();
+        }
+    }
 }
