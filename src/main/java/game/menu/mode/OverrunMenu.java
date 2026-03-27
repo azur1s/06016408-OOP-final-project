@@ -53,7 +53,7 @@ public class OverrunMenu extends Scene {
         String item2Text = item2Index == -1 ? "" : "ITEM " + (item2Index + 1);
 
         item1Btn = new UIButton(
-                super.layout.center(-60, 0),
+                super.layout.center(60, 0),
                 itemSlotSize,
                 item1Text,
                 Color.WHITE,
@@ -63,7 +63,7 @@ public class OverrunMenu extends Scene {
                 itemSlotTexture);
 
         item2Btn = new UIButton(
-                super.layout.center(60, 0),
+                super.layout.center(-60, 0),
                 itemSlotSize,
                 item2Text,
                 Color.WHITE,

@@ -18,7 +18,6 @@ public class Shield extends Item {
         stage.playerColor = new Color(255 / 255f, 211 / 255f, 54 / 255f, 255 / 255f);
         System.out.println("Player is now invincible!");
         Engine.runAfter(() -> {
-            System.out.println("Player is no longer invincible.");
             stage.playerColor = previousColor;
         }, super.durationLevel + 5f);
     }

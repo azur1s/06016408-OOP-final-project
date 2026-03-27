@@ -4,6 +4,7 @@ import engine.graphics.AnimationClip;
 import engine.graphics.Texture;
 
 public final class StageConfigs {
+    //
     private StageConfigs() {
     }
 
@@ -31,9 +32,9 @@ public final class StageConfigs {
                     new Texture("textures/entities/stage1/e1_4.png"),
             }, 0.2f),
             new SpawnPhase[] {
-                    new SpawnPhase(5, 1),
-                    new SpawnPhase(10, 10),
-                    new SpawnPhase(15, 20)
+                    new SpawnPhase(1, 1),
+                    new SpawnPhase(3, 10),
+                    new SpawnPhase(4, 20)
             },
             60f * 2f);
 
@@ -49,9 +50,10 @@ public final class StageConfigs {
                     new Texture("textures/entities/stage1/e1_4.png"),
             }, 0.2f),
             new SpawnPhase[] {
-                    new SpawnPhase(10, 1),
-                    new SpawnPhase(15, 10),
-                    new SpawnPhase(20, 20)
+                    new SpawnPhase(2, 1),
+                    new SpawnPhase(4, 10),
+                    new SpawnPhase(4, 20),
+                    new SpawnPhase(4, 25)
             },
             60f * 3f);
 
@@ -67,9 +69,11 @@ public final class StageConfigs {
                     new Texture("textures/entities/stage1/e1_4.png"),
             }, 0.2f),
             new SpawnPhase[] {
-                    new SpawnPhase(15, 1),
-                    new SpawnPhase(20, 10),
-                    new SpawnPhase(25, 20)
+                    new SpawnPhase(3, 1),
+                    new SpawnPhase(4, 10),
+                    new SpawnPhase(4, 20),
+                    new SpawnPhase(4, 25),
+                    new SpawnPhase(4, 30)
             },
             60f * 4f);
 
@@ -85,9 +89,12 @@ public final class StageConfigs {
                     new Texture("textures/entities/stage1/e1_4.png"),
             }, 0.2f),
             new SpawnPhase[] {
-                    new SpawnPhase(20, 1),
-                    new SpawnPhase(25, 10),
-                    new SpawnPhase(30, 20)
+                    new SpawnPhase(4, 1),
+                    new SpawnPhase(4, 10),
+                    new SpawnPhase(4, 20),
+                    new SpawnPhase(4, 25),
+                    new SpawnPhase(4, 30),
+                    new SpawnPhase(4, 40)
             },
             60f * 5f);
 

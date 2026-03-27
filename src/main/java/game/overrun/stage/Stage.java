@@ -109,10 +109,20 @@ public class Stage extends Scene {
             debug = !debug;
         }
 
-        if (Engine.input.isKeyPressed(GLFW_KEY_F1)) {
+        if (Engine.input.isKeyPressed(GLFW_KEY_1)) {
             ItemType equippedItem = PlayerData.equippedItems[0];
             System.out.println(
                     "Activating Item in Slot 1: " + (equippedItem != null ? equippedItem.displayName() : "None"));
+            if (equippedItem != null) {
+                Item item = PlayerData.getItemByType(equippedItem);
+                if (item != null) {
+                    item.activate(words, this);
+                }
+            }
+        } else if (Engine.input.isKeyPressed(GLFW_KEY_2)) {
+            ItemType equippedItem = PlayerData.equippedItems[1];
+            System.out.println(
+                    "Activating Item in Slot 2: " + (equippedItem != null ? equippedItem.displayName() : "None"));
             if (equippedItem != null) {
                 Item item = PlayerData.getItemByType(equippedItem);
                 if (item != null) {
