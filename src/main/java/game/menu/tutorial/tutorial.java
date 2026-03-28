@@ -41,6 +41,7 @@ public class tutorial extends Scene {
     }
 
     private FontAtlas font;
+    private FontAtlas contentFont;
     private Texture sceneBackgroundTexture;
     private Texture backgroundTexture;
     private Texture readyButtonTexture;
@@ -69,6 +70,7 @@ public class tutorial extends Scene {
     @Override
     public void init(int width, int height) {
         font = new FontAtlas("GeistMono-Regular.otf", 32);
+        contentFont = new FontAtlas("Geist-Regular.otf", 32);
         sceneBackgroundTexture = new Texture("textures/bg.png");
         readyButtonTexture = new Texture("textures/tutorial/btn_ready.png");
         backgroundTexture = new Texture("textures/tutorial/tut_page.png");
@@ -154,6 +156,7 @@ public class tutorial extends Scene {
     @Override
     public void cleanup() {
         font.cleanup();
+        contentFont.cleanup();
         sceneBackgroundTexture.cleanup();
         backgroundTexture.cleanup();
         readyButtonTexture.cleanup();
@@ -309,10 +312,11 @@ public class tutorial extends Scene {
             }
 
             if (block.centered) {
-                font.drawTextHorizontalAligned(super.batch, block.text, viewportPos.x, currentY, block.color, block.size);
+                contentFont.drawTextHorizontalAligned(super.batch, block.text, viewportPos.x, currentY, block.color,
+                        block.size);
             } else {
                 float leftX = viewportPos.x - viewportSize.x / 2.0f + 10.0f;
-                font.drawTextUnaligned(super.batch, block.text, leftX, currentY, block.color, block.size);
+                contentFont.drawTextUnaligned(super.batch, block.text, leftX, currentY, block.color, block.size);
             }
         }
 
@@ -417,7 +421,7 @@ public class tutorial extends Scene {
 
         for (String word : words) {
             String candidate = currentLine.length() == 0 ? word : currentLine + " " + word;
-            if (currentLine.length() > 0 && font.getTextWidth(candidate, textSize) > maxWidth) {
+            if (currentLine.length() > 0 && contentFont.getTextWidth(candidate, textSize) > maxWidth) {
                 lines.add(currentLine.toString());
                 currentLine = new StringBuilder(word);
             } else {
