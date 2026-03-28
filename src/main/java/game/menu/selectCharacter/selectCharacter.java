@@ -66,7 +66,7 @@ public class selectCharacter extends Scene {
         characterTextures = new Texture[] {
                 new Texture("textures/player_1.png"),
                 new Texture("textures/player_0.png"),
-                new Texture("textures/player_3.png")
+                new Texture("textures/player_2.png")
         };
 
         pendingSelection = 1;
