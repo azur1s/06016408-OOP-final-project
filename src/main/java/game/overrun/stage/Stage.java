@@ -17,6 +17,7 @@ import engine.ui.Button;
 import game.data.Item;
 import game.data.ItemType;
 import game.data.PlayerData;
+import game.data.PlayerDataSaver;
 import game.overrun.InputHandler;
 import game.overrun.PlayerManager;
 import game.overrun.projectiles.ProjectileManager;
@@ -43,9 +44,12 @@ public class Stage extends Scene {
 
     protected Button pauseButton;
     protected Button exitButton;
+    protected Button okButton;
 
     protected boolean debug = false;
     protected boolean isPaused = false;
+    protected boolean isStageWon = false;
+    protected boolean winRewardsGranted = false;
     protected boolean deathRewardsGranted = false;
 
     public Stage() {
@@ -87,6 +91,12 @@ public class Stage extends Scene {
         words.addListener(playerManager);
         words.addListener(projectiles);
 
+        if (config.manualSpawn()) {
+            for (SpawnPhase phase : config.spawnPhases()) {
+                phase.spawned = false;
+            }
+        }
+
         inputHandler = new InputHandler(words);
 
         pauseButton = new Button(
@@ -112,6 +122,16 @@ public class Stage extends Scene {
 
         exitButton.setOnClick(() -> {
             Engine.setScene(new game.menu.Main());
+        });
+
+        okButton = new Button(
+                super.layout.center(0, 100),
+                new Vec2(240, 50),
+                "Ok",
+                new Texture(StageConfigs.getButtonTexturePath()));
+
+        okButton.setOnClick(() -> {
+            Engine.setScene(new game.menu.mode.Mode());
         });
     }
 
@@ -152,7 +172,7 @@ public class Stage extends Scene {
             }
         }
 
-        if (!isPaused && !playerManager.isDead()) {
+        if (!isPaused && !playerManager.isDead() && !isStageWon) {
             inputHandler.update();
             words.update(delta);
             projectiles.update(delta);
@@ -167,11 +187,14 @@ public class Stage extends Scene {
         } else {
             if (isPaused) {
                 exitButton.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
+            } else if (isStageWon) {
+                okButton.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
             } else if (playerManager.isDead()) {
                 if (!deathRewardsGranted) {
                     // Update player data
-                    PlayerData.coins += playerManager.score / 10;
+                    PlayerData.coins += playerManager.score / 5;
                     deathRewardsGranted = true;
+                    PlayerDataSaver.save();
                 }
 
                 exitButton.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
@@ -180,12 +203,33 @@ public class Stage extends Scene {
 
         pauseButton.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
 
-        if (config.manualSpawn()) {
+        if (config.manualSpawn() && !isStageWon && !playerManager.isDead()) {
             for (SpawnPhase phase : config.spawnPhases()) {
                 if (!phase.spawned && timer >= phase.timerAt) {
                     words.addNewEntites(phase.count);
                     phase.spawned = true;
                 }
+            }
+
+            boolean allPhasesSpawned = true;
+            for (SpawnPhase phase : config.spawnPhases()) {
+                if (!phase.spawned) {
+                    allPhasesSpawned = false;
+                    break;
+                }
+            }
+
+            // Manual stage is won when all configured waves spawned, all monsters are
+            // cleared, and the timer has not reached the stage timeout.
+            if (allPhasesSpawned
+                    && words.getWordEntities().isEmpty()
+                    && timer < config.maxTime()) {
+                if (!winRewardsGranted) {
+                    PlayerData.coins += playerManager.score / 5;
+                    winRewardsGranted = true;
+                    PlayerDataSaver.save();
+                }
+                isStageWon = true;
             }
 
             if (timer >= config.maxTime() && !deathRewardsGranted) {
@@ -308,6 +352,19 @@ public class Stage extends Scene {
 
             Vec2 pauseTextPos = super.layout.center(0, -100);
             font.drawTextAligned(super.batch, "PAUSED", pauseTextPos.x, pauseTextPos.y, Color.WHITE, 64);
+        } else if (isStageWon) {
+            super.batch.setColor(new Color(0f, 0f, 0f, 0.5f));
+            super.batch.draw(solidTexture, Engine.width * 0.5f, Engine.height * 0.5f, Engine.width, Engine.height);
+            super.batch.setColor(Color.WHITE);
+
+            Vec2 stageClearTextPos = super.layout.center(0, -100);
+            font.drawTextAligned(super.batch, "Stage Clear!", stageClearTextPos.x, stageClearTextPos.y, Color.WHITE,
+                    64);
+            font.drawTextAligned(super.batch, "Reward: +" + (playerManager.score / 5) + " coins",
+                    Engine.width * 0.5f,
+                    Engine.height * 0.5f - 20f, Color.WHITE, 22);
+
+            okButton.render(super.batch, font, mouseScreen);
         } else if (playerManager.isDead()) {
             super.batch.setColor(new Color(0f, 0f, 0f, 0.5f));
             super.batch.draw(solidTexture, Engine.width * 0.5f, Engine.height * 0.5f, Engine.width, Engine.height);
