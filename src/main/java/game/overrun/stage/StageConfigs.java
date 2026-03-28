@@ -25,6 +25,11 @@ public final class StageConfigs {
             "textures/entities/stage3/buksas/buksas_1.png",
             "textures/entities/stage3/buksas/buksas_2.png",
     };
+    private static final String[] ENEMY_STAGE_4_TEXTURE_PATHS = {
+            "textures/entities/stage4/medice/medice_0.png",
+            "textures/entities/stage4/medice/medice_1.png",
+            "textures/entities/stage4/medice/medice_2.png",
+    };
 
     public static final StageConfig OVERRUN = new StageConfig(
             "bgm_main",
@@ -107,7 +112,7 @@ public final class StageConfigs {
             "textures/background/bg_s4.png",
             "GeistMono-Regular.otf",
             32,
-            ENEMY_STAGE_1_TEXTURE_PATHS,
+            ENEMY_STAGE_4_TEXTURE_PATHS,
             new SpawnPhase[] {
                     new SpawnPhase(4, 1),
                     new SpawnPhase(4, 10),
@@ -119,7 +124,11 @@ public final class StageConfigs {
             60f * 5f,
             new WordEntity(
                     new AnimationClip(new Texture[] {
-                            new Texture("textures/entities/stage1/Peter/Peter_1.png"),
+                            new Texture("textures/entities/stage4/boss/boss_0.png"),
+                            new Texture("textures/entities/stage4/boss/boss_1.png"),
+                            new Texture("textures/entities/stage4/boss/boss_2.png"),
+                            new Texture("textures/entities/stage4/boss/boss_3.png"),
+                            new Texture("textures/entities/stage4/boss/boss_4.png"),
                     }, 0.2f),
                     "new BufferedReader(new InputStreamReader(System.in)).readLine()",
                     650f,
