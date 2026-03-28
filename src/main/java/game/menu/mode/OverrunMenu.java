@@ -13,6 +13,8 @@ import game.menu.components.UIButton;
 public class OverrunMenu extends Scene {
     private FontAtlas font;
     private Texture btnTexture;
+    private Texture backBtnTexture;
+    private Texture playBtnTexture;
     private Texture itemSlotTexture;
     private Texture backgroundTexture;
 
@@ -26,6 +28,8 @@ public class OverrunMenu extends Scene {
         super.preloadAssets();
         Texture.preloadAsync(
                 "textures/button_test.png",
+                "textures/btn_back.png",
+                "textures/mode/btn_play_pk.png",
                 "textures/solid.png",
                 "textures/bg.png");
     }
@@ -39,23 +43,25 @@ public class OverrunMenu extends Scene {
 
         font = new FontAtlas("GeistMono-Regular.otf", 32);
         btnTexture = new Texture("textures/button_test.png");
+        backBtnTexture = new Texture("textures/btn_back.png");
+        playBtnTexture = new Texture("textures/mode/btn_play_pk.png");
         itemSlotTexture = new Texture("textures/solid.png"); // placeholder
         backgroundTexture = new Texture("textures/bg.png");
 
-        Vec2 btnSize = new Vec2(200, 50);
+        Vec2 btnSize = new Vec2(256 * 0.75f, 92 * 0.75f);
         Vec2 itemSlotSize = new Vec2(100, 100);
 
         playBtn = new UIButton(
                 super.layout.center(0, 150),
                 btnSize,
-                "Play",
-                btnTexture);
+                "",
+                playBtnTexture);
 
         backBtn = new UIButton(
                 super.layout.topLeft(100, 50),
                 new Vec2(100, 50),
-                "Back",
-                btnTexture);
+                "",
+                backBtnTexture);
 
         item1Btn = new UIButton(
                 super.layout.center(60, 0),
@@ -149,6 +155,10 @@ public class OverrunMenu extends Scene {
             font.cleanup();
         if (btnTexture != null)
             btnTexture.cleanup();
+        if (backBtnTexture != null)
+            backBtnTexture.cleanup();
+        if (playBtnTexture != null)
+            playBtnTexture.cleanup();
         if (itemSlotTexture != null)
             itemSlotTexture.cleanup();
         if (backgroundTexture != null)
