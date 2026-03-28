@@ -15,8 +15,10 @@ import game.menu.components.UISlider;
 public class Setting extends Scene {
     private FontAtlas font;
     private Texture buttonTexture;
-    private Texture backgroundTexture;
     private UIButton backButton;
+    private Texture backgroundTexture;
+    private Texture backBtnTexture;
+    private Texture solidTexture;
     private UISlider bgmVolumeSlider;
     private UISlider sfxVolumeSlider;
 
@@ -31,7 +33,9 @@ public class Setting extends Scene {
     @Override
     public void init(int width, int height) {
         font = new FontAtlas("GeistMono-Regular.otf", 32);
+        backBtnTexture = new Texture("textures/btn_back.png");
         backgroundTexture = new Texture("textures/bg.png");
+        solidTexture = new Texture("textures/solid.png");
 
         buttonTexture = new Texture("textures/button_test.png");
         Vec2 btnSize = new Vec2(400, 100);
@@ -52,9 +56,9 @@ public class Setting extends Scene {
 
         backButton = new UIButton(
                 super.layout.center(0, 250),
-                btnSize,
-                "Back",
-                buttonTexture);
+                new Vec2(256, 92),
+                "",
+                backBtnTexture);
 
         bgmVolumeSlider.setOnValueChanged(value -> {
             Engine.audio.setBgmVolume(value);
@@ -88,6 +92,11 @@ public class Setting extends Scene {
         Vec2 backgroundSize = new Vec2(super.layout.res.x, super.layout.res.y);
         super.batch.draw(backgroundTexture, backgroundPos.x, backgroundPos.y, backgroundSize.x, backgroundSize.y);
 
+        Vec2 contentPos = super.layout.center(0, 0);
+        Vec2 ContentSize = new Vec2(800, 400);
+        super.batch.setColor(new Color(0.0f, 0.0f, 0.0f, 0.5f));
+        super.batch.draw(solidTexture, contentPos, ContentSize.x, ContentSize.y);
+        
         Vec2 titlePos = super.layout.center(0, -200);
         font.drawTextAligned(super.batch, "Settings", titlePos.x, titlePos.y, Color.WHITE, 64);
 
