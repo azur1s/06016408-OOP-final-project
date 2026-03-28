@@ -36,7 +36,7 @@ public class ShopMenu extends Scene {
 
     // Costs
     private final int ITEM_COST = 2000;
-    private final int[] SKIN_COSTS = { 5000, 10000, 20000 };
+
 
     // --- ITEM TAB UI ---
     private List<UIButton> itemBoxBtns = new ArrayList<>();
@@ -44,9 +44,6 @@ public class ShopMenu extends Scene {
 
     // --- SKIN TAB UI ---
     private List<UIButton> skinBoxBtns = new ArrayList<>();
-    private UIButton buySkin1Btn;
-    private UIButton buySkin2Btn;
-    private UIButton buySkin3Btn;
 
     @Override
     public void preloadAssets() {
@@ -156,20 +153,6 @@ public class ShopMenu extends Scene {
             super.uiManager.add(skinBoxBtn);
         }
 
-        buySkin1Btn = new UIButton(super.layout.center(-220, 120), new Vec2(150, 50),
-                game.data.PlayerData.unlockedSkins[0] ? "UNLOCKED" : "BUY (" + SKIN_COSTS[0] + " C)",
-                btnTexture);
-        buySkin2Btn = new UIButton(super.layout.center(0, 120), new Vec2(150, 50),
-                game.data.PlayerData.unlockedSkins[1] ? "UNLOCKED" : "BUY (" + SKIN_COSTS[1] + " C)",
-                btnTexture);
-        buySkin3Btn = new UIButton(super.layout.center(220, 120), new Vec2(150, 50),
-                game.data.PlayerData.unlockedSkins[2] ? "UNLOCKED" : "BUY (" + SKIN_COSTS[2] + " C)",
-                btnTexture);
-
-        super.uiManager.add(buySkin1Btn);
-        super.uiManager.add(buySkin2Btn);
-        super.uiManager.add(buySkin3Btn);
-
         // ======= EVENT LISTENERS =======
         backBtn.setOnClick(() -> Engine.setScene(new game.menu.mode.Mode()));
 
@@ -185,7 +168,6 @@ public class ShopMenu extends Scene {
             updateBuyButtonText();
         });
 
-        // Buy System Integration
         buyItemBtn.setOnClick(() -> {
             if (!PlayerData.isItemUnlocked(selectedItemIndex)) {
                 if (game.data.PlayerData.hasEnoughCoins(ITEM_COST)) {
@@ -200,26 +182,6 @@ public class ShopMenu extends Scene {
                 }
             }
         });
-
-        // Loop skin buy logic
-        UIButton[] skinBuyBtns = { buySkin1Btn, buySkin2Btn, buySkin3Btn };
-        for (int i = 0; i < 3; i++) {
-            final int skinIdx = i;
-            skinBuyBtns[i].setOnClick(() -> {
-                int cost = SKIN_COSTS[skinIdx];
-                if (!game.data.PlayerData.unlockedSkins[skinIdx]) {
-                    if (game.data.PlayerData.hasEnoughCoins(cost)) {
-                        game.data.PlayerData.deductCoins(cost);
-                        game.data.PlayerData.unlockedSkins[skinIdx] = true;
-                        game.data.PlayerDataSaver.save();
-                        System.out.println("Purchased SKIN " + (skinIdx + 1));
-                        skinBuyBtns[skinIdx].setText("UNLOCKED");
-                    } else {
-                        System.out.println("Not enough coins for SKIN " + (skinIdx + 1));
-                    }
-                }
-            });
-        }
     }
 
     private void updateBuyButtonText() {
@@ -251,9 +213,6 @@ public class ShopMenu extends Scene {
             for (UIButton btn : skinBoxBtns) {
                 btn.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
             }
-            buySkin1Btn.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
-            buySkin2Btn.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
-            buySkin3Btn.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
         }
 
         toggleLeftBtn.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
@@ -332,16 +291,20 @@ public class ShopMenu extends Scene {
                 btn.render(super.batch, font, mouseScreen);
 
             // Draw Skin Texts inside borders
-            font.drawTextAligned(super.batch, "SKIN 1", super.layout.center(-220, -100).x,
-                    super.layout.center(-220, -100).y, Color.BLACK, 24);
-            font.drawTextAligned(super.batch, "SKIN 2", super.layout.center(0, -100).x, super.layout.center(0, -100).y,
-                    Color.BLACK, 24);
-            font.drawTextAligned(super.batch, "SKIN 3", super.layout.center(220, -100).x,
+            font.drawTextAligned(super.batch, "SKIN 1", super.layout.center(220, -100).x,
                     super.layout.center(220, -100).y, Color.BLACK, 24);
+            font.drawTextAligned(super.batch, "Coming Soon", super.layout.center(220, 120).x,
+                    super.layout.center(220, 120).y, Color.BLACK, 24);
 
-            buySkin1Btn.render(super.batch, font, mouseScreen);
-            buySkin2Btn.render(super.batch, font, mouseScreen);
-            buySkin3Btn.render(super.batch, font, mouseScreen);
+            font.drawTextAligned(super.batch, "SKIN 2", super.layout.center(0, -100).x, 
+                    super.layout.center(0, -100).y, Color.BLACK, 24);
+            font.drawTextAligned(super.batch, "Coming Soon", super.layout.center(0, 120).x,
+                    super.layout.center(0, 120).y, Color.BLACK, 24);
+
+            font.drawTextAligned(super.batch, "SKIN 3", super.layout.center(-220, -100).x,
+                    super.layout.center(-220, -100).y, Color.BLACK, 24);
+            font.drawTextAligned(super.batch, "Coming Soon", super.layout.center(-220, 120).x,
+                    super.layout.center(-220, 120).y, Color.BLACK, 24);
         }
 
         toggleLeftBtn.render(super.batch, font, mouseScreen);

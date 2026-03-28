@@ -21,6 +21,8 @@ public class StageMenu extends Scene {
     private Texture[] stageButtonTextures;
     private Texture unlockedProgressBackground;
     private Button[] stageButtons;
+    private UIButton backBtn;
+    private Texture solidTexture;
 
     @Override
     public void preloadAssets() {
@@ -28,7 +30,8 @@ public class StageMenu extends Scene {
         String[] stageButtonPaths = StageConfigs.getStageButtonPaths();
         Texture.preloadAsync(
                 StageConfigs.getButtonTexturePath(),
-                StageConfigs.getStageBackgroundPaths());
+                StageConfigs.getStageBackgroundPaths(),
+                "textures/solid.png");
         Texture.preloadAsync(stageButtonPaths);
     }
 
@@ -37,6 +40,21 @@ public class StageMenu extends Scene {
         font = new FontAtlas("GeistMono-Regular.otf", 32);
         buttonTexture = new Texture(StageConfigs.getButtonTexturePath());
         unlockedProgressBackground = new Texture(StageConfigs.getStageBackgroundPaths());
+        solidTexture = new Texture("textures/solid.png");
+
+        Color tColor = new Color(0, 0, 0, 0);
+        Color hColor = new Color(1, 1, 1, 0.3f);
+        backBtn = new UIButton(
+                super.layout.topLeft(80, 12),
+                new Vec2(150, 40),
+                "Back",
+                tColor,
+                hColor,
+                new Color(0.8f, 0.8f, 0.8f, 1.0f),
+                Color.WHITE,
+                solidTexture);
+        backBtn.setOnClick(() -> Engine.setScene(new game.menu.mode.Mode()));
+        super.uiManager.add(backBtn);
 
         createStageButtons();
     }
@@ -137,5 +155,7 @@ public class StageMenu extends Scene {
         }
         if (unlockedProgressBackground != null)
             unlockedProgressBackground.cleanup();
+        if (solidTexture != null)
+            solidTexture.cleanup();
     }
 }
