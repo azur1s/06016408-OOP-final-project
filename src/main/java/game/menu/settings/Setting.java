@@ -15,12 +15,18 @@ import game.menu.components.UISlider;
 public class Setting extends Scene {
     private FontAtlas font;
     private UIButton backButton;
+    private Texture backgroundTexture;
+    private Texture backBtnTexture;
+    private Texture solidTexture;
     private UISlider bgmVolumeSlider;
     private UISlider sfxVolumeSlider;
 
     @Override
     public void init(int width, int height) {
         font = new FontAtlas("GeistMono-Regular.otf", 32);
+        backBtnTexture = new Texture("textures/btn_back.png");
+        backgroundTexture = new Texture("textures/bg.png");
+        solidTexture = new Texture("textures/solid.png");
 
         Texture btnTexture = new Texture("textures/button_test.png");
         Vec2 btnSize = new Vec2(400, 100);
@@ -41,9 +47,9 @@ public class Setting extends Scene {
 
         backButton = new UIButton(
                 super.layout.center(0, 250),
-                btnSize,
-                "Back",
-                btnTexture);
+                new Vec2(256, 92),
+                "",
+                backBtnTexture);
 
         bgmVolumeSlider.setOnValueChanged(value -> {
             Engine.audio.setBgmVolume(value);
@@ -72,6 +78,15 @@ public class Setting extends Scene {
     @Override
     public void renderUI(float delta) {
         glClearColor(0.2f, 0.2f, 0.3f, 1.0f);
+
+        Vec2 backgoundPos = super.layout.center(0, 0);
+        Vec2 bacgroundSize = new Vec2(1280, 720);
+        super.batch.draw(backgroundTexture, backgoundPos, bacgroundSize.x, bacgroundSize.y);
+
+        Vec2 contentPos = super.layout.center(0, 0);
+        Vec2 ContentSize = new Vec2(800, 400);
+        super.batch.setColor(new Color(0.0f, 0.0f, 0.0f, 0.5f));
+        super.batch.draw(solidTexture, contentPos, ContentSize.x, ContentSize.y);
 
         Vec2 titlePos = super.layout.center(0, -200);
         font.drawTextAligned(super.batch, "Settings", titlePos.x, titlePos.y, Color.WHITE, 64);
