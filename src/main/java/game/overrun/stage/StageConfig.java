@@ -19,9 +19,9 @@ public class StageConfig {
     private final String fontPath;
     private final int fontSize;
 
-    private final String[] entityTexturePaths;
+    private final String[][] entityTexturePaths;
     // Lazily created on first call to entityTexture().
-    private AnimationClip entityTexture;
+    private AnimationClip[] entityTextureVariants;
     private final boolean manualSpawn;
     private SpawnPhase[] spawnPhases;
     private float maxTime;
@@ -34,7 +34,7 @@ public class StageConfig {
             String backgroundTexturePath,
             String fontPath,
             int fontSize,
-            String[] entityTexturePaths) {
+            String[][] entityTexturePaths) {
         this.soundToStopOnInit = soundToStopOnInit;
         this.backgroundTexturePath = backgroundTexturePath;
         this.fontPath = fontPath;
@@ -54,7 +54,7 @@ public class StageConfig {
             String backgroundTexturePath,
             String fontPath,
             int fontSize,
-            String[] entityTexturePaths,
+            String[][] entityTexturePaths,
             SpawnPhase[] spawnPhases,
             float maxTime,
             WordEntity bossWordEntity) {
@@ -86,20 +86,48 @@ public class StageConfig {
         return fontSize;
     }
 
-    public AnimationClip entityTexture() {
-        if (entityTexture == null) {
+    public AnimationClip entityTexture(int variantIndex) {
+        if (entityTextureVariants == null) {
             // Delay Texture creation until the stage is actually entered.
-            Texture[] frames = new Texture[entityTexturePaths.length];
-            for (int i = 0; i < entityTexturePaths.length; i++) {
-                frames[i] = new Texture(entityTexturePaths[i]);
-            }
-            entityTexture = new AnimationClip(frames, 0.2f);
+            entityTextureVariants = new AnimationClip[entityTexturePaths.length];
         }
-        return entityTexture;
+
+        if (variantIndex >= 0 && variantIndex < entityTextureVariants.length
+                && entityTextureVariants[variantIndex] == null) {
+            Texture[] frames = new Texture[entityTexturePaths[variantIndex].length];
+            for (int i = 0; i < entityTexturePaths[variantIndex].length; i++) {
+                frames[i] = new Texture(entityTexturePaths[variantIndex][i]);
+            }
+            entityTextureVariants[variantIndex] = new AnimationClip(frames, 0.2f);
+        }
+
+        return entityTextureVariants[variantIndex];
     }
 
-    public String[] entityTexturePaths() {
+    // Convenience method for first variant (variant 0)
+    public AnimationClip entityTexture() {
+        return entityTexture(0);
+    }
+
+    public String[][] entityTexturePaths() {
         return entityTexturePaths;
+    }
+
+    // Flatten for preloading
+    public String[] allEntityTexturePaths() {
+        int total = 0;
+        for (String[] paths : entityTexturePaths) {
+            total += paths.length;
+        }
+
+        String[] flattened = new String[total];
+        int index = 0;
+        for (String[] paths : entityTexturePaths) {
+            for (String path : paths) {
+                flattened[index++] = path;
+            }
+        }
+        return flattened;
     }
 
     public boolean manualSpawn() {

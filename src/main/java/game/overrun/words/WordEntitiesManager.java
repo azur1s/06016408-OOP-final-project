@@ -49,6 +49,7 @@ public class WordEntitiesManager {
     Vector<WordEntitiesListener> listeners = new Vector<>();
 
     AnimationClip wordAnimationClip;
+    game.overrun.stage.StageConfig stageConfig;
 
     /**
      * If true, new word entities will not be automatically spawned via timers and
@@ -61,6 +62,13 @@ public class WordEntitiesManager {
 
     public WordEntitiesManager(AnimationClip wordAnimationClip, boolean manualSpawn) {
         this.wordAnimationClip = wordAnimationClip;
+        this.manualSpawn = manualSpawn;
+        this.stageConfig = null;
+    }
+
+    public WordEntitiesManager(game.overrun.stage.StageConfig config, boolean manualSpawn) {
+        this.stageConfig = config;
+        this.wordAnimationClip = config.entityTexture();
         this.manualSpawn = manualSpawn;
     }
 
@@ -224,8 +232,16 @@ public class WordEntitiesManager {
         for (int i = 0; i < limit; i++) {
             String word = candidates.get(i);
 
+            // Select random texture variant if available
+            AnimationClip entityClip = wordAnimationClip;
+            if (stageConfig != null) {
+                String[][] texturePaths = stageConfig.entityTexturePaths();
+                int variantIndex = (int) (Math.random() * texturePaths.length);
+                entityClip = stageConfig.entityTexture(variantIndex);
+            }
+
             WordEntity entity = new WordEntity(
-                    wordAnimationClip,
+                    entityClip,
                     word,
                     // Random x position off the right edge
                     700f,

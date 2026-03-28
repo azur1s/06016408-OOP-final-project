@@ -9,26 +9,89 @@ public final class StageConfigs {
     private StageConfigs() {
     }
 
-    private static final String[] ENEMY_STAGE_1_TEXTURE_PATHS = {
-            "textures/entities/stage1/Peter/Peter_1.png",
-            "textures/entities/stage1/Peter/Peter_2.png",
-            "textures/entities/stage1/Peter/Peter_3.png",
-            "textures/entities/stage1/Peter/Peter_4.png",
+    private static final String[][] ENEMY_STAGE_1_TEXTURE_PATHS = {
+            {
+                    "textures/entities/stage1/Peter/Peter_1.png",
+                    "textures/entities/stage1/Peter/Peter_2.png",
+                    "textures/entities/stage1/Peter/Peter_3.png",
+                    "textures/entities/stage1/Peter/Peter_4.png",
+            },
+            {
+                    "textures/entities/stage1/John/John_1.png",
+                    "textures/entities/stage1/John/John_2.png",
+                    "textures/entities/stage1/John/John_3.png",
+                    "textures/entities/stage1/John/John_4.png",
+            },
+            {
+                    "textures/entities/stage1/King/King_1.png",
+                    "textures/entities/stage1/King/King_2.png",
+                    "textures/entities/stage1/King/King_3.png",
+                    "textures/entities/stage1/King/King_4.png",
+            }
     };
-    private static final String[] ENEMY_STAGE_2_TEXTURE_PATHS = {
-            "textures/entities/stage2/Dark_Red/Dark_Red_0.png",
-            "textures/entities/stage2/Dark_Red/Dark_Red_1.png",
-            "textures/entities/stage2/Dark_Red/Dark_Red_2.png",
+
+    private static final String[][] ENEMY_STAGE_2_TEXTURE_PATHS = {
+            {
+                    "textures/entities/stage2/Dark_Red/Dark_Red_0.png",
+                    "textures/entities/stage2/Dark_Red/Dark_Red_1.png",
+                    "textures/entities/stage2/Dark_Red/Dark_Red_2.png",
+            },
+            {
+                    "textures/entities/stage2/Blue/Blue_0.png",
+                    "textures/entities/stage2/Blue/Blue_1.png",
+                    "textures/entities/stage2/Blue/Blue_2.png",
+            },
+            {
+                    "textures/entities/stage2/Black/Black_0.png",
+                    "textures/entities/stage2/Black/Black_1.png",
+                    "textures/entities/stage2/Black/Black_2.png",
+            },
+            {
+                    "textures/entities/stage2/Red/Red_0.png",
+                    "textures/entities/stage2/Red/Red_1.png",
+                    "textures/entities/stage2/Red/Red_2.png",
+            },
     };
-    private static final String[] ENEMY_STAGE_3_TEXTURE_PATHS = {
-            "textures/entities/stage3/buksas/buksas_0.png",
-            "textures/entities/stage3/buksas/buksas_1.png",
-            "textures/entities/stage3/buksas/buksas_2.png",
+
+    private static final String[][] ENEMY_STAGE_3_TEXTURE_PATHS = {
+            {
+                    "textures/entities/stage3/bukdog/bukdog_0.png",
+                    "textures/entities/stage3/bukdog/bukdog_1.png",
+                    "textures/entities/stage3/bukdog/bukdog_2.png",
+            },
+            {
+                    "textures/entities/stage3/bukyern/bukyern_0.png",
+                    "textures/entities/stage3/bukyern/bukyern_1.png",
+                    "textures/entities/stage3/bukyern/bukyern_2.png",
+            },
+            {
+                    "textures/entities/stage3/buksas/buksas_0.png",
+                    "textures/entities/stage3/buksas/buksas_1.png",
+                    "textures/entities/stage3/buksas/buksas_2.png",
+            }
     };
-    private static final String[] ENEMY_STAGE_4_TEXTURE_PATHS = {
-            "textures/entities/stage4/medice/medice_0.png",
-            "textures/entities/stage4/medice/medice_1.png",
-            "textures/entities/stage4/medice/medice_2.png",
+
+    private static final String[][] ENEMY_STAGE_4_TEXTURE_PATHS = {
+            {
+                    "textures/entities/stage4/medcrazy/medcrazy_0.png",
+                    "textures/entities/stage4/medcrazy/medcrazy_1.png",
+                    "textures/entities/stage4/medcrazy/medcrazy_2.png",
+            },
+            {
+                    "textures/entities/stage4/medgreen/medgreen_0.png",
+                    "textures/entities/stage4/medgreen/medgreen_1.png",
+                    "textures/entities/stage4/medgreen/medgreen_2.png",
+            },
+            {
+                    "textures/entities/stage4/medpurple/medpurple_0.png",
+                    "textures/entities/stage4/medpurple/medpurple_1.png",
+                    "textures/entities/stage4/medpurple/medpurple_2.png",
+            },
+            {
+                    "textures/entities/stage4/medice/medice_0.png",
+                    "textures/entities/stage4/medice/medice_1.png",
+                    "textures/entities/stage4/medice/medice_2.png",
+            }
     };
 
     public static final StageConfig OVERRUN = new StageConfig(
@@ -162,10 +225,6 @@ public final class StageConfigs {
 
     public static String getButtonTexturePath() {
         return "textures/button_test.png";
-    }
-
-    public static String[] getEnemyTexturePaths() {
-        return ENEMY_STAGE_1_TEXTURE_PATHS;
     }
 
     public static StageConfig getStageConfig(int stageIndex) {

@@ -73,7 +73,7 @@ public class Stage extends Scene {
                 config.backgroundTexturePath(),
                 getSelectedPlayerTexturePath(),
                 StageConfigs.getButtonTexturePath());
-        Texture.preloadAsync(config.entityTexturePaths());
+        Texture.preloadAsync(config.allEntityTexturePaths());
     }
 
     @Override
@@ -91,7 +91,7 @@ public class Stage extends Scene {
         projectiles = new ProjectileManager();
         projectiles.playerManager = playerManager;
 
-        words = new WordEntitiesManager(this.config.entityTexture(), this.config.manualSpawn());
+        words = new WordEntitiesManager(this.config, this.config.manualSpawn());
         words.init();
         words.addListener(playerManager);
         words.addListener(projectiles);
