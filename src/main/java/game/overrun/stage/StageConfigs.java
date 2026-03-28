@@ -10,10 +10,20 @@ public final class StageConfigs {
     }
 
     private static final String[] ENEMY_STAGE_1_TEXTURE_PATHS = {
-            "textures/entities/stage1/e1_1.png",
-            "textures/entities/stage1/e1_2.png",
-            "textures/entities/stage1/e1_3.png",
-            "textures/entities/stage1/e1_4.png",
+            "textures/entities/stage1/Peter/Peter_1.png",
+            "textures/entities/stage1/Peter/Peter_2.png",
+            "textures/entities/stage1/Peter/Peter_3.png",
+            "textures/entities/stage1/Peter/Peter_4.png",
+    };
+    private static final String[] ENEMY_STAGE_2_TEXTURE_PATHS = {
+            "textures/entities/stage2/Dark_Red/Dark_Red_0.png",
+            "textures/entities/stage2/Dark_Red/Dark_Red_1.png",
+            "textures/entities/stage2/Dark_Red/Dark_Red_2.png",
+    };
+    private static final String[] ENEMY_STAGE_3_TEXTURE_PATHS = {
+            "textures/entities/stage3/buksas/buksas_0.png",
+            "textures/entities/stage3/buksas/buksas_1.png",
+            "textures/entities/stage3/buksas/buksas_2.png",
     };
 
     public static final StageConfig OVERRUN = new StageConfig(
@@ -37,10 +47,10 @@ public final class StageConfigs {
             60f * 2f,
             new WordEntity(
                     new AnimationClip(new Texture[] {
-                            new Texture("textures/entities/stage1/e1_1.png"),
-                            new Texture("textures/entities/stage1/e1_2.png"),
-                            new Texture("textures/entities/stage1/e1_3.png"),
-                            new Texture("textures/entities/stage1/e1_4.png"),
+                            new Texture("textures/entities/stage1/Peter/Peter_1.png"),
+                            new Texture("textures/entities/stage1/Peter/Peter_2.png"),
+                            new Texture("textures/entities/stage1/Peter/Peter_3.png"),
+                            new Texture("textures/entities/stage1/Peter/Peter_4.png"),
                     }, 0.2f),
                     "public static void main(String[] args)",
                     650f,
@@ -52,7 +62,7 @@ public final class StageConfigs {
             "textures/background/bg_s2.png",
             "GeistMono-Regular.otf",
             32,
-            ENEMY_STAGE_1_TEXTURE_PATHS,
+            ENEMY_STAGE_2_TEXTURE_PATHS,
             new SpawnPhase[] {
                     new SpawnPhase(2, 1),
                     new SpawnPhase(4, 10),
@@ -74,7 +84,7 @@ public final class StageConfigs {
             "textures/background/bg_s3.png",
             "GeistMono-Regular.otf",
             32,
-            ENEMY_STAGE_1_TEXTURE_PATHS,
+            ENEMY_STAGE_3_TEXTURE_PATHS,
             new SpawnPhase[] {
                     new SpawnPhase(3, 1),
                     new SpawnPhase(4, 10),
