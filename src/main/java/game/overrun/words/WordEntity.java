@@ -62,9 +62,7 @@ public class WordEntity extends Entity {
 
     public void render(TextureBatch batch, FontAtlas font) {
         batch.setColor(this.color);
-        batch.setFlipped(true); // TODO remove this when texture is fixed
         batch.draw(clip.getFrame(Engine.graphics.getTime()), position.x, position.y - 8f, size.x, size.y);
-        batch.setFlipped(false);
 
         Color previewColor = new Color(0.75f, 0.75f, 0.75f, 1f);
         Color typedColor = Color.WHITE;
