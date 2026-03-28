@@ -18,3 +18,4 @@ mvn compile exec:exec
 
 # License
 This project is licensed under the GPL-3.0 License. See the [LICENSE](./LICENSE) file for details.
+Textures used in this project are licensed under CC-BY-NC-SA 4.0 License. Visit [creativecommons.org](https://creativecommons.org/licenses/by-nc-sa/4.0/) for more information.
