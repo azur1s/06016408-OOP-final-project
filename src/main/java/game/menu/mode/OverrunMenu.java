@@ -88,7 +88,6 @@ public class OverrunMenu extends Scene {
         super.uiManager.add(item1Btn);
         super.uiManager.add(item2Btn);
 
-        // TODO: สำหรับคนทำระบบเปิดหน้าต่าง shop/inventory ตรงนี้เพื่อเลือกรูปไอเทมมาใส่
         item1Btn.setOnClick(() -> {
             Engine.setScene(new game.menu.equipment.ItemEquipMenu(0, "Overrun"));
         });
@@ -98,8 +97,7 @@ public class OverrunMenu extends Scene {
         });
 
         playBtn.setOnClick(() -> {
-            // TODO: ส่งคำสั่งเริ่มเกมในโหมด Overrun (อาจจะสร้าง Scene สำหรับ Overrun
-            // แทนหรือส่งพารามิเตอร์)
+
             Engine.setScene(new game.overrun.stage.OverrunStage());
         });
 
@@ -133,6 +131,7 @@ public class OverrunMenu extends Scene {
         renderEquippedSlot(1, super.layout.center(-60, 0));
     }
 
+    // Check Item in data and render
     private void renderEquippedSlot(int slot, Vec2 position) {
         int itemIndex = game.data.PlayerData.getEquippedItemIndex(slot);
         if (itemIndex >= 0) {

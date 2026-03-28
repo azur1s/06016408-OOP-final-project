@@ -37,7 +37,6 @@ public class ShopMenu extends Scene {
     // Costs
     private final int ITEM_COST = 2000;
 
-
     // --- ITEM TAB UI ---
     private List<UIButton> itemBoxBtns = new ArrayList<>();
     private UIButton buyItemBtn;
@@ -55,6 +54,9 @@ public class ShopMenu extends Scene {
                 "textures/bg.png");
     }
 
+    /**
+     * use fo render graphic
+     */
     @Override
     public void init(int width, int height) {
         font = new FontAtlas("GeistMono-Regular.otf", 32);
@@ -184,6 +186,11 @@ public class ShopMenu extends Scene {
         });
     }
 
+    /**
+     * ใช้ทำงานสำหรับอัปเดตข้อความบนปุ่ม "ซื้อ" (Buy Button)
+     * โดยเช็คข้อมูลของไอเทมปัจจุบัน (selectedItemIndex) ว่าถูกผู้เล่นปลดล็อกหรือยัง
+     * (isItemUnlocked)
+     */
     private void updateBuyButtonText() {
         if (!isSkinTabSelected) {
             if (PlayerData.isItemUnlocked(selectedItemIndex)) {
@@ -202,6 +209,18 @@ public class ShopMenu extends Scene {
         item.unlocked = true;
     }
 
+    /**
+     * ทำงานวนลูปซ้ำๆ ทุกๆ เฟรมเรตของเกม
+     * เพื่ออัปเดตสถานะและการประมวลผลตรรกะเบื้องหลัง
+     * เช่น การจับว่าผู้เล่นขยับเมาส์มาโดนเอาหรือคลิกเมาส์
+     *
+     * @param delta ค่าความแต่งต่างของเวลาในแต่ละเฟรม
+     *              (ใช้ในกรณีคำนวณแอนิเมชันให้เคลื่อนที่เนียนเท่ากันหมด)
+     *
+     *              ตัวอย่าง:
+     *              btn.update(mouseScreen) เป็นการบอกให้ตัวปุ่มรับข้อมูลเมาส์
+     *              ถ้าเอาเมาส์ชี้ปุ่ม ปุ่มอาจจะสว่างขึ้น (Hover state)
+     */
     @Override
     public void update(float delta) {
         if (!isSkinTabSelected) {
@@ -220,6 +239,18 @@ public class ShopMenu extends Scene {
         backBtn.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
     }
 
+    /**
+     * ใช้จัดเรียง วาดกราฟิก และข้อความต่างๆ ลงบนหน้าจอ
+     * ฟังก์ชันนี้ถูกเรียกให้ทำงานทุกๆ เฟรมเรตต่อยอดจาก update()
+     * โดยการเปลี่ยนแปลงพิกัด แกน X, Y หรือขนาดจะถูกกำหนด ณ จุดนี้
+     *
+     * @param delta ค่าความแต่งต่างของเวลาแต่ละเฟรม
+     *
+     *              ตัวอย่าง:
+     *              - คำสั่ง batch.draw() ช่วยวาดรูป (Texture)
+     *              - คำสั่ง font.drawTextAligned() คือเอาไว้พ่นตัวหนังสือ (Text)
+     *              ใส่ฉาก
+     */
     @Override
     public void renderUI(float delta) {
         glClearColor(0.4f, 0.4f, 0.4f, 1.0f);
@@ -267,7 +298,8 @@ public class ShopMenu extends Scene {
             // Description text
             List<String> descriptionLines = new ArrayList<>();
             String description = PlayerData.getItemDescription(selectedItemIndex);
-            if (description == null) description = "";
+            if (description == null)
+                description = "";
             while (description.length() > 30) {
                 int splitIndex = description.lastIndexOf(' ', 30);
                 if (splitIndex == -1) {
@@ -296,7 +328,7 @@ public class ShopMenu extends Scene {
             font.drawTextAligned(super.batch, "Coming Soon", super.layout.center(220, 120).x,
                     super.layout.center(220, 120).y, Color.BLACK, 24);
 
-            font.drawTextAligned(super.batch, "SKIN 2", super.layout.center(0, -100).x, 
+            font.drawTextAligned(super.batch, "SKIN 2", super.layout.center(0, -100).x,
                     super.layout.center(0, -100).y, Color.BLACK, 24);
             font.drawTextAligned(super.batch, "Coming Soon", super.layout.center(0, 120).x,
                     super.layout.center(0, 120).y, Color.BLACK, 24);
@@ -312,6 +344,15 @@ public class ShopMenu extends Scene {
         backBtn.render(super.batch, font, mouseScreen);
     }
 
+    /**
+     * เมธอดนี้จะถูกเรียกใช้งานเมื่อระบบปิดฉาก/สลับไปเล่นหน้าจออื่น (Scene อื่น)
+     * เพื่อรับหน้าที่เคลียร์ความจำแรม (Memory Management) ลบรูปภาพทิ้ง
+     * ไม่ให้เกมกินแรมไปเรื่อยๆ
+     *
+     * ตัวอย่าง:
+     * คำสั่ง texture.cleanup() จะบอกการ์ดจอเและ OpenGL
+     * ให้ทำลายภาพส่วนนั้นคืนความจำให้ระบบ
+     */
     @Override
     public void cleanup() {
         if (font != null)
