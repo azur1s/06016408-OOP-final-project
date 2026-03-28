@@ -23,6 +23,16 @@ public class StageMenu extends Scene {
     private Button[] stageButtons;
 
     @Override
+    public void preloadAssets() {
+        super.preloadAssets();
+        String[] stageButtonPaths = StageConfigs.getStageButtonPaths();
+        Texture.preloadAsync(
+                StageConfigs.getButtonTexturePath(),
+                StageConfigs.getStageBackgroundPaths());
+        Texture.preloadAsync(stageButtonPaths);
+    }
+
+    @Override
     public void init(int width, int height) {
         font = new FontAtlas("GeistMono-Regular.otf", 32);
         buttonTexture = new Texture(StageConfigs.getButtonTexturePath());

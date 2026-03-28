@@ -19,6 +19,14 @@ public class tutorial extends Scene {
     private UIButton nextButton;
 
     @Override
+    public void preloadAssets() {
+        super.preloadAssets();
+        Texture.preloadAsync(
+                "textures/tutorial/btn_ready.png",
+                "textures/solid.png");
+    }
+
+    @Override
     public void init(int width, int height) {
 
         font = new FontAtlas("GeistMono-Regular.otf", 32);

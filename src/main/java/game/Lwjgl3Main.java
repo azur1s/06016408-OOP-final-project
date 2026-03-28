@@ -6,6 +6,7 @@ import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 
 import engine.Engine;
+import engine.graphics.Texture;
 import game.menu.Main;
 
 import java.nio.*;
@@ -132,6 +133,8 @@ public class Lwjgl3Main {
     private void cleanup() {
         if (Engine.getCurrentScene() != null)
             Engine.getCurrentScene().internalCleanup();
+
+        Texture.shutdownPreloader();
 
         glfwFreeCallbacks(window);
         glfwDestroyWindow(window);

@@ -21,6 +21,14 @@ public class Setting extends Scene {
     private UISlider sfxVolumeSlider;
 
     @Override
+    public void preloadAssets() {
+        super.preloadAssets();
+        Texture.preloadAsync(
+                "textures/bg.png",
+                "textures/button_test.png");
+    }
+
+    @Override
     public void init(int width, int height) {
         font = new FontAtlas("GeistMono-Regular.otf", 32);
         backgroundTexture = new Texture("textures/bg.png");

@@ -1,14 +1,26 @@
 package game.overrun.stage;
 
 import engine.graphics.AnimationClip;
+import engine.graphics.Texture;
 
+/**
+ * Immutable stage metadata plus lazily constructed runtime assets.
+ *
+ * Entity texture paths are stored as strings so stage configs stay cheap to
+ * load.
+ * The animation clip is created on first use, which avoids eager texture
+ * creation
+ * during class initialization.
+ */
 public class StageConfig {
     private final String soundToStopOnInit;
     private final String backgroundTexturePath;
     private final String fontPath;
     private final int fontSize;
 
-    private final AnimationClip entityTexture;
+    private final String[] entityTexturePaths;
+    // Lazily created on first call to entityTexture().
+    private AnimationClip entityTexture;
     private final boolean manualSpawn;
     private SpawnPhase[] spawnPhases;
     private float maxTime;
@@ -18,13 +30,13 @@ public class StageConfig {
             String backgroundTexturePath,
             String fontPath,
             int fontSize,
-            AnimationClip entityTexture) {
+            String[] entityTexturePaths) {
         this.soundToStopOnInit = soundToStopOnInit;
         this.backgroundTexturePath = backgroundTexturePath;
         this.fontPath = fontPath;
         this.fontSize = fontSize;
 
-        this.entityTexture = entityTexture;
+        this.entityTexturePaths = entityTexturePaths;
         this.manualSpawn = false;
         // unused
         this.spawnPhases = new SpawnPhase[0];
@@ -36,7 +48,7 @@ public class StageConfig {
             String backgroundTexturePath,
             String fontPath,
             int fontSize,
-            AnimationClip entityTexture,
+            String[] entityTexturePaths,
             SpawnPhase[] spawnPhases,
             float maxTime) {
         this.soundToStopOnInit = soundToStopOnInit;
@@ -44,7 +56,7 @@ public class StageConfig {
         this.fontPath = fontPath;
         this.fontSize = fontSize;
 
-        this.entityTexture = entityTexture;
+        this.entityTexturePaths = entityTexturePaths;
         this.manualSpawn = true;
         this.spawnPhases = spawnPhases;
         this.maxTime = maxTime;
@@ -67,7 +79,19 @@ public class StageConfig {
     }
 
     public AnimationClip entityTexture() {
+        if (entityTexture == null) {
+            // Delay Texture creation until the stage is actually entered.
+            Texture[] frames = new Texture[entityTexturePaths.length];
+            for (int i = 0; i < entityTexturePaths.length; i++) {
+                frames[i] = new Texture(entityTexturePaths[i]);
+            }
+            entityTexture = new AnimationClip(frames, 0.2f);
+        }
         return entityTexture;
+    }
+
+    public String[] entityTexturePaths() {
+        return entityTexturePaths;
     }
 
     public boolean manualSpawn() {

@@ -57,6 +57,17 @@ public class Stage extends Scene {
     }
 
     @Override
+    public void preloadAssets() {
+        super.preloadAssets();
+        Texture.preloadAsync(
+                StageConfigs.getSolidTexturePath(),
+                config.backgroundTexturePath(),
+                getSelectedPlayerTexturePath(),
+                StageConfigs.getButtonTexturePath());
+        Texture.preloadAsync(config.entityTexturePaths());
+    }
+
+    @Override
     public void init(int width, int height) {
         Engine.audio.stopSound(config.soundToStopOnInit());
 

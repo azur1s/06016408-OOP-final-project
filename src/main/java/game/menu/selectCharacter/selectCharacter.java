@@ -44,6 +44,19 @@ public class selectCharacter extends Scene {
     private int pendingSelection;
 
     @Override
+    public void preloadAssets() {
+        super.preloadAssets();
+        Texture.preloadAsync(
+                "textures/solid.png",
+                "textures/bg.png",
+                "textures/selectCharacter/btn_select.png",
+                "textures/btn_back.png",
+                "textures/player_1.png",
+                "textures/player_0.png",
+                "textures/player_3.png");
+    }
+
+    @Override
     public void init(int width, int height) {
         font = new FontAtlas("GeistMono-Regular.otf", 32);
         solidTexture = new Texture("textures/solid.png");
@@ -90,7 +103,7 @@ public class selectCharacter extends Scene {
 
         selectButton = new UIButton(
                 super.layout.bottomCenter(0, 90),
-                new Vec2(256* 0.8f, 92*0.8f),
+                new Vec2(256 * 0.8f, 92 * 0.8f),
                 "",
                 selectedCharacterTexture);
         selectButton.setOnClick(() -> {
@@ -102,15 +115,17 @@ public class selectCharacter extends Scene {
 
         backButton = new UIButton(
                 super.layout.topLeft(100, 50),
-                new Vec2(256* 0.6f, 92*0.6f),
+                new Vec2(256 * 0.6f, 92 * 0.6f),
                 "",
                 backTexture);
-        backButton.setOnClick(() -> Engine.setScene(new game.menu.Main())); // has a bug if you click back when it's back to main menu, it has 2 time sound effect but it must be 1 time        
+        backButton.setOnClick(() -> Engine.setScene(new game.menu.Main())); // has a bug if you click back when it's
+                                                                            // back to main menu, it has 2 time sound
+                                                                            // effect but it must be 1 time
         super.uiManager.add(backButton);
     }
 
-        @Override
-        public void update(float delta) {
+    @Override
+    public void update(float delta) {
         for (UIButton button : characterButtons) {
             button.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
         }

@@ -29,6 +29,20 @@ public class Mode extends Scene {
     private UIButton backBtn;
 
     @Override
+    public void preloadAssets() {
+        super.preloadAssets();
+        Texture.preloadAsync(
+                "textures/bg.png",
+                "textures/btn_back.png",
+                "textures/mode/btn_stage.png",
+                "textures/mode/btn_overrun.png",
+                "textures/mode/btn_upgrade.png",
+                "textures/mode/btn_shop.png",
+                "textures/mode/stage.png",
+                "textures/mode/overrun.png");
+    }
+
+    @Override
     public void init(int width, int height) {
         backgroundTexture = new Texture("textures/bg.png");
         font = new FontAtlas("GeistMono-Regular.otf", 32);
@@ -109,7 +123,7 @@ public class Mode extends Scene {
 
         Vec2 backgroundPos = super.layout.center(0, 0);
         Vec2 backgroundSize = new Vec2(super.layout.res.x, super.layout.res.y);
-    
+
         super.batch.draw(backgroundTexture, backgroundPos.x, backgroundPos.y, backgroundSize.x, backgroundSize.y);
 
         // Coins Display

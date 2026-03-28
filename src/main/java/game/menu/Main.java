@@ -22,6 +22,17 @@ public class Main extends Scene {
     private Texture startTexture, settingTexture, quitTexture;
 
     @Override
+    public void preloadAssets() {
+        super.preloadAssets();
+        Texture.preloadAsync(
+                "textures/logo.png",
+                "textures/bg.png",
+                "textures/main/btn_start.png",
+                "textures/main/btn_setting.png",
+                "textures/main/btn_quit.png");
+    }
+
+    @Override
     public void init(int width, int height) {
         PlayerDataSaver.load();
 

@@ -22,6 +22,15 @@ public class OverrunMenu extends Scene {
     private UIButton item2Btn;
 
     @Override
+    public void preloadAssets() {
+        super.preloadAssets();
+        Texture.preloadAsync(
+                "textures/button_test.png",
+                "textures/solid.png",
+                "textures/bg.png");
+    }
+
+    @Override
     public void init(int width, int height) {
         // TODO: Change BGM to Overrun specific music here later
         // Example:

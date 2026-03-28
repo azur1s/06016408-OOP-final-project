@@ -30,6 +30,15 @@ public class ItemSelection extends Scene {
     }
 
     @Override
+    public void preloadAssets() {
+        super.preloadAssets();
+        Texture.preloadAsync(
+                "textures/button_test.png",
+                "textures/solid.png",
+                "textures/bg.png");
+    }
+
+    @Override
     public void init(int width, int height) {
         font = new FontAtlas("GeistMono-Regular.otf", 32);
         btnTexture = new Texture("textures/button_test.png");
