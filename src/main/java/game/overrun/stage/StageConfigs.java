@@ -2,6 +2,7 @@ package game.overrun.stage;
 
 import engine.graphics.AnimationClip;
 import engine.graphics.Texture;
+import game.overrun.words.WordEffect;
 import game.overrun.words.WordEntity;
 
 public final class StageConfigs {
@@ -123,7 +124,8 @@ public final class StageConfigs {
                     "public static void main(String[] args)",
                     650f,
                     10f,
-                    2));
+                    2,
+                    new WordEffect.Boss()));
 
     public static final StageConfig STAGE_2 = new StageConfig(
             "bgm_main",
@@ -145,7 +147,8 @@ public final class StageConfigs {
                     "public class Airplane extends Vehicle implements Flyable",
                     650f,
                     10f,
-                    2));
+                    2,
+                    new WordEffect.Boss()));
 
     public static final StageConfig STAGE_3 = new StageConfig(
             "bgm_main",
@@ -168,7 +171,8 @@ public final class StageConfigs {
                     "for (int i = 0; i < 10; i++) { System.out.println(i); }",
                     650f,
                     10f,
-                    2));
+                    2,
+                    new WordEffect.Boss()));
 
     public static final StageConfig STAGE_4 = new StageConfig(
             "bgm_main",
@@ -196,7 +200,8 @@ public final class StageConfigs {
                     "new BufferedReader(new InputStreamReader(System.in)).readLine()",
                     650f,
                     10f,
-                    2));
+                    2,
+                    new WordEffect.Boss()));
 
     public static String[] getPlayerTexturePaths() {
         return new String[] {

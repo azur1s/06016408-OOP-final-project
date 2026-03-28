@@ -28,9 +28,8 @@ public sealed interface WordEffect {
         }
     }
 
-    record Boss(int minLength) implements WordEffect {
-        public Boss(int minLength) {
-            this.minLength = minLength;
+    record Boss() implements WordEffect {
+        public Boss() {
         }
     }
 

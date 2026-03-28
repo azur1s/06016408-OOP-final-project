@@ -41,6 +41,11 @@ public class WordEntity extends Entity {
         this.lane = lane;
     }
 
+    public WordEntity(AnimationClip clip, String word, float xPosition, float speed, int lane, WordEffect effect) {
+        this(clip, word, xPosition, speed, lane);
+        this.effect = effect;
+    }
+
     @Override
     public int getLayer() {
         return CollisionLayer.ENEMY;
@@ -62,13 +67,20 @@ public class WordEntity extends Entity {
 
     public void render(TextureBatch batch, FontAtlas font) {
         batch.setColor(this.color);
-        batch.draw(clip.getFrame(Engine.graphics.getTime()), position.x, position.y - 8f, size.x, size.y);
+        if (effect instanceof WordEffect.Boss) {
+            size = new Vec2(256f, 256f);
+        }
+        batch.draw(clip.getFrame(Engine.graphics.getTime()), position.x, position.y - 8f,
+                size.x, size.y);
 
         Color previewColor = new Color(0.75f, 0.75f, 0.75f, 1f);
         Color typedColor = Color.WHITE;
 
         // Shift the text up so it's above the texture
         Vec2 pos = position.add(new Vec2(0f, 30f));
+        if (effect instanceof WordEffect.Boss) {
+            pos = pos.add(new Vec2(0f, 50f));
+        }
 
         float fontSize = 18f;
 
