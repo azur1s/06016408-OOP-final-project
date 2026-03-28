@@ -1,6 +1,9 @@
 # Object-Oriented Programming (2/68) Final Project
 [Thai Version](./README_th.md)
-**Compiling**
+
+To see the design details and architecture, see [ARCHITECTURE.md](./ARCHITECTURE.md).
+
+## Compiling
 
 ### 1. Prerequisites
 - Java 17 or higher

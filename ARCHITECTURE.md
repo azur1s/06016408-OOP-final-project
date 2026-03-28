@@ -9,9 +9,21 @@ The entry point [`Lwjgl3Main.java`](./src/main/java/game/Lwjgl3Main.java) which 
 
 ## 2. Engine globals
 The [`Engine.java`](./src/main/java/engine/Engine.java) class serves as a central class for managing global states. It provides access to these core subsystems:
-- Input: Tracks keyboard and mouse input states, updated via GLFW callbacks hooked in the main initialization.
-- Graphics & Audio: Manages rendering and audio playback.
-- Task Scheduling: Allows delayed logic execution (via `runAfter` method) which queue tasks to be executed on the main game thread during `tickScheduleTasks`.
+- Input
+
+  Tracks keyboard and mouse input states, updated via GLFW callbacks hooked in the main initialization and accessible via `Engine.input`.
+- Graphics & Audio
+
+  Manages rendering and audio playback via `Engine.graphics` and `Engine.audio` (and [`AudioManager`](./src/main/java/engine/AudioManager.java)/[`Graphics`](./src/main/java/engine/graphics/Graphics.java) respectively).
+- Scene Management
+
+  Holds a reference to the current active `Scene` and provides methods for changing scenes.
+- Task Scheduling/Deferred Execution
+
+  Allows delayed logic execution (via `runAfter` method) which queue tasks to be executed on the main game thread during `tickScheduleTasks`. (see below for more details)
+
+### Deferred Execution
+The engine includes a custom [`ScheduledTask`](./src/main/java/engine/Engine.java#L26) system. Because OpenGL and game state updates generally need to happen on the main thread, calling `Engine.runAfter()` safely locks and queues a `Runnable` to be executed precisely when `tickScheduledTasks()` is called during the main game loop.
 
 ## 3. Scene Management
 The engine utilizes a state-based design where discrete game views (like main menus or gameplay levels) inherit from the abstract `Scene` class. Each scene is responsible for managing two distinct rendering contexts:
@@ -62,6 +74,23 @@ Since GPU memory is limited, the caching system is paired with a strict referenc
 
 ### Coordinate System & Origins
 To simplify entity rendering, the `Texture` class automatically calculates an internal origin point (`originX`, `originY`) set to the exact mathematical center of the image (`width / 2.0f`, `height / 2.0f`) upon instantiation.
+
+## 5. Texture Batching
+If `Texture` manages how textures are stored in memory, the `TextureBatch` manages how they are drawn to the screen. It implements a dynamic batching system that groups multiple sprites sharing the same texture into a single draw call.
+
+- The Batching Solution
+
+   `TextureBatch` combines up to 1000 textures into a single massive float array before sending them to the GPU all at once. Every 2D texture is represented as a quad consisting of 2 triangles (6 vertices), requiring 24 floats total (X, Y, U, V per vertex).
+
+- Dynamic GPU Uploads
+
+   It uses a dynamic Vertex Buffer Object (VBO) with `GL_DYNAMIC_DRAW`, meaning the buffer is optimized for frequent frame-by-frame updates.
+
+- State-Change Flushing
+
+  The architecture automatically flushes the batch (draws what it has so far) whenever an OpenGL state change is required. This happens if the batch hits its 1000-texture limit, if the tint color changes, if the UV flip state changes, or most importantly, if the bound `Texture` changes.
+
+  Ideally, all sprites that share the same texture should be drawn together in sequence to maximize batching efficiency. If a different texture is encountered, the batch is flushed immediately to ensure correct rendering.
 
 # Game Architecture
 
