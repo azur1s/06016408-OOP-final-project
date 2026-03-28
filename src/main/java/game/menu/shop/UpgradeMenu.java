@@ -20,6 +20,7 @@ public class UpgradeMenu extends Scene {
     private FontAtlas font;
     private Texture btnTexture;
     private Texture solidTexture;
+    private Texture backgroundTexture;
 
     // Shared UI
     private UIButton backBtn;
@@ -33,7 +34,6 @@ public class UpgradeMenu extends Scene {
     private int selectedItemIndex = 0; // The item currently shown on the right panel
 
     // --- INFO PANEL UI ---
-    private UIButton infoItemBtn;
     private UIButton mainUpgradeBtn;
 
     private UIButton stat0Btn;
@@ -44,10 +44,20 @@ public class UpgradeMenu extends Scene {
     // Removed constant UPGRADE_COST to use dynamic formula
 
     @Override
+    public void preloadAssets() {
+        super.preloadAssets();
+        Texture.preloadAsync(
+                "textures/button_test.png",
+                "textures/solid.png",
+                "textures/bg.png");
+    }
+
+    @Override
     public void init(int width, int height) {
         font = new FontAtlas("GeistMono-Regular.otf", 32);
         btnTexture = new Texture("textures/button_test.png");
         solidTexture = new Texture("textures/solid.png");
+        backgroundTexture = new Texture("textures/bg.png");
 
         backBtn = new UIButton(
                 super.layout.topLeft(100, 50),
@@ -69,12 +79,12 @@ public class UpgradeMenu extends Scene {
 
         Color tColor = new Color(0, 0, 0, 0);
         Color hColor = new Color(1, 1, 1, 0.3f);
-        Vec2 statBtnSize = new Vec2(380, 70);
-        stat0Btn = new UIButton(super.layout.centerRight(super.layout.res.x / 4f + 30, -80), statBtnSize, "", tColor,
+        Vec2 statBtnSize = new Vec2(380, 50);
+        stat0Btn = new UIButton(super.layout.centerRight(super.layout.res.x / 4f + 30, 50), statBtnSize, "", tColor,
                 hColor, solidTexture);
-        stat1Btn = new UIButton(super.layout.centerRight(super.layout.res.x / 4f + 30, 0), statBtnSize, "", tColor,
+        stat1Btn = new UIButton(super.layout.centerRight(super.layout.res.x / 4f + 30, 120), statBtnSize, "", tColor,
                 hColor, solidTexture);
-        stat2Btn = new UIButton(super.layout.centerRight(super.layout.res.x / 4f + 30, 80), statBtnSize, "", tColor,
+        stat2Btn = new UIButton(super.layout.centerRight(super.layout.res.x / 4f + 30, 190), statBtnSize, "", tColor,
                 hColor, solidTexture);
 
         stat0Btn.setOnClick(() -> {
@@ -93,7 +103,7 @@ public class UpgradeMenu extends Scene {
         // ปุ่มอัพเกรดหลักในแผง Info Panel (Initialized here to avoid NPE in
         // updateUpgradeButtonText)
         mainUpgradeBtn = new UIButton(
-                super.layout.centerRight(super.layout.res.x / 4f + 30, 200),
+                super.layout.centerRight(super.layout.res.x / 4f + 30, 270),
                 new Vec2(180, 60),
                 "UPGRADE",
                 btnTexture);
@@ -110,7 +120,7 @@ public class UpgradeMenu extends Scene {
             UIButton itemBtn = new UIButton(
                     super.layout.centerLeft(super.layout.res.x / 4f - 60, yOffset),
                     new Vec2(220, 60),
-                    "ITEM " + (i + 1),
+                    PlayerData.getItemDisplayName(i),
                     btnTexture);
 
             boolean isUnlocked = PlayerData.isItemUnlocked(i);
@@ -140,13 +150,6 @@ public class UpgradeMenu extends Scene {
             super.uiManager.add(upgradeStatusBtn);
         }
 
-        infoItemBtn = new UIButton(
-                super.layout.centerRight(super.layout.res.x / 4f - 100, -220),
-                new Vec2(120, 30),
-                "INFO ITEM",
-                btnTexture);
-        super.uiManager.add(infoItemBtn);
-
         // ======= EVENT LISTENERS =======
         backBtn.setOnClick(() -> Engine.setScene(new game.menu.mode.Mode()));
 
@@ -162,7 +165,8 @@ public class UpgradeMenu extends Scene {
                 game.data.PlayerDataSaver.save();
                 String[] statNames = { "Cooldown", "Damage", "Duration" };
                 System.out.println(
-                        "Upgraded " + statNames[selectedStatIndex] + " of Item " + (selectedItemIndex + 1) + "!");
+                        "Upgraded " + statNames[selectedStatIndex] + " of "
+                                + PlayerData.getItemDisplayName(selectedItemIndex) + "!");
                 updateUpgradeButtonText();
             } else {
                 System.out.println("Not enough coins to upgrade.");
@@ -192,7 +196,6 @@ public class UpgradeMenu extends Scene {
         for (UIButton btn : itemUpgradeBtns)
             btn.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
 
-        infoItemBtn.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
         mainUpgradeBtn.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
         backBtn.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
 
@@ -204,6 +207,10 @@ public class UpgradeMenu extends Scene {
     @Override
     public void renderUI(float delta) {
         glClearColor(0.4f, 0.4f, 0.4f, 1.0f);
+
+        Vec2 backgroundPos = super.layout.center(0, 0);
+        Vec2 backgroundSize = new Vec2(super.layout.res.x, super.layout.res.y);
+        super.batch.draw(backgroundTexture, backgroundPos.x, backgroundPos.y, backgroundSize.x, backgroundSize.y);
 
         // Coins Display
         Vec2 coinPos = super.layout.topRight(150, 50);
@@ -219,6 +226,16 @@ public class UpgradeMenu extends Scene {
         for (UIButton btn : itemUpgradeBtns)
             btn.render(super.batch, font, mouseScreen);
 
+        for (int i = 0; i < PlayerData.getItemCount(); i++) {
+            Texture icon = PlayerData.getItemIcon(i);
+            if (icon == null) {
+                continue;
+            }
+            Vec2 rowCenter = super.layout.centerLeft(super.layout.res.x / 4f - 60, -150 + (i * 80));
+            super.batch.setColor(Color.WHITE);
+            super.batch.draw(icon, rowCenter.x - 84f, rowCenter.y, 42f, 42f);
+        }
+
         // Draw Info panel background
         Vec2 infoPanelPos = super.layout.centerRight(super.layout.res.x / 4f + 30, 0);
         super.batch.setColor(new Color(0.8f, 0.8f, 0.8f, 1.0f));
@@ -228,14 +245,40 @@ public class UpgradeMenu extends Scene {
         boolean isUnlocked = PlayerData.isItemUnlocked(selectedItemIndex);
 
         // Render Info panel details
-        font.drawTextAligned(super.batch, "ITEM " + (selectedItemIndex + 1), infoPanelPos.x, infoPanelPos.y + 180,
-                Color.BLACK, 48);
+        Texture selectedIcon = PlayerData.getItemIcon(selectedItemIndex);
+        if (selectedIcon != null) {
+            super.batch.setColor(Color.WHITE);
+            super.batch.draw(selectedIcon, infoPanelPos.x, infoPanelPos.y + 115f, 70f, 70f);
+        }
+
+        font.drawTextAligned(super.batch, PlayerData.getItemDisplayName(selectedItemIndex), infoPanelPos.x,
+                infoPanelPos.y + 185, Color.BLACK, 48);
+
+        // Description text
+        ArrayList<String> descriptionLines = new ArrayList<>();
+        // max of 30 characters per line for description
+        String description = PlayerData.getItemDescription(selectedItemIndex);
+        while (description.length() > 30) {
+            int splitIndex = description.lastIndexOf(' ', 30);
+            if (splitIndex == -1) {
+                splitIndex = 30; // If no space found, force split at 30 characters
+            }
+            descriptionLines.add(description.substring(0, splitIndex));
+            description = description.substring(splitIndex).trim();
+        }
+        if (!description.isEmpty()) {
+            descriptionLines.add(description);
+        }
+        for (int i = 0; i < descriptionLines.size(); i++) {
+            font.drawTextAligned(super.batch, descriptionLines.get(i), infoPanelPos.x,
+                    infoPanelPos.y + 50 - (i * 22), Color.BLACK, 18);
+        }
 
         if (isUnlocked) {
             // Render highlight for selected stat
-            Vec2 selectedPos = super.layout.centerRight(super.layout.res.x / 4f + 30, -80 + (selectedStatIndex * 80));
+            Vec2 selectedPos = super.layout.centerRight(super.layout.res.x / 4f + 30, 50 + (selectedStatIndex * 70));
             super.batch.setColor(new Color(1.0f, 1.0f, 0.0f, 0.4f)); // Yellow highlight
-            super.batch.draw(solidTexture, selectedPos.x, selectedPos.y, 380, 70);
+            super.batch.draw(solidTexture, selectedPos.x, selectedPos.y, 380, 50);
             super.batch.setColor(Color.WHITE);
 
             // Draw Stat Buttons
@@ -254,17 +297,16 @@ public class UpgradeMenu extends Scene {
             float baseDamage = 10f;
             float baseDuration = 5f;
 
-            drawStatBar("Cooldown", barStartX, super.layout.centerRight(0, -80).y,
+            drawStatBar("Cooldown", barStartX, super.layout.centerRight(0, 50).y,
                     baseCooldown + (currentCooldownLevel * 1f), 30.0f);
-            drawStatBar("Damage", barStartX, super.layout.centerRight(0, 0).y, baseDamage + (currentDamageLevel * 5f),
+            drawStatBar("Damage", barStartX, super.layout.centerRight(0, 120).y, baseDamage + (currentDamageLevel * 5f),
                     100.0f);
-            drawStatBar("Duration", barStartX, super.layout.centerRight(0, 80).y,
+            drawStatBar("Duration", barStartX, super.layout.centerRight(0, 190).y,
                     baseDuration + (currentDurationLevel * 2f), 30.0f);
 
-            infoItemBtn.render(super.batch, font, mouseScreen);
             mainUpgradeBtn.render(super.batch, font, mouseScreen);
         } else {
-            font.drawTextAligned(super.batch, "LOCKED", infoPanelPos.x, infoPanelPos.y, Color.BLACK, 64);
+            font.drawTextAligned(super.batch, "LOCKED", infoPanelPos.x, infoPanelPos.y - 100f, Color.BLACK, 64);
         }
 
         backBtn.render(super.batch, font, mouseScreen);
@@ -332,5 +374,7 @@ public class UpgradeMenu extends Scene {
             btnTexture.cleanup();
         if (solidTexture != null)
             solidTexture.cleanup();
+        if (backgroundTexture != null)
+            backgroundTexture.cleanup();
     }
 }

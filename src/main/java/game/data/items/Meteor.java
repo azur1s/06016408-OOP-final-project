@@ -12,11 +12,12 @@ public class Meteor extends Item {
             new Texture("textures/items/meteor_1.png"),
             new Texture("textures/items/meteor_2.png"),
     };
+    private static final Texture ICON_TEXTURE = new Texture("textures/items/icon_meteor.png");
 
     public Meteor() {
         this.name = "Meteor";
         this.description = "Summon meteors that fall from the sky and crush enemies. More meteors fall with higher duration.";
-        this.icon = new Texture("textures/items/icon_meteor.png");
+        this.icon = ICON_TEXTURE;
     }
 
     @Override

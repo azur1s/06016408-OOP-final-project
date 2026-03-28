@@ -12,12 +12,20 @@ import game.data.PlayerData;
 import game.data.PlayerDataSaver;
 import game.menu.components.UIButton;
 
-public class tutorial extends Scene{
+public class tutorial extends Scene {
 
     private FontAtlas font;
     private Texture backgroundTexture, readyButtonTexture;
     private UIButton nextButton;
-    
+
+    @Override
+    public void preloadAssets() {
+        super.preloadAssets();
+        Texture.preloadAsync(
+                "textures/tutorial/btn_ready.png",
+                "textures/solid.png");
+    }
+
     @Override
     public void init(int width, int height) {
 
@@ -27,7 +35,7 @@ public class tutorial extends Scene{
 
         nextButton = new UIButton(
                 super.layout.bottomCenter(0, 80),
-                new Vec2(256* 0.65f, 92*0.65f),
+                new Vec2(256 * 0.65f, 92 * 0.65f),
                 "",
                 readyButtonTexture);
 
@@ -42,7 +50,7 @@ public class tutorial extends Scene{
 
     @Override
     public void update(float delta) {
-        
+
     }
 
     @Override
@@ -58,8 +66,8 @@ public class tutorial extends Scene{
 
         String tutorialText[] = {
                 "Welcome to the tutorial! Here you will learn the basics of the game.",
-                "Use WASD to move around and left-click to attack.",
-                "Defeat enemies to earn points and upgrade your character.",
+                "Defeat enemies by typing the words that appear above them to earn points",
+                "and upgrade your character.",
                 "Good luck, and have fun playing!"
         };
 
@@ -72,7 +80,6 @@ public class tutorial extends Scene{
         }
         super.uiManager.render(super.batch, font, mouseScreen);
     }
-
 
     @Override
     public void cleanup() {

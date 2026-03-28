@@ -146,7 +146,7 @@ public class WordEntitiesManager {
             // one
             if (wordEntity.position.x < -600f) {
                 entities.get(i).active = false;
-                entities.remove(i);
+                entities.get(i).missedLeftEdge = true;
                 addNewEntites(1);
                 for (WordEntitiesListener l : listeners) {
                     l.onWordMissed(wordEntity);
@@ -226,7 +226,7 @@ public class WordEntitiesManager {
                     // Random x position off the right edge
                     700f,
                     // Calculate speed based on word length, longer words move slower
-                    30f + (maxWordLength - word.length()) * 2f
+                    15f + (maxWordLength - word.length()) * 2f
                     // Random variation for fun
                             + (float) Math.random() * 20f - 10f,
                     selectLane());
@@ -293,9 +293,6 @@ public class WordEntitiesManager {
             }
             // Decrease the spawn timer
             spawnCooldown -= 0.5f;
-            difficultyRamp += 0.2f;
-            // Cap the difficulty ramp
-            difficultyRamp = Math.min(difficultyRamp, SPAWN_INTERVAL - (SPAWN_INTERVAL / 2f));
         }
 
         // Clear the input buffer if a word was matched and there's no other
@@ -303,6 +300,12 @@ public class WordEntitiesManager {
         if (!keepInputBuffer && matchedEntities.size() > 0) {
             clearInputBuffer();
         }
+    }
+
+    public void increaseDifficultyRamp() {
+        difficultyRamp += 0.2f;
+        // Cap the difficulty ramp
+        difficultyRamp = Math.min(difficultyRamp, SPAWN_INTERVAL - (SPAWN_INTERVAL / 2f));
     }
 
     // #endregion
@@ -314,6 +317,11 @@ public class WordEntitiesManager {
     }
 
     public void removeInactive() {
+        for (WordEntity entity : entities) {
+            if (!entity.active && !entity.missedLeftEdge) {
+                increaseDifficultyRamp();
+            }
+        }
         entities.removeIf(entity -> !entity.active);
     }
 

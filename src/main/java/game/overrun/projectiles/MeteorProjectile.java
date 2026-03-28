@@ -1,6 +1,5 @@
 package game.overrun.projectiles;
 
-import engine.Engine;
 import engine.entities.Collidable;
 import engine.graphics.Texture;
 import engine.graphics.TextureBatch;

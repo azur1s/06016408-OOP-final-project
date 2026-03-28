@@ -33,7 +33,20 @@ public class Engine {
         }
     }
 
+    /**
+     * Replaces the current scene.
+     *
+     * Order is important:
+     * 1) Ask the new scene to queue preload/decode work.
+     * 2) Cleanup old scene.
+     * 3) Initialize the new scene.
+     */
     public static void setScene(Scene newScene) {
+        if (newScene != null) {
+            // This call should not make OpenGL calls; it is meant to queue async decode
+            // work (e.g. Texture.preloadAsync).
+            newScene.preloadAssets();
+        }
         if (currentScene != null)
             currentScene.internalCleanup();
         currentScene = newScene;

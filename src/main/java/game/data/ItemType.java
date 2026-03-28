@@ -4,7 +4,8 @@ public enum ItemType {
     FREEZE("Freeze"),
     SHIELD("Shield"),
     TORNADO("Tornado"),
-    METEOR("Meteor");
+    METEOR("Meteor"),
+    TURRET("Turret");
 
     private final String displayName;
 

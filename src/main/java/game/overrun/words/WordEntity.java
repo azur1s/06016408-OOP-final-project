@@ -23,6 +23,7 @@ public class WordEntity extends Entity {
     public String word;
     public int progress = 0; // How many characters have been correctly typed
     public WordEffect effect = new WordEffect.Normal();
+    public boolean missedLeftEdge = false; // Whether the word has moved past the left edge without being fully typed
 
     public float speed;
     /**

@@ -6,6 +6,10 @@ import engine.utils.Resources;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
@@ -15,14 +19,34 @@ import static org.lwjgl.system.MemoryStack.stackPush;
 
 /**
  * OpenGL 2D texture wrapper with image loading and GPU upload utilities.
+ *
+ * Loading from a file path is intentionally split into two phases:
+ * 1) Decode image bytes on worker threads ({@link #preloadAsync(String...)})
+ * 2) Upload decoded pixels to OpenGL in the {@link Texture} constructor
+ *
+ * This keeps OpenGL calls on the render thread while still parallelizing
+ * expensive IO/decode work during scene transitions.
  */
 public class Texture {
     // Cache for textures loaded from files to avoid duplicate loads and save GPU
     // memory.
     private static final Object CACHE_LOCK = new Object();
+    // Use a small worker pool for decode/IO work only. OpenGL uploads still run on
+    // the render thread.
+    private static final int TEXTURE_IO_THREADS = Math.max(2, Runtime.getRuntime().availableProcessors() / 2);
+    private static final ExecutorService TEXTURE_IO_EXECUTOR = Executors.newFixedThreadPool(
+            TEXTURE_IO_THREADS,
+            r -> {
+                Thread t = new Thread(r, "texture-io");
+                t.setDaemon(true);
+                return t;
+            });
     // Maps file paths to cached texture data (OpenGL ID, dimensions, reference
     // count)
     private static final Map<String, CachedTexture> FILE_TEXTURE_CACHE = new HashMap<>();
+    // Maps file paths to decoded image data futures. Decode happens off the render
+    // thread; upload is still done on the render thread.
+    private static final Map<String, CompletableFuture<DecodedTexture>> FILE_DECODE_CACHE = new HashMap<>();
 
     /**
      * Represents a texture loaded from a file and stored in OpenGL. Multiple
@@ -49,6 +73,19 @@ public class Texture {
         }
     }
 
+    private static final class DecodedTexture {
+        /** STB-owned RGBA pixel buffer. Must be released with stbi_image_free. */
+        final ByteBuffer pixels;
+        final int width;
+        final int height;
+
+        DecodedTexture(ByteBuffer pixels, int width, int height) {
+            this.pixels = pixels;
+            this.width = width;
+            this.height = height;
+        }
+    }
+
     private final int id;
     private final int width;
     private final int height;
@@ -66,8 +103,7 @@ public class Texture {
     public Texture(String filePath) {
         this.cachedPath = filePath;
 
-        // Synchronize to prevent multiple threads from loading the same texture
-        // simultaneously
+        CompletableFuture<DecodedTexture> decodeFuture;
         synchronized (CACHE_LOCK) {
             CachedTexture cachedTexture = FILE_TEXTURE_CACHE.get(filePath);
             if (cachedTexture != null) {
@@ -83,58 +119,167 @@ public class Texture {
                 return;
             }
 
-            ByteBuffer image;
+            // Queue decode if needed, or reuse in-flight work from preloadAsync.
+            decodeFuture = getOrCreateDecodeFutureLocked(filePath);
+        }
 
-            // Load the image data
-            try (MemoryStack stack = stackPush()) {
-                IntBuffer w = stack.mallocInt(1);
-                IntBuffer h = stack.mallocInt(1);
-                IntBuffer chans = stack.mallocInt(1);
-
-                // OpenGL expects the Y-axis to start at the bottom, but images
-                // usually start at the top, so we need to flip the image vertically
-                // stbi_set_flip_vertically_on_load(true);
-
-                // Load the image data with 4 channels (RGBA)
-                ByteBuffer imageBuffer;
-                try {
-                    imageBuffer = Resources.loadResourceToByteBuffer(filePath);
-                } catch (Exception e) {
-                    throw new RuntimeException("Failed to load texture: " + filePath, e);
+        DecodedTexture decodedTexture;
+        try {
+            decodedTexture = decodeFuture.join();
+        } catch (CompletionException e) {
+            synchronized (CACHE_LOCK) {
+                if (FILE_DECODE_CACHE.get(filePath) == decodeFuture) {
+                    FILE_DECODE_CACHE.remove(filePath);
                 }
+            }
+            throw new RuntimeException("Failed to load texture: " + filePath,
+                    e.getCause() != null ? e.getCause() : e);
+        }
 
-                image = stbi_load_from_memory(imageBuffer, w, h, chans, 4);
-                if (image == null) {
-                    throw new RuntimeException("Failed to decode texture: " + filePath + "\n" + stbi_failure_reason());
-                }
-
-                this.width = w.get(0);
-                this.height = h.get(0);
+        synchronized (CACHE_LOCK) {
+            CachedTexture cachedTexture = FILE_TEXTURE_CACHE.get(filePath);
+            if (cachedTexture != null) {
+                cachedTexture.refCount++;
+                this.id = cachedTexture.id;
+                this.width = cachedTexture.width;
+                this.height = cachedTexture.height;
+                this.originX = this.width / 2.0f;
+                this.originY = this.height / 2.0f;
+                System.out.println(
+                        "Texture loaded from cache: " + filePath + " (ID: " + id + ", " + width + "x" + height
+                                + ", refCount: " + cachedTexture.refCount + ")");
+                return;
             }
 
-            // Set origin to center
+            this.width = decodedTexture.width;
+            this.height = decodedTexture.height;
             this.originX = this.width / 2.0f;
             this.originY = this.height / 2.0f;
 
-            // Upload to OpenGL
+            try {
+                // Must happen on the thread that owns the OpenGL context.
+                this.id = uploadDecodedTexture(decodedTexture);
+            } finally {
+                // DecodedTexture.pixels was allocated by STB and must always be freed.
+                stbi_image_free(decodedTexture.pixels);
+            }
 
-            this.id = glGenTextures();
-            glBindTexture(GL_TEXTURE_2D, id);
-            // Tell OpenGL how to unpack the pixel data (1 byte alignment)
-            glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-            // Upload the texture data to GPU
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA,
-                    GL_UNSIGNED_BYTE, image);
-            // Set texture parameters
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-            // Free the image memory
-            stbi_image_free(image);
             FILE_TEXTURE_CACHE.put(filePath, new CachedTexture(id, width, height));
+            if (FILE_DECODE_CACHE.get(filePath) == decodeFuture) {
+                FILE_DECODE_CACHE.remove(filePath);
+            }
             System.out.println(
                     "Texture loaded successfully: " + filePath + " (ID: " + id + ", " + width + "x" + height + ")");
         }
+    }
+
+    /**
+     * Starts decoding one or more textures on worker threads.
+     *
+     * This method is safe to call repeatedly. Already decoded, in-flight, or
+     * uploaded
+     * textures are reused through internal caches.
+     *
+     * @param filePaths classpath texture paths
+     */
+    public static void preloadAsync(String... filePaths) {
+        if (filePaths == null) {
+            return;
+        }
+        for (String filePath : filePaths) {
+            if (filePath == null || filePath.isBlank()) {
+                continue;
+            }
+            synchronized (CACHE_LOCK) {
+                if (FILE_TEXTURE_CACHE.containsKey(filePath)) {
+                    continue;
+                }
+                getOrCreateDecodeFutureLocked(filePath);
+            }
+        }
+    }
+
+    /**
+     * Releases decoded-but-not-yet-uploaded images and shuts down preload workers.
+     * Call this during app shutdown.
+     */
+    public static void shutdownPreloader() {
+        synchronized (CACHE_LOCK) {
+            for (CompletableFuture<DecodedTexture> future : FILE_DECODE_CACHE.values()) {
+                if (!future.isDone() || future.isCompletedExceptionally() || future.isCancelled()) {
+                    continue;
+                }
+                DecodedTexture decoded = future.getNow(null);
+                if (decoded != null && decoded.pixels != null) {
+                    stbi_image_free(decoded.pixels);
+                }
+            }
+            FILE_DECODE_CACHE.clear();
+        }
+
+        // Daemon workers do not block process exit, but shutting down avoids stale work
+        // in tool/test runs.
+        TEXTURE_IO_EXECUTOR.shutdownNow();
+    }
+
+    /**
+     * Returns an existing decode future or creates a new one.
+     *
+     * Callers must hold {@link #CACHE_LOCK} when invoking this method.
+     */
+    private static CompletableFuture<DecodedTexture> getOrCreateDecodeFutureLocked(String filePath) {
+        CompletableFuture<DecodedTexture> decodeFuture = FILE_DECODE_CACHE.get(filePath);
+        if (decodeFuture != null) {
+            return decodeFuture;
+        }
+
+        decodeFuture = CompletableFuture.supplyAsync(() -> decodeTexture(filePath), TEXTURE_IO_EXECUTOR);
+        FILE_DECODE_CACHE.put(filePath, decodeFuture);
+        return decodeFuture;
+    }
+
+    /**
+     * Performs classpath read + STB decode without touching OpenGL.
+     */
+    private static DecodedTexture decodeTexture(String filePath) {
+        ByteBuffer image;
+
+        try (MemoryStack stack = stackPush()) {
+            IntBuffer w = stack.mallocInt(1);
+            IntBuffer h = stack.mallocInt(1);
+            IntBuffer chans = stack.mallocInt(1);
+
+            ByteBuffer imageBuffer;
+            try {
+                imageBuffer = Resources.loadResourceToByteBuffer(filePath);
+            } catch (Exception e) {
+                throw new RuntimeException("Failed to load texture: " + filePath, e);
+            }
+
+            image = stbi_load_from_memory(imageBuffer, w, h, chans, 4);
+            if (image == null) {
+                throw new RuntimeException("Failed to decode texture: " + filePath + "\n" + stbi_failure_reason());
+            }
+
+            return new DecodedTexture(image, w.get(0), h.get(0));
+        }
+    }
+
+    /**
+     * Uploads decoded pixels into GPU texture storage.
+     *
+     * Must be called from the render thread while the GL context is current.
+     */
+    private static int uploadDecodedTexture(DecodedTexture decodedTexture) {
+        int uploadedId = glGenTextures();
+        glBindTexture(GL_TEXTURE_2D, uploadedId);
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, decodedTexture.width, decodedTexture.height, 0, GL_RGBA,
+                GL_UNSIGNED_BYTE, decodedTexture.pixels);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        return uploadedId;
     }
 
     /**

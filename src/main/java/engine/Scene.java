@@ -152,6 +152,18 @@ public abstract class Scene {
     public void cleanup() {
     };
 
+    /**
+     * Optional hook to queue expensive asset decode work before {@link #init(int,
+     * int)}.
+     *
+     * Keep this method lightweight and non-OpenGL. It is primarily intended for
+     * background decode requests such as Texture.preloadAsync(...).
+     */
+    public void preloadAssets() {
+        // Base prompt textures are used by the global exit dialog in every scene.
+        Texture.preloadAsync("textures/solid.png", "textures/button_test.png");
+    };
+
     protected boolean usesGlobalExitPrompt() {
         return true;
     }

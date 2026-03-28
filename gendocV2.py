@@ -147,6 +147,23 @@ def gather_java_files(base_dir):
     return files
 
 
+def format_csv_path(file_path):
+    normalized = os.path.normpath(file_path)
+    parts = normalized.split(os.sep)
+
+    # Prefer path relative to src/main/java, e.g. engine/graphics/Color.java.
+    for i in range(len(parts) - 2):
+        if parts[i] == "src" and parts[i + 1] == "main" and parts[i + 2] == "java":
+            return "/".join(parts[i + 3:])
+
+    # Fallback: keep path from engine/ or game/ if present.
+    for marker in ("engine", "game"):
+        if marker in parts:
+            return "/".join(parts[parts.index(marker):])
+
+    return os.path.basename(normalized)
+
+
 def extract_type_header(content):
     match = DECL_PATTERN.search(content)
     if not match:
@@ -280,8 +297,7 @@ with open(output_csv, "w", newline="", encoding="utf-8") as f:
     writer.writerow(["Owner", "Type", "Path", "Method", "KPI", "Rate", "Note"])
 
     for file_path in java_files:
-        file_name = os.path.basename(file_path)
-        file_name_no_ext, _ = os.path.splitext(file_name)
+        csv_file_path = format_csv_path(file_path)
 
         with open(file_path, "r", encoding="utf-8") as file_obj:
             content = file_obj.read()
@@ -410,7 +426,7 @@ with open(output_csv, "w", newline="", encoding="utf-8") as f:
 
             owner_cell = "Custom" if is_first_row_for_file else ""
             type_cell = type_header["type_kind"] if is_first_row_for_file else ""
-            path_cell = file_name_no_ext if is_first_row_for_file else ""
+            path_cell = csv_file_path if is_first_row_for_file else ""
 
             writer.writerow(
                 [

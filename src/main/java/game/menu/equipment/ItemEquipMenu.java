@@ -19,6 +19,7 @@ import game.menu.components.UIButton;
 public class ItemEquipMenu extends Scene {
     private FontAtlas font;
     private Texture btnTexture;
+    private Texture backgroundTexture;
 
     private UIButton backBtn;
     private List<UIButton> itemBtns = new ArrayList<>();
@@ -35,9 +36,18 @@ public class ItemEquipMenu extends Scene {
     }
 
     @Override
+    public void preloadAssets() {
+        super.preloadAssets();
+        Texture.preloadAsync(
+                "textures/button_test.png",
+                "textures/bg.png");
+    }
+
+    @Override
     public void init(int width, int height) {
         font = new FontAtlas("GeistMono-Regular.otf", 32);
         btnTexture = new Texture("textures/button_test.png");
+        backgroundTexture = new Texture("textures/bg.png");
 
         backBtn = new UIButton(
                 super.layout.topLeft(100, 50),
@@ -56,8 +66,9 @@ public class ItemEquipMenu extends Scene {
 
             float yOffset = -150 + (i * 80);
             boolean isUnlocked = PlayerData.items[itemIndex] != null && PlayerData.items[itemIndex].unlocked;
+            String itemName = PlayerData.getItemDisplayName(itemIndex);
 
-            String btnText = "ITEM " + (itemIndex + 1);
+            String btnText = itemName;
             if (!isUnlocked) {
                 btnText += " (LOCKED)";
             }
@@ -85,12 +96,14 @@ public class ItemEquipMenu extends Scene {
                         // Swap: put displaced item into the slot where selected item came from
                         PlayerData.equippedItems[itemCurrentSlot] = PlayerData.equippedItems[slotToEquip];
                         int movedItemIndex = PlayerData.getItemIndexForType(PlayerData.equippedItems[itemCurrentSlot]);
-                        String movedItemLabel = movedItemIndex >= 0 ? "Item " + (movedItemIndex + 1) : "Empty";
+                        String movedItemLabel = movedItemIndex >= 0 ? PlayerData.getItemDisplayName(movedItemIndex)
+                                : "Empty";
                         System.out.println("Swapped: moved " + movedItemLabel + " to Slot " + (itemCurrentSlot + 1));
                     }
                     // Equipping the item into the correct slot
                     PlayerData.equippedItems[slotToEquip] = selectedType;
-                    System.out.println("Equipped Item " + (itemIndex + 1) + " into Slot " + (slotToEquip + 1));
+                    System.out.println("Equipped " + PlayerData.getItemDisplayName(itemIndex) + " into Slot "
+                            + (slotToEquip + 1));
                     goBack();
                 } else {
                     // TODO (For Backend Devs): Maybe trigger a sound or a Toast message that it's
@@ -121,11 +134,31 @@ public class ItemEquipMenu extends Scene {
     public void renderUI(float delta) {
         glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 
+        Vec2 backgroundPos = super.layout.center(0, 0);
+        Vec2 backgroundSize = new Vec2(super.layout.res.x, super.layout.res.y);
+        super.batch.draw(backgroundTexture, backgroundPos.x, backgroundPos.y, backgroundSize.x, backgroundSize.y);
+
         Vec2 titlePos = super.layout.center(0, -250);
         font.drawTextAligned(super.batch, "Equip Item to Slot " + (slotToEquip + 1), titlePos.x, titlePos.y,
                 Color.WHITE, 48);
 
         super.uiManager.render(super.batch, font, mouseScreen);
+
+        renderItemIcons();
+    }
+
+    private void renderItemIcons() {
+        for (int i = 0; i < PlayerData.getItemCount(); i++) {
+            Texture icon = PlayerData.getItemIcon(i);
+            if (icon == null) {
+                continue;
+            }
+
+            float yOffset = -150 + (i * 80);
+            Vec2 rowCenter = super.layout.center(0, yOffset);
+            super.batch.setColor(Color.WHITE);
+            super.batch.draw(icon, rowCenter.x - 118f, rowCenter.y, 44f, 44f);
+        }
     }
 
     @Override
@@ -134,5 +167,7 @@ public class ItemEquipMenu extends Scene {
             font.cleanup();
         if (btnTexture != null)
             btnTexture.cleanup();
+        if (backgroundTexture != null)
+            backgroundTexture.cleanup();
     }
 }

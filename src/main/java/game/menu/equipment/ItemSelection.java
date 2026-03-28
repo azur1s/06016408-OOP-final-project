@@ -14,6 +14,7 @@ public class ItemSelection extends Scene {
     private FontAtlas font;
     private Texture btnTexture;
     private Texture itemSlotTexture;
+    private Texture backgroundTexture;
 
     private UIButton playBtn;
     private UIButton backBtn;
@@ -29,10 +30,20 @@ public class ItemSelection extends Scene {
     }
 
     @Override
+    public void preloadAssets() {
+        super.preloadAssets();
+        Texture.preloadAsync(
+                "textures/button_test.png",
+                "textures/solid.png",
+                "textures/bg.png");
+    }
+
+    @Override
     public void init(int width, int height) {
         font = new FontAtlas("GeistMono-Regular.otf", 32);
         btnTexture = new Texture("textures/button_test.png");
         itemSlotTexture = new Texture("textures/solid.png"); // placeholder
+        backgroundTexture = new Texture("textures/bg.png");
 
         Vec2 btnSize = new Vec2(200, 50);
         Vec2 itemSlotSize = new Vec2(100, 100);
@@ -49,16 +60,10 @@ public class ItemSelection extends Scene {
                 "Back",
                 btnTexture);
 
-        int item1Index = game.data.PlayerData.getEquippedItemIndex(0);
-        int item2Index = game.data.PlayerData.getEquippedItemIndex(1);
-
-        String item1Text = item1Index == -1 ? "" : "ITEM " + (item1Index + 1);
-        String item2Text = item2Index == -1 ? "" : "ITEM " + (item2Index + 1);
-
         item1Btn = new UIButton(
                 super.layout.center(60, 0),
                 itemSlotSize,
-                item1Text,
+                "",
                 Color.WHITE,
                 new Color(0.8f, 0.8f, 0.8f, 1.0f),
                 Color.BLACK,
@@ -68,7 +73,7 @@ public class ItemSelection extends Scene {
         item2Btn = new UIButton(
                 super.layout.center(-60, 0),
                 itemSlotSize,
-                item2Text,
+                "",
                 Color.WHITE,
                 new Color(0.8f, 0.8f, 0.8f, 1.0f),
                 Color.BLACK,
@@ -109,6 +114,10 @@ public class ItemSelection extends Scene {
     public void renderUI(float delta) {
         glClearColor(0.4f, 0.4f, 0.4f, 1.0f);
 
+        Vec2 backgroundPos = super.layout.center(0, 0);
+        Vec2 backgroundSize = new Vec2(super.layout.res.x, super.layout.res.y);
+        super.batch.draw(backgroundTexture, backgroundPos.x, backgroundPos.y, backgroundSize.x, backgroundSize.y);
+
         // Texts
         Vec2 titlePos = super.layout.center(0, -150);
         font.drawTextAligned(super.batch, "Stage", titlePos.x, titlePos.y, Color.WHITE, 64);
@@ -117,6 +126,25 @@ public class ItemSelection extends Scene {
         font.drawTextAligned(super.batch, "Select Item", selectItemPos.x, selectItemPos.y, Color.WHITE, 24);
 
         super.uiManager.render(super.batch, font, mouseScreen);
+
+        renderEquippedSlot(0, super.layout.center(60, 0));
+        renderEquippedSlot(1, super.layout.center(-60, 0));
+    }
+
+    private void renderEquippedSlot(int slot, Vec2 position) {
+        int itemIndex = game.data.PlayerData.getEquippedItemIndex(slot);
+        if (itemIndex >= 0) {
+            Texture icon = game.data.PlayerData.getItemIcon(itemIndex);
+            if (icon != null) {
+                super.batch.setColor(Color.WHITE);
+                super.batch.draw(icon, position.x, position.y - 8f, 64f, 64f);
+            }
+            font.drawTextAligned(super.batch, game.data.PlayerData.getItemDisplayName(itemIndex), position.x,
+                    position.y + 33f, Color.BLACK, 14);
+            return;
+        }
+
+        font.drawTextAligned(super.batch, "Empty", position.x, position.y, Color.BLACK, 14);
     }
 
     @Override
@@ -127,5 +155,7 @@ public class ItemSelection extends Scene {
             btnTexture.cleanup();
         if (itemSlotTexture != null)
             itemSlotTexture.cleanup();
+        if (backgroundTexture != null)
+            backgroundTexture.cleanup();
     }
 }
