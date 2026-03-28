@@ -20,6 +20,7 @@ public class UpgradeMenu extends Scene {
     private FontAtlas font;
     private Texture btnTexture;
     private Texture solidTexture;
+    private Texture backgroundTexture;
 
     // Shared UI
     private UIButton backBtn;
@@ -48,6 +49,7 @@ public class UpgradeMenu extends Scene {
         font = new FontAtlas("GeistMono-Regular.otf", 32);
         btnTexture = new Texture("textures/button_test.png");
         solidTexture = new Texture("textures/solid.png");
+        backgroundTexture = new Texture("textures/bg.png");
 
         backBtn = new UIButton(
                 super.layout.topLeft(100, 50),
@@ -205,6 +207,10 @@ public class UpgradeMenu extends Scene {
     public void renderUI(float delta) {
         glClearColor(0.4f, 0.4f, 0.4f, 1.0f);
 
+        Vec2 backgroundPos = super.layout.center(0, 0);
+        Vec2 backgroundSize = new Vec2(super.layout.res.x, super.layout.res.y);
+        super.batch.draw(backgroundTexture, backgroundPos.x, backgroundPos.y, backgroundSize.x, backgroundSize.y);
+
         // Coins Display
         Vec2 coinPos = super.layout.topRight(150, 50);
         font.drawTextAligned(super.batch, "Coins: " + game.data.PlayerData.coins, coinPos.x, coinPos.y,
@@ -332,5 +338,7 @@ public class UpgradeMenu extends Scene {
             btnTexture.cleanup();
         if (solidTexture != null)
             solidTexture.cleanup();
+        if (backgroundTexture != null)
+            backgroundTexture.cleanup();
     }
 }

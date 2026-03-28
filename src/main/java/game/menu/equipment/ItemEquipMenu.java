@@ -19,6 +19,7 @@ import game.menu.components.UIButton;
 public class ItemEquipMenu extends Scene {
     private FontAtlas font;
     private Texture btnTexture;
+    private Texture backgroundTexture;
 
     private UIButton backBtn;
     private List<UIButton> itemBtns = new ArrayList<>();
@@ -38,6 +39,7 @@ public class ItemEquipMenu extends Scene {
     public void init(int width, int height) {
         font = new FontAtlas("GeistMono-Regular.otf", 32);
         btnTexture = new Texture("textures/button_test.png");
+        backgroundTexture = new Texture("textures/bg.png");
 
         backBtn = new UIButton(
                 super.layout.topLeft(100, 50),
@@ -121,6 +123,10 @@ public class ItemEquipMenu extends Scene {
     public void renderUI(float delta) {
         glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 
+        Vec2 backgroundPos = super.layout.center(0, 0);
+        Vec2 backgroundSize = new Vec2(super.layout.res.x, super.layout.res.y);
+        super.batch.draw(backgroundTexture, backgroundPos.x, backgroundPos.y, backgroundSize.x, backgroundSize.y);
+
         Vec2 titlePos = super.layout.center(0, -250);
         font.drawTextAligned(super.batch, "Equip Item to Slot " + (slotToEquip + 1), titlePos.x, titlePos.y,
                 Color.WHITE, 48);
@@ -134,5 +140,7 @@ public class ItemEquipMenu extends Scene {
             font.cleanup();
         if (btnTexture != null)
             btnTexture.cleanup();
+        if (backgroundTexture != null)
+            backgroundTexture.cleanup();
     }
 }
