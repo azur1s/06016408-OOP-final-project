@@ -2,6 +2,7 @@ package game.overrun.stage;
 
 import engine.graphics.AnimationClip;
 import engine.graphics.Texture;
+import game.overrun.words.WordEntity;
 
 /**
  * Immutable stage metadata plus lazily constructed runtime assets.
@@ -25,6 +26,9 @@ public class StageConfig {
     private SpawnPhase[] spawnPhases;
     private float maxTime;
 
+    private WordEntity bossWordEntity;
+
+    // Overrun
     public StageConfig(
             String soundToStopOnInit,
             String backgroundTexturePath,
@@ -41,8 +45,10 @@ public class StageConfig {
         // unused
         this.spawnPhases = new SpawnPhase[0];
         this.maxTime = 0f;
+        this.bossWordEntity = null;
     }
 
+    // Manual spawn stages
     public StageConfig(
             String soundToStopOnInit,
             String backgroundTexturePath,
@@ -50,7 +56,8 @@ public class StageConfig {
             int fontSize,
             String[] entityTexturePaths,
             SpawnPhase[] spawnPhases,
-            float maxTime) {
+            float maxTime,
+            WordEntity bossWordEntity) {
         this.soundToStopOnInit = soundToStopOnInit;
         this.backgroundTexturePath = backgroundTexturePath;
         this.fontPath = fontPath;
@@ -60,6 +67,7 @@ public class StageConfig {
         this.manualSpawn = true;
         this.spawnPhases = spawnPhases;
         this.maxTime = maxTime;
+        this.bossWordEntity = bossWordEntity;
     }
 
     public String soundToStopOnInit() {
@@ -104,5 +112,9 @@ public class StageConfig {
 
     public float maxTime() {
         return maxTime;
+    }
+
+    public WordEntity bossWordEntity() {
+        return bossWordEntity;
     }
 }

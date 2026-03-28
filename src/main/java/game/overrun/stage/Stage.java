@@ -48,9 +48,14 @@ public class Stage extends Scene {
 
     protected boolean debug = false;
     protected boolean isPaused = false;
+    protected boolean deathRewardsGranted = false;
+    // Manual spawn stages related fields
     protected boolean isStageWon = false;
     protected boolean winRewardsGranted = false;
-    protected boolean deathRewardsGranted = false;
+    protected boolean isBossSpawned = false;
+    protected boolean isBossDefeated = false;
+    protected float timeSinceAllPhasesCleared = -1f; // -1 means not started
+    private static final float BOSS_SPAWN_DELAY = 2f; // seconds after all phases cleared before boss spawns
 
     public Stage() {
         this(StageConfigs.STAGE_1);
@@ -219,17 +224,33 @@ public class Stage extends Scene {
                 }
             }
 
-            // Manual stage is won when all configured waves spawned, all monsters are
-            // cleared, and the timer has not reached the stage timeout.
-            if (allPhasesSpawned
-                    && words.getWordEntities().isEmpty()
-                    && timer < config.maxTime()) {
-                if (!winRewardsGranted) {
-                    PlayerData.coins += playerManager.score / 5;
-                    winRewardsGranted = true;
-                    PlayerDataSaver.save();
+            // Check if all phases spawned and all words cleared
+            if (allPhasesSpawned && words.getWordEntities().isEmpty()) {
+                // Start boss spawn timer if not already started
+                if (timeSinceAllPhasesCleared < 0f) {
+                    timeSinceAllPhasesCleared = 0f;
+                    System.out.println("All phases cleared! Boss will spawn in " + BOSS_SPAWN_DELAY + " seconds...");
                 }
-                isStageWon = true;
+
+                // Update boss spawn timer
+                timeSinceAllPhasesCleared += delta;
+
+                // Spawn boss after delay
+                if (timeSinceAllPhasesCleared >= BOSS_SPAWN_DELAY && !isBossSpawned) {
+                    words.addEntity(config.bossWordEntity());
+                    isBossSpawned = true;
+                    System.out.println("Boss spawned!");
+                }
+
+                // Win when boss is defeated (all words cleared including boss)
+                if (isBossSpawned && words.getWordEntities().isEmpty()) {
+                    if (!winRewardsGranted) {
+                        PlayerData.coins += playerManager.score / 5;
+                        winRewardsGranted = true;
+                        PlayerDataSaver.save();
+                    }
+                    isStageWon = true;
+                }
             }
 
             if (timer >= config.maxTime() && !deathRewardsGranted) {

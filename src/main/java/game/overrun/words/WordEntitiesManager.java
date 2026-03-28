@@ -209,6 +209,10 @@ public class WordEntitiesManager {
         return candidates.subList(0, Math.min(count, candidates.size()));
     }
 
+    public void addEntity(WordEntity entity) {
+        entities.add(entity);
+    }
+
     /**
      * Generates a new word entity/entites and adds it to the current word list.
      * Ensured that the generated word(s) is not already in the current word list.
@@ -345,10 +349,21 @@ public class WordEntitiesManager {
         }
     }
 
+    private int getInputBufferMaxLength() {
+        int longestEntityLength = 0;
+        for (WordEntity entity : entities) {
+            if (entity.word != null) {
+                longestEntityLength = Math.max(longestEntityLength, entity.word.length());
+            }
+        }
+        return Math.max(1, Math.max(maxWordLength, longestEntityLength));
+    }
+
     public void addInputChar(char c) {
-        // Circular buffer with max length equal to the longest word in the
-        // possible word list
-        if (inputBuffer.length() < maxWordLength) {
+        // Circular buffer with max length equal to the longest active target
+        // (or fallback dictionary max when no entities are active).
+        int maxInputLength = getInputBufferMaxLength();
+        if (inputBuffer.length() < maxInputLength) {
             inputBuffer += c;
         } else {
             inputBuffer = inputBuffer.substring(1) + c;

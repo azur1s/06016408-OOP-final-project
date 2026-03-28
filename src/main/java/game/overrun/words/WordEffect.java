@@ -28,6 +28,12 @@ public sealed interface WordEffect {
         }
     }
 
+    record Boss(int minLength) implements WordEffect {
+        public Boss(int minLength) {
+            this.minLength = minLength;
+        }
+    }
+
     static WordEffect randomEffect(WordEntity wordEntity) {
         double r = Math.random();
         if (r < 0.2) {
