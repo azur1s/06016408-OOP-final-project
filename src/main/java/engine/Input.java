@@ -16,6 +16,7 @@ public class Input {
     private final boolean[] mouseButtonsReleased = new boolean[2];
 
     private Vec2 mouse = new Vec2(0, 0);
+    private float mouseScrollY = 0.0f;
 
     public void updateKeyState(int key, int action) {
         if (key >= 0 && key < keysDown.length) {
@@ -32,6 +33,10 @@ public class Input {
         mouse.set(xpos, ypos);
     }
 
+    public void updateMouseScroll(float yoffset) {
+        mouseScrollY += yoffset;
+    }
+
     /**
      * Wipe the keysPressed array at the end of each frame to ensure
      * isKeyPressed only returns true once per key press.
@@ -39,6 +44,7 @@ public class Input {
     public void endFrame() {
         Arrays.fill(keysPressed, false);
         Arrays.fill(mouseButtonsReleased, false);
+        mouseScrollY = 0.0f;
     }
 
     /**
@@ -90,5 +96,9 @@ public class Input {
             return mouseButtonsReleased[button];
         }
         return false;
+    }
+
+    public float getMouseScrollY() {
+        return mouseScrollY;
     }
 }

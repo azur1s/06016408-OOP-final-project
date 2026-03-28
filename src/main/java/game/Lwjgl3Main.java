@@ -66,6 +66,9 @@ public class Lwjgl3Main {
         glfwSetMouseButtonCallback(window, (window, button, action, mods) -> {
             Engine.input.updateMouseButtonState(button, action);
         });
+        glfwSetScrollCallback(window, (window, xoffset, yoffset) -> {
+            Engine.input.updateMouseScroll((float) yoffset);
+        });
 
         // glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
