@@ -1,6 +1,5 @@
 # Object-Oriented Programming (2/68) Final Project
 [Thai Version](./README_th.md)
-
 **Compiling**
 
 ### 1. Prerequisites
