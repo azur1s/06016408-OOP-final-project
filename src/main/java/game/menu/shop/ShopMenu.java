@@ -64,6 +64,10 @@ public class ShopMenu extends Scene {
                 super.layout.topCenter(0, 50),
                 new Vec2(300, 40),
                 isSkinTabSelected ? "Skin Shop" : "Item Shop",
+                new Color(0.2f, 0.2f, 0.2f, 1.0f),
+                new Color(0.2f, 0.2f, 0.2f, 1.0f),
+                Color.WHITE,
+                Color.WHITE,
                 solidTexture);
 
         toggleLeftBtn = new UIButton(

@@ -29,7 +29,7 @@ public class Turret extends Item {
 
     public Turret() {
         this.name = "Turret";
-        this.description = "Summon a turret that automatically shoots at enemies. The turret's fire rate increases with higher duration.";
+        this.description = "Summon a turret that automatically shoots at enemies.";
         this.icon = ICON_TEXTURE;
     }
 

@@ -70,12 +70,12 @@ public class UpgradeMenu extends Scene {
 
         Color tColor = new Color(0, 0, 0, 0);
         Color hColor = new Color(1, 1, 1, 0.3f);
-        Vec2 statBtnSize = new Vec2(380, 70);
-        stat0Btn = new UIButton(super.layout.centerRight(super.layout.res.x / 4f + 30, 20), statBtnSize, "", tColor,
+        Vec2 statBtnSize = new Vec2(380, 50);
+        stat0Btn = new UIButton(super.layout.centerRight(super.layout.res.x / 4f + 30, 50), statBtnSize, "", tColor,
                 hColor, solidTexture);
-        stat1Btn = new UIButton(super.layout.centerRight(super.layout.res.x / 4f + 30, 100), statBtnSize, "", tColor,
+        stat1Btn = new UIButton(super.layout.centerRight(super.layout.res.x / 4f + 30, 120), statBtnSize, "", tColor,
                 hColor, solidTexture);
-        stat2Btn = new UIButton(super.layout.centerRight(super.layout.res.x / 4f + 30, 180), statBtnSize, "", tColor,
+        stat2Btn = new UIButton(super.layout.centerRight(super.layout.res.x / 4f + 30, 190), statBtnSize, "", tColor,
                 hColor, solidTexture);
 
         stat0Btn.setOnClick(() -> {
@@ -243,14 +243,33 @@ public class UpgradeMenu extends Scene {
         }
 
         font.drawTextAligned(super.batch, PlayerData.getItemDisplayName(selectedItemIndex), infoPanelPos.x,
-                infoPanelPos.y + 185,
-                Color.BLACK, 48);
+                infoPanelPos.y + 185, Color.BLACK, 48);
+
+        // Description text
+        ArrayList<String> descriptionLines = new ArrayList<>();
+        // max of 30 characters per line for description
+        String description = PlayerData.getItemDescription(selectedItemIndex);
+        while (description.length() > 30) {
+            int splitIndex = description.lastIndexOf(' ', 30);
+            if (splitIndex == -1) {
+                splitIndex = 30; // If no space found, force split at 30 characters
+            }
+            descriptionLines.add(description.substring(0, splitIndex));
+            description = description.substring(splitIndex).trim();
+        }
+        if (!description.isEmpty()) {
+            descriptionLines.add(description);
+        }
+        for (int i = 0; i < descriptionLines.size(); i++) {
+            font.drawTextAligned(super.batch, descriptionLines.get(i), infoPanelPos.x,
+                    infoPanelPos.y + 50 - (i * 22), Color.BLACK, 18);
+        }
 
         if (isUnlocked) {
             // Render highlight for selected stat
-            Vec2 selectedPos = super.layout.centerRight(super.layout.res.x / 4f + 30, -80 + (selectedStatIndex * 80));
+            Vec2 selectedPos = super.layout.centerRight(super.layout.res.x / 4f + 30, 50 + (selectedStatIndex * 70));
             super.batch.setColor(new Color(1.0f, 1.0f, 0.0f, 0.4f)); // Yellow highlight
-            super.batch.draw(solidTexture, selectedPos.x, selectedPos.y, 380, 70);
+            super.batch.draw(solidTexture, selectedPos.x, selectedPos.y, 380, 50);
             super.batch.setColor(Color.WHITE);
 
             // Draw Stat Buttons
@@ -269,16 +288,16 @@ public class UpgradeMenu extends Scene {
             float baseDamage = 10f;
             float baseDuration = 5f;
 
-            drawStatBar("Cooldown", barStartX, super.layout.centerRight(0, -80).y,
+            drawStatBar("Cooldown", barStartX, super.layout.centerRight(0, 50).y,
                     baseCooldown + (currentCooldownLevel * 1f), 30.0f);
-            drawStatBar("Damage", barStartX, super.layout.centerRight(0, 0).y, baseDamage + (currentDamageLevel * 5f),
+            drawStatBar("Damage", barStartX, super.layout.centerRight(0, 120).y, baseDamage + (currentDamageLevel * 5f),
                     100.0f);
-            drawStatBar("Duration", barStartX, super.layout.centerRight(0, 80).y,
+            drawStatBar("Duration", barStartX, super.layout.centerRight(0, 190).y,
                     baseDuration + (currentDurationLevel * 2f), 30.0f);
 
             mainUpgradeBtn.render(super.batch, font, mouseScreen);
         } else {
-            font.drawTextAligned(super.batch, "LOCKED", infoPanelPos.x, infoPanelPos.y, Color.BLACK, 64);
+            font.drawTextAligned(super.batch, "LOCKED", infoPanelPos.x, infoPanelPos.y - 100f, Color.BLACK, 64);
         }
 
         backBtn.render(super.batch, font, mouseScreen);

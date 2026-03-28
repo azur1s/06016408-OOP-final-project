@@ -100,6 +100,15 @@ public class PlayerData {
         return "Unknown Item";
     }
 
+    public static String getItemDescription(int itemIndex) {
+        Item item = ensureItemAtIndex(itemIndex);
+        if (item != null && item.description != null && !item.description.isBlank()) {
+            return item.description;
+        }
+
+        return "No description available.";
+    }
+
     public static Texture getItemIcon(int itemIndex) {
         Item item = ensureItemAtIndex(itemIndex);
         if (item == null) {
