@@ -299,12 +299,31 @@ public class ShopMenu extends Scene {
             Texture selectedIcon = PlayerData.getItemIcon(selectedItemIndex);
             if (selectedIcon != null) {
                 super.batch.setColor(Color.WHITE);
-                super.batch.draw(selectedIcon, infoPanelPos.x, infoPanelPos.y - 130f, 72f, 72f);
+                super.batch.draw(selectedIcon, infoPanelPos.x, infoPanelPos.y + 100f, 96f, 96f);
             }
 
             font.drawTextAligned(super.batch, PlayerData.getItemDisplayName(selectedItemIndex), infoPanelPos.x,
-                    infoPanelPos.y - 55, Color.BLACK, 30);
-            font.drawTextAligned(super.batch, "Ability", infoPanelPos.x, infoPanelPos.y - 20, Color.BLACK, 24);
+                    infoPanelPos.y + 20f, Color.BLACK, 32);
+
+            // Description text
+            List<String> descriptionLines = new ArrayList<>();
+            String description = PlayerData.getItemDescription(selectedItemIndex);
+            if (description == null) description = "";
+            while (description.length() > 30) {
+                int splitIndex = description.lastIndexOf(' ', 30);
+                if (splitIndex == -1) {
+                    splitIndex = 30; // Force split if no space found
+                }
+                descriptionLines.add(description.substring(0, splitIndex));
+                description = description.substring(splitIndex).trim();
+            }
+            if (!description.isEmpty()) {
+                descriptionLines.add(description);
+            }
+            for (int i = 0; i < descriptionLines.size(); i++) {
+                font.drawTextAligned(super.batch, descriptionLines.get(i), infoPanelPos.x,
+                        infoPanelPos.y - 40f - (i * 24), Color.BLACK, 20);
+            }
 
             buyItemBtn.render(super.batch, font, mouseScreen);
 
