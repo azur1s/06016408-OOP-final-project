@@ -72,7 +72,7 @@ public final class StageConfigs {
             60f * 3f,
             new WordEntity(
                     new AnimationClip(new Texture[] {
-                            new Texture("textures/entities/stage1/e1_1.png"),
+                            new Texture("textures/entities/stage1/Peter/Peter_1.png"),
                     }, 0.2f),
                     "public class Airplane extends Vehicle implements Flyable",
                     650f,
@@ -95,7 +95,7 @@ public final class StageConfigs {
             60f * 4f,
             new WordEntity(
                     new AnimationClip(new Texture[] {
-                            new Texture("textures/entities/stage1/e1_1.png"),
+                            new Texture("textures/entities/stage1/Peter/Peter_1.png"),
                     }, 0.2f),
                     "for (int i = 0; i < 10; i++) { System.out.println(i); }",
                     650f,
@@ -119,7 +119,7 @@ public final class StageConfigs {
             60f * 5f,
             new WordEntity(
                     new AnimationClip(new Texture[] {
-                            new Texture("textures/entities/stage1/e1_1.png"),
+                            new Texture("textures/entities/stage1/Peter/Peter_1.png"),
                     }, 0.2f),
                     "new BufferedReader(new InputStreamReader(System.in)).readLine()",
                     650f,
