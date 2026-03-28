@@ -58,8 +58,9 @@ public class ItemEquipMenu extends Scene {
 
             float yOffset = -150 + (i * 80);
             boolean isUnlocked = PlayerData.items[itemIndex] != null && PlayerData.items[itemIndex].unlocked;
+            String itemName = PlayerData.getItemDisplayName(itemIndex);
 
-            String btnText = "ITEM " + (itemIndex + 1);
+            String btnText = itemName;
             if (!isUnlocked) {
                 btnText += " (LOCKED)";
             }
@@ -87,12 +88,14 @@ public class ItemEquipMenu extends Scene {
                         // Swap: put displaced item into the slot where selected item came from
                         PlayerData.equippedItems[itemCurrentSlot] = PlayerData.equippedItems[slotToEquip];
                         int movedItemIndex = PlayerData.getItemIndexForType(PlayerData.equippedItems[itemCurrentSlot]);
-                        String movedItemLabel = movedItemIndex >= 0 ? "Item " + (movedItemIndex + 1) : "Empty";
+                        String movedItemLabel = movedItemIndex >= 0 ? PlayerData.getItemDisplayName(movedItemIndex)
+                                : "Empty";
                         System.out.println("Swapped: moved " + movedItemLabel + " to Slot " + (itemCurrentSlot + 1));
                     }
                     // Equipping the item into the correct slot
                     PlayerData.equippedItems[slotToEquip] = selectedType;
-                    System.out.println("Equipped Item " + (itemIndex + 1) + " into Slot " + (slotToEquip + 1));
+                    System.out.println("Equipped " + PlayerData.getItemDisplayName(itemIndex) + " into Slot "
+                            + (slotToEquip + 1));
                     goBack();
                 } else {
                     // TODO (For Backend Devs): Maybe trigger a sound or a Toast message that it's
@@ -132,6 +135,22 @@ public class ItemEquipMenu extends Scene {
                 Color.WHITE, 48);
 
         super.uiManager.render(super.batch, font, mouseScreen);
+
+        renderItemIcons();
+    }
+
+    private void renderItemIcons() {
+        for (int i = 0; i < PlayerData.getItemCount(); i++) {
+            Texture icon = PlayerData.getItemIcon(i);
+            if (icon == null) {
+                continue;
+            }
+
+            float yOffset = -150 + (i * 80);
+            Vec2 rowCenter = super.layout.center(0, yOffset);
+            super.batch.setColor(Color.WHITE);
+            super.batch.draw(icon, rowCenter.x - 118f, rowCenter.y, 44f, 44f);
+        }
     }
 
     @Override

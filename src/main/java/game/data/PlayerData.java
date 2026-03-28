@@ -1,5 +1,7 @@
 package game.data;
 
+import engine.graphics.Texture;
+
 public class PlayerData {
     // 99999 starting coins for testing
     public static int coins = 99999;
@@ -82,6 +84,28 @@ public class PlayerData {
             return null;
         }
         return items[index];
+    }
+
+    public static String getItemDisplayName(int itemIndex) {
+        Item item = ensureItemAtIndex(itemIndex);
+        if (item != null && item.name != null && !item.name.isBlank()) {
+            return item.name;
+        }
+
+        ItemType type = getItemTypeForIndex(itemIndex);
+        if (type != null) {
+            return type.displayName();
+        }
+
+        return "Unknown Item";
+    }
+
+    public static Texture getItemIcon(int itemIndex) {
+        Item item = ensureItemAtIndex(itemIndex);
+        if (item == null) {
+            return null;
+        }
+        return item.icon;
     }
 
     public static Item ensureItemAtIndex(int itemIndex) {

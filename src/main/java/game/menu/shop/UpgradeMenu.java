@@ -34,7 +34,6 @@ public class UpgradeMenu extends Scene {
     private int selectedItemIndex = 0; // The item currently shown on the right panel
 
     // --- INFO PANEL UI ---
-    private UIButton infoItemBtn;
     private UIButton mainUpgradeBtn;
 
     private UIButton stat0Btn;
@@ -72,11 +71,11 @@ public class UpgradeMenu extends Scene {
         Color tColor = new Color(0, 0, 0, 0);
         Color hColor = new Color(1, 1, 1, 0.3f);
         Vec2 statBtnSize = new Vec2(380, 70);
-        stat0Btn = new UIButton(super.layout.centerRight(super.layout.res.x / 4f + 30, -80), statBtnSize, "", tColor,
+        stat0Btn = new UIButton(super.layout.centerRight(super.layout.res.x / 4f + 30, 20), statBtnSize, "", tColor,
                 hColor, solidTexture);
-        stat1Btn = new UIButton(super.layout.centerRight(super.layout.res.x / 4f + 30, 0), statBtnSize, "", tColor,
+        stat1Btn = new UIButton(super.layout.centerRight(super.layout.res.x / 4f + 30, 100), statBtnSize, "", tColor,
                 hColor, solidTexture);
-        stat2Btn = new UIButton(super.layout.centerRight(super.layout.res.x / 4f + 30, 80), statBtnSize, "", tColor,
+        stat2Btn = new UIButton(super.layout.centerRight(super.layout.res.x / 4f + 30, 180), statBtnSize, "", tColor,
                 hColor, solidTexture);
 
         stat0Btn.setOnClick(() -> {
@@ -95,7 +94,7 @@ public class UpgradeMenu extends Scene {
         // ปุ่มอัพเกรดหลักในแผง Info Panel (Initialized here to avoid NPE in
         // updateUpgradeButtonText)
         mainUpgradeBtn = new UIButton(
-                super.layout.centerRight(super.layout.res.x / 4f + 30, 200),
+                super.layout.centerRight(super.layout.res.x / 4f + 30, 270),
                 new Vec2(180, 60),
                 "UPGRADE",
                 btnTexture);
@@ -112,7 +111,7 @@ public class UpgradeMenu extends Scene {
             UIButton itemBtn = new UIButton(
                     super.layout.centerLeft(super.layout.res.x / 4f - 60, yOffset),
                     new Vec2(220, 60),
-                    "ITEM " + (i + 1),
+                    PlayerData.getItemDisplayName(i),
                     btnTexture);
 
             boolean isUnlocked = PlayerData.isItemUnlocked(i);
@@ -142,13 +141,6 @@ public class UpgradeMenu extends Scene {
             super.uiManager.add(upgradeStatusBtn);
         }
 
-        infoItemBtn = new UIButton(
-                super.layout.centerRight(super.layout.res.x / 4f - 100, -220),
-                new Vec2(120, 30),
-                "INFO ITEM",
-                btnTexture);
-        super.uiManager.add(infoItemBtn);
-
         // ======= EVENT LISTENERS =======
         backBtn.setOnClick(() -> Engine.setScene(new game.menu.mode.Mode()));
 
@@ -164,7 +156,8 @@ public class UpgradeMenu extends Scene {
                 game.data.PlayerDataSaver.save();
                 String[] statNames = { "Cooldown", "Damage", "Duration" };
                 System.out.println(
-                        "Upgraded " + statNames[selectedStatIndex] + " of Item " + (selectedItemIndex + 1) + "!");
+                        "Upgraded " + statNames[selectedStatIndex] + " of "
+                                + PlayerData.getItemDisplayName(selectedItemIndex) + "!");
                 updateUpgradeButtonText();
             } else {
                 System.out.println("Not enough coins to upgrade.");
@@ -194,7 +187,6 @@ public class UpgradeMenu extends Scene {
         for (UIButton btn : itemUpgradeBtns)
             btn.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
 
-        infoItemBtn.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
         mainUpgradeBtn.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
         backBtn.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
 
@@ -225,6 +217,16 @@ public class UpgradeMenu extends Scene {
         for (UIButton btn : itemUpgradeBtns)
             btn.render(super.batch, font, mouseScreen);
 
+        for (int i = 0; i < PlayerData.getItemCount(); i++) {
+            Texture icon = PlayerData.getItemIcon(i);
+            if (icon == null) {
+                continue;
+            }
+            Vec2 rowCenter = super.layout.centerLeft(super.layout.res.x / 4f - 60, -150 + (i * 80));
+            super.batch.setColor(Color.WHITE);
+            super.batch.draw(icon, rowCenter.x - 84f, rowCenter.y, 42f, 42f);
+        }
+
         // Draw Info panel background
         Vec2 infoPanelPos = super.layout.centerRight(super.layout.res.x / 4f + 30, 0);
         super.batch.setColor(new Color(0.8f, 0.8f, 0.8f, 1.0f));
@@ -234,7 +236,14 @@ public class UpgradeMenu extends Scene {
         boolean isUnlocked = PlayerData.isItemUnlocked(selectedItemIndex);
 
         // Render Info panel details
-        font.drawTextAligned(super.batch, "ITEM " + (selectedItemIndex + 1), infoPanelPos.x, infoPanelPos.y + 180,
+        Texture selectedIcon = PlayerData.getItemIcon(selectedItemIndex);
+        if (selectedIcon != null) {
+            super.batch.setColor(Color.WHITE);
+            super.batch.draw(selectedIcon, infoPanelPos.x, infoPanelPos.y + 115f, 70f, 70f);
+        }
+
+        font.drawTextAligned(super.batch, PlayerData.getItemDisplayName(selectedItemIndex), infoPanelPos.x,
+                infoPanelPos.y + 185,
                 Color.BLACK, 48);
 
         if (isUnlocked) {
@@ -267,7 +276,6 @@ public class UpgradeMenu extends Scene {
             drawStatBar("Duration", barStartX, super.layout.centerRight(0, 80).y,
                     baseDuration + (currentDurationLevel * 2f), 30.0f);
 
-            infoItemBtn.render(super.batch, font, mouseScreen);
             mainUpgradeBtn.render(super.batch, font, mouseScreen);
         } else {
             font.drawTextAligned(super.batch, "LOCKED", infoPanelPos.x, infoPanelPos.y, Color.BLACK, 64);

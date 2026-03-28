@@ -48,16 +48,10 @@ public class OverrunMenu extends Scene {
                 "Back",
                 btnTexture);
 
-        int item1Index = game.data.PlayerData.getEquippedItemIndex(0);
-        int item2Index = game.data.PlayerData.getEquippedItemIndex(1);
-
-        String item1Text = item1Index == -1 ? "" : "ITEM " + (item1Index + 1);
-        String item2Text = item2Index == -1 ? "" : "ITEM " + (item2Index + 1);
-
         item1Btn = new UIButton(
                 super.layout.center(60, 0),
                 itemSlotSize,
-                item1Text,
+                "",
                 Color.WHITE,
                 new Color(0.8f, 0.8f, 0.8f, 1.0f),
                 Color.BLACK,
@@ -67,7 +61,7 @@ public class OverrunMenu extends Scene {
         item2Btn = new UIButton(
                 super.layout.center(-60, 0),
                 itemSlotSize,
-                item2Text,
+                "",
                 Color.WHITE,
                 new Color(0.8f, 0.8f, 0.8f, 1.0f),
                 Color.BLACK,
@@ -119,6 +113,25 @@ public class OverrunMenu extends Scene {
         font.drawTextAligned(super.batch, "Select Item", selectItemPos.x, selectItemPos.y, Color.WHITE, 24);
 
         super.uiManager.render(super.batch, font, mouseScreen);
+
+        renderEquippedSlot(0, super.layout.center(60, 0));
+        renderEquippedSlot(1, super.layout.center(-60, 0));
+    }
+
+    private void renderEquippedSlot(int slot, Vec2 position) {
+        int itemIndex = game.data.PlayerData.getEquippedItemIndex(slot);
+        if (itemIndex >= 0) {
+            Texture icon = game.data.PlayerData.getItemIcon(itemIndex);
+            if (icon != null) {
+                super.batch.setColor(Color.WHITE);
+                super.batch.draw(icon, position.x, position.y - 8f, 58f, 58f);
+            }
+            font.drawTextAligned(super.batch, game.data.PlayerData.getItemDisplayName(itemIndex), position.x,
+                    position.y + 33f, Color.BLACK, 14);
+            return;
+        }
+
+        font.drawTextAligned(super.batch, "Empty", position.x, position.y, Color.BLACK, 14);
     }
 
     @Override

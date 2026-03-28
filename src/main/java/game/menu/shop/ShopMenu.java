@@ -40,7 +40,6 @@ public class ShopMenu extends Scene {
     // --- ITEM TAB UI ---
     private List<UIButton> itemBoxBtns = new ArrayList<>();
     private UIButton buyItemBtn;
-    private UIButton infoItemBtn;
 
     // --- SKIN TAB UI ---
     private List<UIButton> skinBoxBtns = new ArrayList<>();
@@ -64,17 +63,17 @@ public class ShopMenu extends Scene {
         tabShopBtnDisplay = new UIButton(
                 super.layout.topCenter(0, 50),
                 new Vec2(300, 40),
-                isSkinTabSelected ? "Shop Skin" : "Shop ITEM",
+                isSkinTabSelected ? "Skin Shop" : "Item Shop",
                 solidTexture);
 
         toggleLeftBtn = new UIButton(
-                super.layout.bottomCenter(-30, 20),
+                super.layout.bottomCenter(30, 20),
                 new Vec2(40, 40),
                 "<",
                 btnTexture);
 
         toggleRightBtn = new UIButton(
-                super.layout.bottomCenter(30, 20),
+                super.layout.bottomCenter(-30, 20),
                 new Vec2(40, 40),
                 ">",
                 btnTexture);
@@ -91,7 +90,7 @@ public class ShopMenu extends Scene {
             UIButton itemBtn = new UIButton(
                     super.layout.centerLeft(super.layout.res.x / 4f - 60, yOffset),
                     new Vec2(220, 60),
-                    "ITEM " + (i + 1),
+                    PlayerData.getItemDisplayName(i),
                     btnTexture);
 
             boolean isUnlocked = PlayerData.isItemUnlocked(i);
@@ -118,13 +117,6 @@ public class ShopMenu extends Scene {
                 updateBuyButtonText();
             });
         }
-
-        infoItemBtn = new UIButton(
-                super.layout.centerRight(super.layout.res.x / 4f - 100, -180),
-                new Vec2(120, 30),
-                "INFO ITEM",
-                btnTexture);
-        super.uiManager.add(infoItemBtn);
 
         buyItemBtn = new UIButton(
                 super.layout.centerRight(super.layout.res.x / 4f + 30, 200),
@@ -167,13 +159,13 @@ public class ShopMenu extends Scene {
 
         toggleLeftBtn.setOnClick(() -> {
             isSkinTabSelected = false;
-            tabShopBtnDisplay.setText("Shop ITEM");
+            tabShopBtnDisplay.setText("Item Shop");
             updateBuyButtonText();
         });
 
         toggleRightBtn.setOnClick(() -> {
             isSkinTabSelected = true;
-            tabShopBtnDisplay.setText("Shop Skin");
+            tabShopBtnDisplay.setText("Skin Shop");
             updateBuyButtonText();
         });
 
@@ -185,10 +177,10 @@ public class ShopMenu extends Scene {
                     unlockItem(selectedItemIndex);
                     game.data.PlayerDataSaver.save();
                     itemBoxBtns.get(selectedItemIndex * 2 + 1).setText("UNLOCKED");
-                    System.out.println("Purchased ITEM " + (selectedItemIndex + 1));
+                    System.out.println("Purchased " + PlayerData.getItemDisplayName(selectedItemIndex));
                     updateBuyButtonText();
                 } else {
-                    System.out.println("Not enough coins for ITEM " + (selectedItemIndex + 1));
+                    System.out.println("Not enough coins for " + PlayerData.getItemDisplayName(selectedItemIndex));
                 }
             }
         });
@@ -239,7 +231,6 @@ public class ShopMenu extends Scene {
                 btn.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
             }
             buyItemBtn.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
-            infoItemBtn.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
         } else {
             for (UIButton btn : skinBoxBtns) {
                 btn.update(mouseScreen, Engine.input.isMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT));
@@ -274,14 +265,31 @@ public class ShopMenu extends Scene {
             for (UIButton btn : itemBoxBtns)
                 btn.render(super.batch, font, mouseScreen);
 
+            for (int i = 0; i < PlayerData.getItemCount(); i++) {
+                Texture icon = PlayerData.getItemIcon(i);
+                if (icon == null) {
+                    continue;
+                }
+                Vec2 rowCenter = super.layout.centerLeft(super.layout.res.x / 4f - 60, -150 + (i * 80));
+                super.batch.setColor(Color.WHITE);
+                super.batch.draw(icon, rowCenter.x - 84f, rowCenter.y, 42f, 42f);
+            }
+
             // Draw item info panel box
             Vec2 infoPanelPos = super.layout.centerRight(super.layout.res.x / 4f + 50, 0);
             super.batch.setColor(new Color(0.8f, 0.8f, 0.8f, 1.0f));
             super.batch.draw(solidTexture, infoPanelPos.x, infoPanelPos.y, 350, 400);
 
-            font.drawTextAligned(super.batch, "Ability of Item", infoPanelPos.x, infoPanelPos.y - 50, Color.BLACK, 32);
+            Texture selectedIcon = PlayerData.getItemIcon(selectedItemIndex);
+            if (selectedIcon != null) {
+                super.batch.setColor(Color.WHITE);
+                super.batch.draw(selectedIcon, infoPanelPos.x, infoPanelPos.y - 130f, 72f, 72f);
+            }
 
-            infoItemBtn.render(super.batch, font, mouseScreen);
+            font.drawTextAligned(super.batch, PlayerData.getItemDisplayName(selectedItemIndex), infoPanelPos.x,
+                    infoPanelPos.y - 55, Color.BLACK, 30);
+            font.drawTextAligned(super.batch, "Ability", infoPanelPos.x, infoPanelPos.y - 20, Color.BLACK, 24);
+
             buyItemBtn.render(super.batch, font, mouseScreen);
 
         } else {
