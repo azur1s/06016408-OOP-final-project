@@ -9,6 +9,7 @@ import engine.Engine;
 import engine.Scene;
 import engine.entities.Collidable;
 import engine.entities.CollisionManager;
+import engine.graphics.AnimationClip;
 import engine.graphics.Color;
 import engine.graphics.FontAtlas;
 import engine.graphics.Texture;
@@ -16,6 +17,7 @@ import engine.math.Vec2;
 import engine.ui.Button;
 import game.data.Item;
 import game.data.ItemType;
+import game.data.PlayerCharacterAssets;
 import game.data.PlayerData;
 import game.data.PlayerDataSaver;
 import game.overrun.InputHandler;
@@ -26,12 +28,16 @@ import game.overrun.words.WordEntity;
 
 // TODO: Make enemy texture configurable per stage.
 public class Stage extends Scene {
+    private static final float PLAYER_RENDER_WIDTH = 110f;
+    private static final float PLAYER_RENDER_HEIGHT = 136f;
+
     protected final StageConfig config;
     protected float timer = 0f;
 
     protected Texture solidTexture;
     protected Texture backgroundTexture;
-    protected Texture playerTexture;
+    protected AnimationClip playerAnimation;
+    protected AnimationClip playerShotAnimation;
     public Color playerColor = Color.WHITE;
 
     protected FontAtlas font;
@@ -71,8 +77,9 @@ public class Stage extends Scene {
         Texture.preloadAsync(
                 StageConfigs.getSolidTexturePath(),
                 config.backgroundTexturePath(),
-                getSelectedPlayerTexturePath(),
                 StageConfigs.getButtonTexturePath());
+        Texture.preloadAsync(PlayerCharacterAssets.getAnimationFramePaths(getSelectedCharacterIndex()));
+        Texture.preloadAsync(PlayerCharacterAssets.getShotAnimationFramePaths(getSelectedCharacterIndex()));
         Texture.preloadAsync(config.allEntityTexturePaths());
     }
 
@@ -82,7 +89,8 @@ public class Stage extends Scene {
 
         solidTexture = new Texture(StageConfigs.getSolidTexturePath());
         backgroundTexture = new Texture(config.backgroundTexturePath());
-        playerTexture = new Texture(getSelectedPlayerTexturePath());
+        playerAnimation = PlayerCharacterAssets.createAnimationClip(getSelectedCharacterIndex());
+        playerShotAnimation = PlayerCharacterAssets.createShotAnimationClip(getSelectedCharacterIndex());
 
         font = new FontAtlas(config.fontPath(), config.fontSize());
 
@@ -90,6 +98,7 @@ public class Stage extends Scene {
         playerManager = new PlayerManager(words);
         projectiles = new ProjectileManager();
         projectiles.playerManager = playerManager;
+        projectiles.playerShotAnimation = playerShotAnimation;
 
         words = new WordEntitiesManager(this.config, this.config.manualSpawn());
         words.init();
@@ -282,7 +291,9 @@ public class Stage extends Scene {
 
         Vec2 playerPos = playerManager.getPosition();
         super.batch.setColor(playerColor);
-        super.batch.draw(playerTexture, playerPos.x, playerPos.y, 81f, 100f);
+        super.batch.setFlipped(true);
+        super.batch.drawAnimation(playerAnimation, playerPos, PLAYER_RENDER_WIDTH, PLAYER_RENDER_HEIGHT);
+        super.batch.setFlipped(false);
 
         // Render active item effects (e.g. shield)
         ItemType equippedItem1 = PlayerData.equippedItems[0];
@@ -409,15 +420,12 @@ public class Stage extends Scene {
     public void cleanup() {
         solidTexture.cleanup();
         backgroundTexture.cleanup();
-        playerTexture.cleanup();
+        projectiles.cleanup();
+        PlayerCharacterAssets.cleanup(playerAnimation);
+        PlayerCharacterAssets.cleanup(playerShotAnimation);
     }
 
-    protected String getSelectedPlayerTexturePath() {
-        String[] texturePaths = StageConfigs.getPlayerTexturePaths();
-        int index = PlayerData.selectedCharacter;
-        if (index < 0 || index >= texturePaths.length) {
-            index = 0;
-        }
-        return texturePaths[index];
+    protected int getSelectedCharacterIndex() {
+        return PlayerCharacterAssets.sanitizeCharacterIndex(PlayerData.selectedCharacter);
     }
 }

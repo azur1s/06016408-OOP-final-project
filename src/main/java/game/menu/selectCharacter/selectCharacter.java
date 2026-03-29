@@ -5,22 +5,26 @@ import static org.lwjgl.opengl.GL11.glClearColor;
 
 import engine.Engine;
 import engine.Scene;
+import engine.graphics.AnimationClip;
 import engine.graphics.Color;
 import engine.graphics.FontAtlas;
 import engine.graphics.Texture;
 import engine.math.Vec2;
+import game.data.PlayerCharacterAssets;
 import game.data.PlayerData;
 import game.data.PlayerDataSaver;
 import game.menu.components.UIButton;
 
 public class selectCharacter extends Scene {
+    private static final int[] DISPLAY_ORDER = { 1, 0, 2 };
+
     private FontAtlas font;
     private Texture solidTexture;
     private Texture buttonTexture;
     private Texture backgroundTexture;
     private Texture selectedCharacterTexture;
     private Texture backTexture;
-    private Texture[] characterTextures;
+    private AnimationClip[] characterAnimations;
 
     private UIButton[] characterButtons;
     private UIButton selectButton;
@@ -50,10 +54,8 @@ public class selectCharacter extends Scene {
                 "textures/solid.png",
                 "textures/bg.png",
                 "textures/selectCharacter/btn_select.png",
-                "textures/btn_back.png",
-                "textures/player_1.png",
-                "textures/player_0.png",
-                "textures/player_3.png");
+                "textures/btn_back.png");
+        Texture.preloadAsync(PlayerCharacterAssets.getAllAnimationFramePaths());
     }
 
     @Override
@@ -63,21 +65,23 @@ public class selectCharacter extends Scene {
         backgroundTexture = new Texture("textures/bg.png");
         selectedCharacterTexture = new Texture("textures/selectCharacter/btn_select.png");
         backTexture = new Texture("textures/btn_back.png");
-        characterTextures = new Texture[] {
-                new Texture("textures/player_1.png"),
-                new Texture("textures/player_0.png"),
-                new Texture("textures/player_2.png")
-        };
+        characterAnimations = new AnimationClip[PlayerCharacterAssets.CHARACTER_COUNT];
+        for (int i = 0; i < characterAnimations.length; i++) {
+            characterAnimations[i] = PlayerCharacterAssets.createAnimationClip(i);
+        }
 
-        pendingSelection = 1;
+        pendingSelection = PlayerData.selectedCharacter == -1
+                ? DISPLAY_ORDER[1]
+                : PlayerCharacterAssets.sanitizeCharacterIndex(PlayerData.selectedCharacter);
         cardScaleAnimations = new float[3];
         cardLiftAnimations = new float[3];
         clickPulseAnimations = new float[3];
 
-        characterButtons = new UIButton[3];
+        characterButtons = new UIButton[DISPLAY_ORDER.length];
         float[] xOffsets = { 280f, 0f, -280f };
         for (int i = 0; i < characterButtons.length; i++) {
-            final int index = i;
+            final int slotIndex = i;
+            final int characterIndex = DISPLAY_ORDER[i];
             UIButton button = new UIButton(
                     super.layout.center(xOffsets[i], -10f),
                     new Vec2(256, 300),
@@ -87,12 +91,12 @@ public class selectCharacter extends Scene {
                     solidTexture);
 
             button.setOnClick(() -> {
-                pendingSelection = index;
-                clickPulseAnimations[index] = 1.0f;
+                pendingSelection = characterIndex;
+                clickPulseAnimations[slotIndex] = 1.0f;
             });
-            button.setOnEnter(() -> hoveredCharacter = index);
+            button.setOnEnter(() -> hoveredCharacter = slotIndex);
             button.setOnLeave(() -> {
-                if (hoveredCharacter == index) {
+                if (hoveredCharacter == slotIndex) {
                     hoveredCharacter = -1;
                 }
             });
@@ -134,7 +138,7 @@ public class selectCharacter extends Scene {
 
         for (int i = 0; i < characterButtons.length; i++) {
             boolean isHovered = characterButtons[i].isHovered(mouseScreen);
-            boolean isSelected = pendingSelection == i;
+            boolean isSelected = pendingSelection == DISPLAY_ORDER[i];
             float targetScale = isSelected ? 1.06f : isHovered ? 1.03f : 1.0f;
             float targetLift = isSelected ? 18f : isHovered ? 10f : 0f;
 
@@ -178,17 +182,23 @@ public class selectCharacter extends Scene {
             solidTexture.cleanup();
         if (buttonTexture != null)
             buttonTexture.cleanup();
-        if (characterTextures != null) {
-            for (Texture characterTexture : characterTextures) {
-                if (characterTexture != null) {
-                    characterTexture.cleanup();
-                }
+        if (backgroundTexture != null)
+            backgroundTexture.cleanup();
+        if (selectedCharacterTexture != null)
+            selectedCharacterTexture.cleanup();
+        if (backTexture != null)
+            backTexture.cleanup();
+        if (characterAnimations != null) {
+            for (AnimationClip characterAnimation : characterAnimations) {
+                PlayerCharacterAssets.cleanup(characterAnimation);
             }
         }
     }
 
     private void drawCharacterCard(int index, float cardX, float cardY) {
-        boolean isSelected = pendingSelection == index;
+        int characterIndex = DISPLAY_ORDER[index];
+        int frameStyleIndex = index;
+        boolean isSelected = pendingSelection == characterIndex;
         boolean isHovered = hoveredCharacter == index;
         float pulse = clickPulseAnimations[index];
         float pulseBoost = (float) Math.sin(pulse * Math.PI) * 0.035f;
@@ -207,10 +217,10 @@ public class selectCharacter extends Scene {
         float drawY = cardY + lift;
 
         Color panelColor = isSelected
-                ? panelColors[index]
+                ? panelColors[frameStyleIndex]
                 : new Color(1f, 1f, 1f, isHovered ? 0.96f : 0.91f);
         Color outlineColor = isSelected
-                ? accentColors[index]
+                ? accentColors[frameStyleIndex]
                 : new Color(0.86f, 0.86f, 0.86f, 1.0f);
         Color shadowColor = new Color(0f, 0f, 0f, 0.10f + pulse * 0.04f);
 
@@ -229,20 +239,25 @@ public class selectCharacter extends Scene {
                 panelHeight);
 
         super.batch.setColor(new Color(
-                Math.max(0f, accentColors[index].r - 0.10f),
-                Math.max(0f, accentColors[index].g - 0.10f),
-                Math.max(0f, accentColors[index].b - 0.10f),
+                Math.max(0f, accentColors[frameStyleIndex].r - 0.10f),
+                Math.max(0f, accentColors[frameStyleIndex].g - 0.10f),
+                Math.max(0f, accentColors[frameStyleIndex].b - 0.10f),
                 0.28f + pulse * 0.10f));
         super.batch.draw(solidTexture, cardX, drawY - 10f * scale, podiumWidth, podiumHeight);
 
         super.batch.setColor(Color.WHITE);
-        super.batch.draw(characterTextures[index], cardX, drawY + 18f * scale, imageWidth, imageHeight);
+        super.batch.setFlipped(true);
+        super.batch.drawAnimation(characterAnimations[characterIndex],
+                new Vec2(cardX, drawY + 18f * scale),
+                imageWidth,
+                imageHeight);
+        super.batch.setFlipped(false);
 
-        font.drawTextHorizontalAligned(super.batch, characterNames[index], cardX, drawY - 115f * scale, Color.BLACK,
+        font.drawTextHorizontalAligned(super.batch, characterNames[characterIndex], cardX, drawY - 115f * scale, Color.BLACK,
                 24f * scale);
 
         if (isSelected) {
-            font.drawTextHorizontalAligned(super.batch, "Selected", cardX, drawY - 145f * scale, accentColors[index],
+            font.drawTextHorizontalAligned(super.batch, "Selected", cardX, drawY - 145f * scale, accentColors[frameStyleIndex],
                     22f * scale);
         }
 

@@ -203,14 +203,6 @@ public final class StageConfigs {
                     2,
                     new WordEffect.Boss()));
 
-    public static String[] getPlayerTexturePaths() {
-        return new String[] {
-                "textures/player_1.png",
-                "textures/player_0.png",
-                "textures/player_3.png"
-        };
-    }
-
     public static String getStageBackgroundPaths() {
         return "textures/background/stagelocked/allLocked.jpg";
     }
